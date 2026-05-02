@@ -1,5 +1,6 @@
 import { PDFDocument, PDFFont, StandardFonts, rgb } from "pdf-lib";
-import { questions, translations } from "../data/catalog";
+import { questions } from "../data/catalog";
+import { translations } from "../data/translations";
 import type { AiOutputs, Answers, Question, ScoreResult } from "../types";
 
 export async function downloadReport(answers: Answers, aiOutputs: AiOutputs, scoreResult: ScoreResult) {

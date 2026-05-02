@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
-import { languages, questions, sectionOrder, translations } from "./data/catalog";
+import { languages, questions, sectionOrder } from "./data/catalog";
+import { translations } from "./data/translations";
 import { interpretTextAnswer } from "./logic/ai";
 import { downloadReport } from "./logic/report";
 import { getVisibleQuestions, recomputeTags } from "./logic/routing";
