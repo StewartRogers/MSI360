@@ -70,6 +70,44 @@ export const questions: Question[] = [
     ]
   },
   {
+    question_id: "work_position",
+    section: "intro",
+    display_condition_tags: [],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "mostly_sit", risk_scores: {}, add_tags: ["seated_work", "desk_based"] },
+      { option_id: "mostly_stand_move", risk_scores: {}, add_tags: ["standing_work", "walking_moving", "manual_handling"] },
+      { option_id: "sit_and_stand", risk_scores: {}, add_tags: ["seated_work", "standing_work", "walking_moving"] }
+    ]
+  },
+  {
+    question_id: "equipment_feedback",
+    section: "organizational",
+    display_condition_tags: [],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "great_extent", risk_scores: {} },
+      { option_id: "some_extent", risk_scores: {} },
+      { option_id: "rarely", risk_scores: {} },
+      { option_id: "not_at_all", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "work_organization_feedback",
+    section: "organizational",
+    display_condition_tags: [],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "great_extent", risk_scores: {} },
+      { option_id: "some_extent", risk_scores: {} },
+      { option_id: "rarely", risk_scores: {} },
+      { option_id: "not_at_all", risk_scores: {} }
+    ]
+  },
+  {
     question_id: "recent_discomfort",
     section: "symptoms",
     display_condition_tags: [],
@@ -78,6 +116,156 @@ export const questions: Question[] = [
     options: [
       { option_id: "yes", risk_scores: { symptoms: 3 }, add_tags: ["reported_discomfort"] },
       { option_id: "no", risk_scores: { symptoms: 1 } }
+    ]
+  },
+  {
+    question_id: "body_discomfort_areas",
+    section: "symptoms",
+    display_condition_tags: ["reported_discomfort"],
+    required: true,
+    type: "grouped_select_all",
+    groups: [
+      {
+        group_id: "neck",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "shoulders_upper_arms",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "elbows_forearms",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "wrists_hands_fingers",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "lower_back",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "hips_upper_legs",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "knees_lower_legs",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      },
+      {
+        group_id: "ankles_feet",
+        options: [
+          { option_id: "one_side", risk_scores: { symptoms: 2 } },
+          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
+          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+        ]
+      }
+    ]
+  },
+  {
+    question_id: "contact_sharp_edges_duration",
+    section: "contact_stress",
+    display_condition_tags: ["office_computer", "desk_based", "manual_handling", "tool_use", "sharp_edges", "standing_work"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_30_min", risk_scores: { contact_stress: 1 } },
+      { option_id: "30_min_to_1_hour", risk_scores: { contact_stress: 2 }, add_tags: ["sharp_edges"] },
+      { option_id: "more_than_1_hour", risk_scores: { contact_stress: 3 }, add_tags: ["sharp_edges"] },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "kneeling_hard_surfaces",
+    section: "contact_stress",
+    display_condition_tags: ["kneeling_floor_work", "low_work", "manual_handling", "standing_work"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_30_min", risk_scores: { contact_stress: 1 } },
+      { option_id: "30_min_to_1_hour", risk_scores: { contact_stress: 2 }, add_tags: ["kneeling_floor_work"] },
+      { option_id: "more_than_1_hour", risk_scores: { contact_stress: 3 }, add_tags: ["kneeling_floor_work"] },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "handheld_tool_contact",
+    section: "contact_stress",
+    display_condition_tags: ["manual_handling", "tool_use", "gripping"],
+    required: true,
+    type: "select_all",
+    options: [
+      { option_id: "poor_grip_size", risk_scores: { contact_stress: 3 }, add_tags: ["gripping"] },
+      { option_id: "irregular_unbalanced", risk_scores: { contact_stress: 2 } },
+      { option_id: "sharp_handholds", risk_scores: { contact_stress: 3 }, add_tags: ["sharp_edges"] },
+      { option_id: "slippery", risk_scores: { contact_stress: 2 }, add_tags: ["gripping"] },
+      { option_id: "none", risk_scores: {}, exclusive: true }
+    ]
+  },
+  {
+    question_id: "body_makeshift_tool",
+    section: "contact_stress",
+    display_condition_tags: ["manual_handling", "tool_use", "standing_work", "body_as_tool"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_one_hour", risk_scores: { contact_stress: 2 }, add_tags: ["body_as_tool"] },
+      { option_id: "more_than_one_hour", risk_scores: { contact_stress: 3 }, add_tags: ["body_as_tool"] },
+      { option_id: "no", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "push_pull_surface_types",
+    section: "force",
+    display_condition_tags: ["pushing_pulling", "manual_handling", "walking_moving"],
+    required: true,
+    type: "select_all",
+    options: [
+      { option_id: "smooth", risk_scores: { force: 1 }, add_tags: ["pushing_pulling"] },
+      { option_id: "soft", risk_scores: { force: 3 }, add_tags: ["pushing_pulling"] },
+      { option_id: "rough", risk_scores: { force: 3 }, add_tags: ["pushing_pulling"] },
+      { option_id: "does_not_apply", risk_scores: {}, exclusive: true }
+    ]
+  },
+  {
+    question_id: "push_pull_heavy_frequency",
+    section: "force",
+    display_condition_tags: ["pushing_pulling", "manual_handling", "heavy_loads"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "most", risk_scores: { force: 3 }, add_tags: ["heavy_loads", "pushing_pulling"] },
+      { option_id: "some", risk_scores: { force: 2 }, add_tags: ["pushing_pulling"] },
+      { option_id: "never", risk_scores: {} }
     ]
   },
   {
@@ -94,6 +282,167 @@ export const questions: Question[] = [
     ]
   },
   {
+    question_id: "tool_start_force",
+    section: "force",
+    display_condition_tags: ["tool_use", "powered_tools", "vehicle_equipment", "manual_handling"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "regularly", risk_scores: { force: 3 }, add_tags: ["powered_tools"] },
+      { option_id: "occasionally", risk_scores: { force: 2 }, add_tags: ["powered_tools"] },
+      { option_id: "no", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "push_pull_assistance",
+    section: "force",
+    display_condition_tags: ["pushing_pulling", "heavy_loads"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "great_extent", risk_scores: { force: 1 } },
+      { option_id: "some_extent", risk_scores: { force: 2 } },
+      { option_id: "do_not_ask", risk_scores: { force: 3 } },
+      { option_id: "ask_but_no_assistance", risk_scores: { force: 4 } },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "upper_body_posture",
+    section: "awkward_postures",
+    display_condition_tags: [],
+    required: true,
+    type: "grouped_multi_choice",
+    groups: [
+      {
+        group_id: "forward_backward",
+        options: [
+          { option_id: "most", risk_scores: { awkward_posture: 3 }, add_tags: ["bending_trunk"] },
+          { option_id: "some", risk_scores: { awkward_posture: 2 }, add_tags: ["bending_trunk"] },
+          { option_id: "never", risk_scores: {} }
+        ]
+      },
+      {
+        group_id: "sideways",
+        options: [
+          { option_id: "most", risk_scores: { awkward_posture: 3 }, add_tags: ["twisting"] },
+          { option_id: "some", risk_scores: { awkward_posture: 2 }, add_tags: ["twisting"] },
+          { option_id: "never", risk_scores: {} }
+        ]
+      }
+    ]
+  },
+  {
+    question_id: "torso_twist",
+    section: "awkward_postures",
+    display_condition_tags: ["twisting", "seated_work", "standing_work", "manual_handling", "office_computer"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "often", risk_scores: { awkward_posture: 3 }, add_tags: ["twisting"] },
+      { option_id: "sometimes", risk_scores: { awkward_posture: 2 }, add_tags: ["twisting"] },
+      { option_id: "never", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "hand_location",
+    section: "awkward_postures",
+    display_condition_tags: ["seated_work", "standing_work", "manual_handling", "office_computer"],
+    required: true,
+    type: "grouped_multi_choice",
+    groups: [
+      {
+        group_id: "hands_above_shoulders",
+        options: [
+          { option_id: "most", risk_scores: { awkward_posture: 3 }, add_tags: ["overhead_work"] },
+          { option_id: "some", risk_scores: { awkward_posture: 2 }, add_tags: ["overhead_work"] },
+          { option_id: "never", risk_scores: {} }
+        ]
+      },
+      {
+        group_id: "hands_floor_to_knee",
+        options: [
+          { option_id: "most", risk_scores: { awkward_posture: 3 }, add_tags: ["low_work"] },
+          { option_id: "some", risk_scores: { awkward_posture: 2 }, add_tags: ["low_work"] },
+          { option_id: "never", risk_scores: {} }
+        ]
+      }
+    ]
+  },
+  {
+    question_id: "arms_extended_forward",
+    section: "awkward_postures",
+    display_condition_tags: ["reaching_forward", "manual_handling", "office_computer", "standing_work", "tool_use"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: { awkward_posture: 3 }, add_tags: ["reaching_forward"] },
+      { option_id: "sometimes", risk_scores: { awkward_posture: 2 }, add_tags: ["reaching_forward"] },
+      { option_id: "never", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "outstretched_arm_load",
+    section: "awkward_postures",
+    display_condition_tags: ["reaching_forward"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_5_lb", risk_scores: { awkward_posture: 2, force: 1 } },
+      { option_id: "5_to_10_lb", risk_scores: { awkward_posture: 3, force: 2 } },
+      { option_id: "more_than_10_lb", risk_scores: { awkward_posture: 4, force: 3 }, add_tags: ["heavy_loads"] },
+      { option_id: "no", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "head_position",
+    section: "awkward_postures",
+    display_condition_tags: [],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "neutral", risk_scores: { awkward_posture: 1 } },
+      { option_id: "slight_tilt", risk_scores: { awkward_posture: 2 } },
+      { option_id: "deep_tilt", risk_scores: { awkward_posture: 3 }, add_tags: ["fine_visual_work"] }
+    ]
+  },
+  {
+    question_id: "wrist_bend_degrees",
+    section: "awkward_postures",
+    display_condition_tags: ["wrist_hand_work", "office_computer", "tool_use", "repetitive_work"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "0_to_14", risk_scores: { awkward_posture: 1 } },
+      { option_id: "15_to_30", risk_scores: { awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "more_than_30", risk_scores: { awkward_posture: 3 }, add_tags: ["wrist_hand_work"] }
+    ]
+  },
+  {
+    question_id: "wrist_side_angle",
+    section: "awkward_postures",
+    display_condition_tags: ["wrist_hand_work", "office_computer", "tool_use", "repetitive_work"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "0_to_10", risk_scores: { awkward_posture: 1 } },
+      { option_id: "10_to_20", risk_scores: { awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "more_than_20", risk_scores: { awkward_posture: 3 }, add_tags: ["wrist_hand_work"] }
+    ]
+  },
+  {
+    question_id: "objects_close_to_body",
+    section: "awkward_postures",
+    display_condition_tags: ["manual_handling", "lifting_carrying", "pushing_pulling", "reaching_forward", "tool_use"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: { awkward_posture: 1 } },
+      { option_id: "sometimes", risk_scores: { awkward_posture: 2 } },
+      { option_id: "never", risk_scores: { awkward_posture: 3 }, add_tags: ["reaching_forward"] }
+    ]
+  },
+  {
     question_id: "repetitive_movements_duration",
     section: "repetition",
     display_condition_tags: ["repetitive_work", "office_computer", "manual_handling", "wrist_hand_work"],
@@ -107,29 +456,170 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "environmental_conditions",
+    question_id: "wrist_bend_duration",
+    section: "repetition",
+    display_condition_tags: ["wrist_hand_work", "repetitive_work", "office_computer", "tool_use"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_1_hour", risk_scores: { repetition: 1, awkward_posture: 1 } },
+      { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "none", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "wrist_side_duration",
+    section: "repetition",
+    display_condition_tags: ["wrist_hand_work", "repetitive_work", "office_computer", "tool_use"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_1_hour", risk_scores: { repetition: 1, awkward_posture: 1 } },
+      { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "none", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "forceful_exertion_duration",
+    section: "repetition",
+    display_condition_tags: ["heavy_loads", "manual_handling", "tool_use", "power_grip"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_5_min", risk_scores: { repetition: 1, force: 1 } },
+      { option_id: "5_to_25_min", risk_scores: { repetition: 2, force: 2 } },
+      { option_id: "30_min_to_2_5_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["heavy_loads"] },
+      { option_id: "2_5_to_5_5_hours", risk_scores: { repetition: 4, force: 4 }, add_tags: ["heavy_loads"] },
+      { option_id: "more_than_5_5_hours", risk_scores: { repetition: 4, force: 4 }, add_tags: ["heavy_loads"] }
+    ]
+  },
+  {
+    question_id: "pinch_grip_duration",
+    section: "repetition",
+    display_condition_tags: ["pinch_grip", "gripping", "wrist_hand_work", "tool_use", "manual_handling"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_2_hours", risk_scores: { repetition: 2, force: 2 }, add_tags: ["pinch_grip"] },
+      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["pinch_grip"] },
+      { option_id: "none", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "power_grip_duration",
+    section: "repetition",
+    display_condition_tags: ["power_grip", "gripping", "tool_use", "manual_handling"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_2_hours", risk_scores: { repetition: 2, force: 2 }, add_tags: ["power_grip"] },
+      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["power_grip"] },
+      { option_id: "none", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "vibration_tools_duration",
+    section: "repetition",
+    display_condition_tags: ["vibrating_tools", "powered_tools", "tool_use"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_1_hour", risk_scores: { repetition: 1, force: 1 }, add_tags: ["vibrating_tools"] },
+      { option_id: "1_to_4_hours", risk_scores: { repetition: 2, force: 2 }, add_tags: ["vibrating_tools"] },
+      { option_id: "more_than_4_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["vibrating_tools"] },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "push_pull_rough_soft_heavy_duration",
+    section: "repetition",
+    display_condition_tags: ["pushing_pulling", "heavy_loads"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "less_than_5_min", risk_scores: { repetition: 1, force: 1 } },
+      { option_id: "5_min_to_1_hour", risk_scores: { repetition: 2, force: 2 } },
+      { option_id: "more_than_1_hour", risk_scores: { repetition: 3, force: 3 } },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "noise_distraction",
     section: "environmental",
     display_condition_tags: [],
     required: true,
-    type: "grouped_multi_choice",
-    groups: [
-      {
-        group_id: "noise_distraction",
-        options: [
-          { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["noise_exposure"] },
-          { option_id: "sometimes", risk_scores: { environmental: 2 } },
-          { option_id: "no", risk_scores: {} }
-        ]
-      },
-      {
-        group_id: "tight_deadlines",
-        options: [
-          { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["tight_deadlines"] },
-          { option_id: "sometimes", risk_scores: { environmental: 2 } },
-          { option_id: "rarely", risk_scores: { environmental: 1 } },
-          { option_id: "never", risk_scores: {} }
-        ]
-      }
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["noise_exposure"] },
+      { option_id: "sometimes", risk_scores: { environmental: 2 } },
+      { option_id: "no", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "glare",
+    section: "environmental",
+    display_condition_tags: ["glare_exposure", "outdoor_work", "screen_work", "office_computer"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["glare_exposure"] },
+      { option_id: "sometimes", risk_scores: { environmental: 2 }, add_tags: ["glare_exposure"] },
+      { option_id: "rarely", risk_scores: { environmental: 1 } },
+      { option_id: "never", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "fine_details",
+    section: "environmental",
+    display_condition_tags: ["fine_visual_work", "screen_work", "office_computer"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: {} },
+      { option_id: "sometimes", risk_scores: { environmental: 1 } },
+      { option_id: "rarely", risk_scores: { environmental: 2 }, add_tags: ["fine_visual_work"] },
+      { option_id: "never", risk_scores: { environmental: 3 }, add_tags: ["fine_visual_work"] },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "cold_environment_discomfort",
+    section: "environmental",
+    display_condition_tags: ["cold_environment", "outdoor_work"],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "yes", risk_scores: { environmental: 3 }, add_tags: ["cold_environment"] },
+      { option_id: "no", risk_scores: { environmental: 1 } },
+      { option_id: "does_not_apply", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "overtime",
+    section: "environmental",
+    display_condition_tags: [],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["overtime"] },
+      { option_id: "sometimes", risk_scores: { environmental: 2 }, add_tags: ["overtime"] },
+      { option_id: "rarely", risk_scores: { environmental: 1 } },
+      { option_id: "never", risk_scores: {} }
+    ]
+  },
+  {
+    question_id: "tight_deadlines",
+    section: "environmental",
+    display_condition_tags: [],
+    required: true,
+    type: "multi_choice",
+    options: [
+      { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["tight_deadlines"] },
+      { option_id: "sometimes", risk_scores: { environmental: 2 }, add_tags: ["tight_deadlines"] },
+      { option_id: "rarely", risk_scores: { environmental: 1 } },
+      { option_id: "never", risk_scores: {} }
     ]
   }
 ];
