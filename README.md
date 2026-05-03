@@ -44,7 +44,7 @@ Create `.env.local` in this repo root:
 
 ```env
 VITE_GEMINI_API_KEY=your_gemini_key_here
-VITE_GEMINI_MODEL=gemini-1.5-flash
+VITE_GEMINI_MODEL=gemini-3.1-flash-lite-preview
 
 # Planned for later. Not currently wired into the app.
 VITE_AZURE_TRANSLATOR_KEY=your_azure_translator_key_here

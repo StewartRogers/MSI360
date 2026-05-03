@@ -14,6 +14,7 @@ export const tagTaxonomy = [
   "tool_use",
   "powered_tools",
   "vibrating_tools",
+  "vehicle_equipment",
   "kneeling_floor_work",
   "sharp_edges",
   "body_as_tool",
