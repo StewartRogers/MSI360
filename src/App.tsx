@@ -72,6 +72,11 @@ export default function App() {
   const totalQuestionSteps = Math.max(5 + assessmentQuestions.length, 5);
   const progressStep = getProgressStep(step, safeAssessmentIndex, totalQuestionSteps);
   const result = scoreResult || scoreAssessment(answers);
+  const canContinueRole = isQuestionAnswered(getQuestionById("role"), answers.role);
+  const canContinueTimeInRole = isQuestionAnswered(getQuestionById("time_in_role"), answers.time_in_role);
+  const canContinueTaskDescription = isQuestionAnswered(getQuestionById("task_description"), answers.task_description);
+  const canContinueHeight = isQuestionAnswered(getQuestionById("height"), answers.height);
+  const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, answers[currentAssessmentQuestion.question_id]) : true;
 
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
     const nextAnswers = { ...answers, [questionId]: { type, value } };
@@ -193,6 +198,7 @@ export default function App() {
           tone="blue"
           onAnswer={(value) => updateAnswer("role", "multi_choice", value)}
           onBack={goBack}
+          canContinue={canContinueRole}
           onContinue={continueFromStep}
         />
       )}
@@ -206,6 +212,7 @@ export default function App() {
           tone="blue"
           onAnswer={(value) => updateAnswer("time_in_role", "multi_choice", value)}
           onBack={goBack}
+          canContinue={canContinueTimeInRole}
           onContinue={continueFromStep}
         />
       )}
@@ -221,6 +228,7 @@ export default function App() {
           totalSteps={totalQuestionSteps}
           onAnswer={(value) => updateAnswer("task_description", "text", value)}
           onBack={goBack}
+          canContinue={canContinueTaskDescription}
           onContinue={continueFromStep}
         />
       )}
@@ -234,6 +242,7 @@ export default function App() {
           tone="blue"
           onAnswer={(value) => updateAnswer("height", "multi_choice", value)}
           onBack={goBack}
+          canContinue={canContinueHeight}
           onContinue={continueFromStep}
         />
       )}
@@ -247,6 +256,7 @@ export default function App() {
           translations={t}
           onAnswer={(value) => currentAssessmentQuestion && setAssessmentAnswer(currentAssessmentQuestion, value)}
           onBack={goBack}
+          canContinue={canContinueAssessmentQuestion}
           onContinue={continueAssessment}
         />
       )}
@@ -354,6 +364,7 @@ function ChoiceScreen(props: {
   tone: HeaderTone;
   onAnswer: (value: string) => void;
   onBack: () => void;
+  canContinue: boolean;
   onContinue: () => void;
 }) {
   const question = questions.find((item) => item.question_id === props.questionId);
@@ -380,7 +391,7 @@ function ChoiceScreen(props: {
             ))}
           </div>
         </div>
-        <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -411,6 +422,7 @@ function TextScreen(props: {
   totalSteps: number;
   onAnswer: (value: string) => void;
   onBack: () => void;
+  canContinue: boolean;
   onContinue: () => void;
 }) {
   const text = translations.en.questions[props.questionId];
@@ -423,7 +435,7 @@ function TextScreen(props: {
           <input className="single-input" value={props.value} onChange={(event) => props.onAnswer(event.target.value)} aria-label={text.label} />
           {props.status && <p className="small-status">{props.status}</p>}
         </div>
-        <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -437,6 +449,7 @@ function AssessmentQuestionScreen(props: {
   translations: typeof translations.en;
   onAnswer: (value: AnswerValue) => void;
   onBack: () => void;
+  canContinue: boolean;
   onContinue: () => void;
 }) {
   if (!props.question) {
@@ -447,7 +460,7 @@ function AssessmentQuestionScreen(props: {
           <div className="content-block">
             <h2>No additional questions are needed.</h2>
           </div>
-          <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+          <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
         </section>
       </>
     );
@@ -458,7 +471,7 @@ function AssessmentQuestionScreen(props: {
       <AppHeader tone="white" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
       <section className={`page page-with-actions question-page question-${props.question.question_id}`}>
         <QuestionContent question={props.question} answer={props.answer} translations={props.translations} onAnswer={props.onAnswer} />
-        <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -658,7 +671,7 @@ function ScoreScreen({ result, progressStep, totalSteps, onBack, onContinue }: {
           <button className="primary-button" onClick={onContinue}>
             Download Report
           </button>
-          <button className="text-back-button" onClick={onBack}>
+          <button className="secondary-button" onClick={onBack}>
             Back
           </button>
         </div>
@@ -859,10 +872,22 @@ function WrapHeader({ active }: { active: WrapTab }) {
   );
 }
 
-function ActionButtons({ onBack, onContinue, continueLabel = "Continue", backLabel = "Back" }: { onBack?: () => void; onContinue: () => void; continueLabel?: string; backLabel?: string }) {
+function ActionButtons({
+  onBack,
+  onContinue,
+  canContinue = true,
+  continueLabel = "Continue",
+  backLabel = "Back"
+}: {
+  onBack?: () => void;
+  onContinue: () => void;
+  canContinue?: boolean;
+  continueLabel?: string;
+  backLabel?: string;
+}) {
   return (
     <div className="actions">
-      <button className="primary-button" onClick={onContinue}>
+      <button className="primary-button" disabled={!canContinue} onClick={onContinue}>
         {continueLabel}
       </button>
       {onBack && (
@@ -967,4 +992,41 @@ function getTaskSummary(answers: Answers) {
   const value = answers.task_description?.value;
   if (typeof value === "string" && value.trim()) return value.trim();
   return "Work task";
+}
+
+function getQuestionById(questionId: string) {
+  return questions.find((question) => question.question_id === questionId);
+}
+
+function isQuestionAnswered(question: Question | undefined, answer: Answer | undefined) {
+  if (!question?.required) return true;
+  if (!answer) return false;
+
+  if (question.type === "text") {
+    return typeof answer.value === "string" && answer.value.trim().length > 0;
+  }
+
+  if (question.type === "multi_choice") {
+    return typeof answer.value === "string" && answer.value.length > 0;
+  }
+
+  if (question.type === "select_all") {
+    return Array.isArray(answer.value) && answer.value.length > 0;
+  }
+
+  if (question.type === "grouped_multi_choice") {
+    if (!question.groups?.length || !isRecord(answer.value)) return false;
+    const value = answer.value;
+    return question.groups.every((group) => {
+      const groupValue = value[group.group_id];
+      return typeof groupValue === "string" && groupValue.length > 0;
+    });
+  }
+
+  if (question.type === "grouped_select_all") {
+    if (!isRecord(answer.value)) return false;
+    return Object.values(answer.value).some((value) => Array.isArray(value) && value.length > 0);
+  }
+
+  return false;
 }
