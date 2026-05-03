@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { languages, questions, sectionOrder } from "./data/catalog";
 import { translations } from "./data/translations";
 import { interpretTextAnswer } from "./logic/ai";
@@ -22,14 +22,19 @@ export default function App() {
   const [status, setStatus] = useState("");
 
   const t = translations[language] || translations.en;
-  const selectedLanguage = languages.find((item) => item.code === language) || languages[0];
+  const selectedLanguage = languages.find((item) => item.code === language) || null;
   const visibleQuestions = useMemo(() => {
     const visible = getVisibleQuestions(activeTags);
     return visible.sort((a, b) => sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section));
   }, [activeTags]);
 
-  function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
-    const nextAnswers = { ...answers, [questionId]: { type, value } };
+  function updateAnswer(questionId: string, type: QuestionType, value?: AnswerValue) {
+    const nextAnswers = { ...answers };
+    if (isEmptyAnswerValue(value)) {
+      delete nextAnswers[questionId];
+    } else {
+      nextAnswers[questionId] = { type, value };
+    }
     const nextTags = recomputeTags(nextAnswers, aiOutputs);
     setAnswers(nextAnswers);
     setActiveTags(nextTags);
@@ -62,7 +67,7 @@ export default function App() {
     }
   }
 
-  function setAssessmentAnswer(question: Question, value: AnswerValue) {
+  function setAssessmentAnswer(question: Question, value?: AnswerValue) {
     updateAnswer(question.question_id, question.type, value);
   }
 
@@ -88,7 +93,10 @@ export default function App() {
               selectedLanguage={selectedLanguage}
               search={languageSearch}
               onSearch={setLanguageSearch}
-              onSelect={(nextLanguage) => nextLanguage.ready && setLanguage(nextLanguage.code)}
+              onSelect={(nextLanguage) => {
+                if (!nextLanguage.ready) return;
+                setLanguage((currentLanguage) => (currentLanguage === nextLanguage.code ? "" : nextLanguage.code));
+              }}
               onContinue={continueFromStep}
             />
           )}
@@ -181,34 +189,103 @@ function Progress({ step, total }: { step: number; total: number }) {
 
 function LanguageScreen(props: {
   languages: Language[];
-  selectedLanguage: Language;
+  selectedLanguage: Language | null;
   search: string;
   onSearch: (value: string) => void;
   onSelect: (language: Language) => void;
   onContinue: () => void;
 }) {
-  const filtered = props.languages.filter((language) => language.name.toLowerCase().includes(props.search.toLowerCase()));
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const [activePage, setActivePage] = useState(0);
+  const pageSize = 6;
+  const filtered = useMemo(
+    () => props.languages.filter((language) => language.name.toLowerCase().includes(props.search.toLowerCase())),
+    [props.languages, props.search]
+  );
+  const pages = useMemo(
+    () => Array.from({ length: Math.ceil(filtered.length / pageSize) }, (_, index) => filtered.slice(index * pageSize, index * pageSize + pageSize)),
+    [filtered]
+  );
+  const safeActivePage = Math.min(activePage, Math.max(pages.length - 1, 0));
+  const firstVisible = filtered.length ? safeActivePage * pageSize + 1 : 0;
+  const lastVisible = Math.min((safeActivePage + 1) * pageSize, filtered.length);
+
+  useEffect(() => {
+    setActivePage(0);
+    carouselRef.current?.scrollTo({ left: 0, behavior: "smooth" });
+  }, [props.search]);
+
+  function scrollToPage(pageIndex: number) {
+    const viewport = carouselRef.current;
+    if (!viewport) return;
+    const nextPage = Math.max(0, Math.min(pageIndex, pages.length - 1));
+    viewport.scrollTo({ left: viewport.clientWidth * nextPage, behavior: "smooth" });
+    setActivePage(nextPage);
+  }
 
   return (
-    <section className="screen-content">
+    <section className="screen-content language-screen">
       <h2>Choose Your Language</h2>
       <p className="subcopy">Questions can be shown in your preferred language. The report is generated in English.</p>
       <div className="search-row">
         <input value={props.search} onChange={(event) => props.onSearch(event.target.value)} placeholder="Search languages..." />
-        <button>Search</button>
+        <button type="button">Search</button>
       </div>
-      <div className="language-grid">
-        {filtered.map((language) => (
-          <button
-            key={language.code}
-            className={`language-card ${props.selectedLanguage.code === language.code ? "selected" : ""}`}
-            disabled={!language.ready}
-            onClick={() => props.onSelect(language)}
-          >
-            <span className="flag">{language.flag}</span>
-            <span>{language.name}</span>
-          </button>
-        ))}
+      <div className="language-carousel-shell">
+        <div className="language-carousel-meta">
+          <span>{filtered.length ? `Showing ${firstVisible}-${lastVisible} of ${filtered.length}` : "No languages found"}</span>
+          {pages.length > 1 && (
+            <div className="language-carousel-actions" aria-label="Language carousel controls">
+              <button type="button" onClick={() => scrollToPage(safeActivePage - 1)} disabled={safeActivePage === 0} aria-label="Previous languages">
+                &lt;
+              </button>
+              <button type="button" onClick={() => scrollToPage(safeActivePage + 1)} disabled={safeActivePage === pages.length - 1} aria-label="Next languages">
+                &gt;
+              </button>
+            </div>
+          )}
+        </div>
+        <div
+          className="language-carousel"
+          ref={carouselRef}
+          aria-label="Language options"
+          onScroll={(event) => {
+            const viewport = event.currentTarget;
+            if (viewport.clientWidth) setActivePage(Math.round(viewport.scrollLeft / viewport.clientWidth));
+          }}
+        >
+          {pages.map((page, pageIndex) => (
+            <div className="language-page" key={pageIndex} aria-label={`Language page ${pageIndex + 1} of ${pages.length}`}>
+              {page.map((language) => (
+                <button
+                  type="button"
+                  key={language.code}
+                  className={`language-card ${props.selectedLanguage?.code === language.code ? "selected" : ""}`}
+                  disabled={!language.ready}
+                  aria-pressed={props.selectedLanguage?.code === language.code}
+                  onClick={() => props.onSelect(language)}
+                >
+                  <span className="flag">{language.flag}</span>
+                  <span className="language-name">{language.name}</span>
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+        {pages.length > 1 && (
+          <div className="language-dots" aria-label="Language pages">
+            {pages.map((_, pageIndex) => (
+              <button
+                type="button"
+                key={pageIndex}
+                className={safeActivePage === pageIndex ? "active" : ""}
+                onClick={() => scrollToPage(pageIndex)}
+                aria-label={`Show language page ${pageIndex + 1}`}
+                aria-current={safeActivePage === pageIndex ? "true" : undefined}
+              />
+            ))}
+          </div>
+        )}
       </div>
       <button className="primary-button fixed-continue" onClick={props.onContinue}>
         Continue
@@ -225,7 +302,7 @@ function ChoiceScreen({
 }: {
   questionId: string;
   answer?: Answer;
-  onAnswer: (value: string) => void;
+  onAnswer: (value?: string) => void;
   onContinue: () => void;
 }) {
   const question = questions.find((item) => item.question_id === questionId);
@@ -240,7 +317,13 @@ function ChoiceScreen({
       <div className="radio-list">
         {question.options.map((option) => (
           <label key={option.option_id} className="radio-row">
-            <input type="radio" name={questionId} checked={selected === option.option_id} onChange={() => onAnswer(option.option_id)} />
+            <input
+              type="radio"
+              name={questionId}
+              checked={selected === option.option_id}
+              onClick={() => onAnswer(selected === option.option_id ? undefined : option.option_id)}
+              onChange={() => undefined}
+            />
             <span>{text.options?.[option.option_id]}</span>
           </label>
         ))}
@@ -270,7 +353,7 @@ function AssessmentScreen(props: {
   questions: Question[];
   answers: Answers;
   activeTags: string[];
-  onAnswer: (question: Question, value: AnswerValue) => void;
+  onAnswer: (question: Question, value?: AnswerValue) => void;
   onContinue: () => void;
 }) {
   return (
@@ -288,7 +371,7 @@ function AssessmentScreen(props: {
   );
 }
 
-function QuestionRenderer({ question, answer, onAnswer }: { question: Question; answer?: Answer; onAnswer: (value: AnswerValue) => void }) {
+function QuestionRenderer({ question, answer, onAnswer }: { question: Question; answer?: Answer; onAnswer: (value?: AnswerValue) => void }) {
   const text = translations.en.questions[question.question_id];
   if (!text) return null;
 
@@ -299,7 +382,13 @@ function QuestionRenderer({ question, answer, onAnswer }: { question: Question; 
         <h3>{text.label}</h3>
         {question.options.map((option) => (
           <label key={option.option_id} className="radio-row compact">
-            <input type="radio" checked={selected === option.option_id} onChange={() => onAnswer(option.option_id)} />
+            <input
+              type="radio"
+              name={question.question_id}
+              checked={selected === option.option_id}
+              onClick={() => onAnswer(selected === option.option_id ? undefined : option.option_id)}
+              onChange={() => undefined}
+            />
             <span>{text.options?.[option.option_id]}</span>
           </label>
         ))}
@@ -309,6 +398,16 @@ function QuestionRenderer({ question, answer, onAnswer }: { question: Question; 
 
   if (question.type === "grouped_multi_choice" && question.groups && text.groups) {
     const value = isRecord(answer?.value) ? answer.value : {};
+    const toggleGroupOption = (groupId: string, optionId: string) => {
+      const nextValue = { ...value };
+      if (nextValue[groupId] === optionId) {
+        delete nextValue[groupId];
+      } else {
+        nextValue[groupId] = optionId;
+      }
+      return Object.keys(nextValue).length ? nextValue : undefined;
+    };
+
     return (
       <section className="placeholder-card">
         <h3>{text.label}</h3>
@@ -321,7 +420,8 @@ function QuestionRenderer({ question, answer, onAnswer }: { question: Question; 
                   type="radio"
                   name={`${question.question_id}-${group.group_id}`}
                   checked={value[group.group_id] === option.option_id}
-                  onChange={() => onAnswer({ ...value, [group.group_id]: option.option_id })}
+                  onClick={() => onAnswer(toggleGroupOption(group.group_id, option.option_id))}
+                  onChange={() => undefined}
                 />
                 <span>{text.groups?.[group.group_id]?.options[option.option_id]}</span>
               </label>
@@ -402,4 +502,11 @@ function formatScore(score: number | null) {
 
 function isRecord(value: unknown): value is Record<string, string | string[]> {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function isEmptyAnswerValue(value?: AnswerValue): value is undefined {
+  if (value === undefined) return true;
+  if (typeof value === "string") return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
+  return Object.keys(value).length === 0;
 }
