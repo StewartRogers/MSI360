@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { languages, questions, sectionOrder } from "./data/catalog";
 import { translations } from "./data/translations";
 import { interpretTextAnswer } from "./logic/ai";
@@ -51,7 +51,6 @@ export default function App() {
   const [step, setStep] = useState<StepId>("intro");
   const [assessmentIndex, setAssessmentIndex] = useState(0);
   const [language, setLanguage] = useState("en");
-  const [languageSearch, setLanguageSearch] = useState("");
   const [answers, setAnswers] = useState<Answers>({});
   const [aiOutputs, setAiOutputs] = useState<AiOutputs>({});
   const [activeTags, setActiveTags] = useState<string[]>(["start"]);
@@ -78,7 +77,7 @@ export default function App() {
   const canContinueHeight = isQuestionAnswered(getQuestionById("height"), answers.height);
   const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, answers[currentAssessmentQuestion.question_id]) : true;
 
-  function updateAnswer(questionId: string, type: QuestionType, value?: AnswerValue) {
+  function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
     const nextAnswers = { ...answers };
     if (isEmptyAnswerValue(value)) {
       delete nextAnswers[questionId];
@@ -184,11 +183,9 @@ export default function App() {
         <LanguageScreen
           languages={languages}
           selectedLanguage={selectedLanguage}
-          search={languageSearch}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
-          onSearch={setLanguageSearch}
-          onSelect={(nextLanguage) => nextLanguage.ready && setLanguage(nextLanguage.code)}
+          onSelect={(nextLanguage) => setLanguage(nextLanguage?.code || "")}
           onBack={goBack}
           onContinue={continueFromStep}
         />
@@ -320,40 +317,22 @@ function IntroScreen({ onContinue }: { onContinue: () => void }) {
 function LanguageScreen(props: {
   languages: Language[];
   selectedLanguage: Language | null;
-  search: string;
   progressStep: number;
   totalSteps: number;
-  onSearch: (value: string) => void;
-  onSelect: (language: Language) => void;
+  onSelect: (language: Language | null) => void;
   onBack: () => void;
   onContinue: () => void;
 }) {
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [activePage, setActivePage] = useState(0);
-  const pageSize = 6;
-  const filtered = useMemo(
-    () => props.languages.filter((language) => language.name.toLowerCase().includes(props.search.toLowerCase())),
-    [props.languages, props.search]
-  );
-  const pages = useMemo(
-    () => Array.from({ length: Math.ceil(filtered.length / pageSize) }, (_, index) => filtered.slice(index * pageSize, index * pageSize + pageSize)),
-    [filtered]
-  );
-  const safeActivePage = Math.min(activePage, Math.max(pages.length - 1, 0));
-  const firstVisible = filtered.length ? safeActivePage * pageSize + 1 : 0;
-  const lastVisible = Math.min((safeActivePage + 1) * pageSize, filtered.length);
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedCode = props.selectedLanguage?.code || "";
 
-  useEffect(() => {
-    setActivePage(0);
-    carouselRef.current?.scrollTo({ left: 0, behavior: "smooth" });
-  }, [props.search]);
-
-  function scrollToPage(pageIndex: number) {
-    const viewport = carouselRef.current;
-    if (!viewport) return;
-    const nextPage = Math.max(0, Math.min(pageIndex, pages.length - 1));
-    viewport.scrollTo({ left: viewport.clientWidth * nextPage, behavior: "smooth" });
-    setActivePage(nextPage);
+  function handleLanguageSelect(nextLanguage: Language) {
+    if (selectedCode === nextLanguage.code) {
+      props.onSelect(null);
+      return;
+    }
+    props.onSelect(nextLanguage);
+    setIsOpen(false);
   }
 
   return (
@@ -363,25 +342,42 @@ function LanguageScreen(props: {
         <div className="content-block">
           <h2>Choose Your Language</h2>
           <p className="body-copy">Questions can be shown in your preferred language. The report is generated in English.</p>
-          <div className="search-row">
-            <input value={props.search} onChange={(event) => props.onSearch(event.target.value)} placeholder="Search languages..." />
-            <button type="button">Search</button>
-          </div>
-          <div className="language-grid">
-            {filtered.map((language) => (
-              <button
-                key={language.code}
-                className={`language-card ${props.selectedLanguage.code === language.code ? "selected" : ""}`}
-                disabled={!language.ready}
-                onClick={() => props.onSelect(language)}
-              >
-                <span className="flag">{language.flag}</span>
-                <span>{language.name}</span>
-              </button>
-            ))}
+          <div className="language-select-block">
+            <label className="field-label" htmlFor="language-select">
+              Language
+            </label>
+            <button
+              id="language-select"
+              type="button"
+              className={`language-select-button ${isOpen ? "open" : ""} ${props.selectedLanguage ? "" : "placeholder"}`}
+              aria-haspopup="listbox"
+              aria-expanded={isOpen}
+              onClick={() => setIsOpen((open) => !open)}
+            >
+              <span>{props.selectedLanguage ? `${props.selectedLanguage.flag} ${props.selectedLanguage.name}` : "Select a language"}</span>
+            </button>
+            {isOpen && (
+              <div className="language-menu" role="listbox" aria-labelledby="language-select">
+                {props.languages.map((language) => {
+                  const isSelected = selectedCode === language.code;
+                  return (
+                    <button
+                      key={language.code}
+                      type="button"
+                      className={`language-option ${isSelected ? "selected" : ""}`}
+                      role="option"
+                      aria-selected={isSelected}
+                      onClick={() => handleLanguageSelect(language)}
+                    >
+                      <span>{language.flag} {language.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
-        <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+        <ActionButtons onBack={props.onBack} canContinue={Boolean(props.selectedLanguage)} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -417,7 +413,7 @@ function ChoiceScreen(props: {
                 name={props.questionId}
                 checked={selected === option.option_id}
                 label={text.options?.[option.option_id] || option.option_id}
-                onChange={() => props.onAnswer(option.option_id)}
+                onChange={() => props.onAnswer(toggleSingleOption(selected, option.option_id))}
               />
             ))}
           </div>
@@ -574,7 +570,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
               checked={selected === option.option_id}
               label={text.options?.[option.option_id] || option.option_id}
               image={images[option.option_id]}
-              onChange={() => onAnswer(option.option_id)}
+              onChange={() => onAnswer(toggleSingleOption(selected, option.option_id))}
             />
           ))}
         </div>
@@ -589,7 +585,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
             name={question.question_id}
             checked={selected === option.option_id}
             label={text.options?.[option.option_id] || option.option_id}
-            onChange={() => onAnswer(option.option_id)}
+            onChange={() => onAnswer(toggleSingleOption(selected, option.option_id))}
           />
         ))}
       </div>
@@ -622,23 +618,27 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
 
     return (
       <div className="group-card-list">
-        {question.groups.map((group) => (
-          <section key={group.group_id} className="question-card">
-            <h3>{text.groups?.[group.group_id]?.label || group.group_id}</h3>
-            {images[group.group_id] && <img className="card-image" src={images[group.group_id]} alt="" />}
-            <div className="answer-list compact">
-              {group.options.map((option) => (
-                <RadioRow
-                  key={option.option_id}
-                  name={`${question.question_id}-${group.group_id}`}
-                  checked={value[group.group_id] === option.option_id}
-                  label={text.groups?.[group.group_id]?.options[option.option_id] || option.option_id}
-                  onChange={() => onAnswer({ ...value, [group.group_id]: option.option_id })}
-                />
-              ))}
-            </div>
-          </section>
-        ))}
+        {question.groups.map((group) => {
+          const groupAnswer = value[group.group_id];
+          const selected = typeof groupAnswer === "string" ? groupAnswer : "";
+          return (
+            <section key={group.group_id} className="question-card">
+              <h3>{text.groups?.[group.group_id]?.label || group.group_id}</h3>
+              {images[group.group_id] && <img className="card-image" src={images[group.group_id]} alt="" />}
+              <div className="answer-list compact">
+                {group.options.map((option) => (
+                  <RadioRow
+                    key={option.option_id}
+                    name={`${question.question_id}-${group.group_id}`}
+                    checked={selected === option.option_id}
+                    label={text.groups?.[group.group_id]?.options[option.option_id] || option.option_id}
+                    onChange={() => onAnswer(setGroupAnswerValue(value, group.group_id, toggleSingleOption(selected, option.option_id)))}
+                  />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
     );
   }
@@ -659,7 +659,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
                     key={option.option_id}
                     checked={groupValue.includes(option.option_id)}
                     label={text.groups?.[group.group_id]?.options[option.option_id] || option.option_id}
-                    onChange={() => onAnswer({ ...value, [group.group_id]: toggleOption(groupValue, option.option_id, Boolean(option.exclusive)) })}
+                    onChange={() => onAnswer(setGroupAnswerValue(value, group.group_id, toggleOption(groupValue, option.option_id, Boolean(option.exclusive))))}
                   />
                 ))}
               </div>
@@ -817,7 +817,7 @@ function SubmitScreen({ value, onChange, onBack, onSubmit }: { value: string; on
           <h2>Would you like to complete another ErgoCheck assessment?</h2>
           <div className="answer-list">
             {options.map(([id, label]) => (
-              <RadioRow key={id} name="next-assessment" checked={value === id} label={label} onChange={() => onChange(id)} />
+              <RadioRow key={id} name="next-assessment" checked={value === id} label={label} onChange={() => onChange(toggleSingleOption(value, id))} />
             ))}
           </div>
           <p className="question-copy submit-copy">Thank you, please press the button below to finish the survey.</p>
@@ -932,10 +932,10 @@ function ActionButtons({
 
 function RadioRow({ name, checked, label, onChange }: { name: string; checked: boolean; label: string; onChange: () => void }) {
   return (
-    <label className={`answer-row ${checked ? "selected" : ""}`}>
-      <input type="radio" name={name} checked={checked} onChange={onChange} />
+    <button className={`answer-row ${checked ? "selected" : ""}`} type="button" role="radio" aria-checked={checked} data-name={name} onClick={onChange}>
+      <span className={`answer-control radio ${checked ? "checked" : ""}`} aria-hidden="true" />
       <span>{label}</span>
-    </label>
+    </button>
   );
 }
 
@@ -950,12 +950,16 @@ function CheckboxRow({ checked, disabled = false, label, onChange }: { checked: 
 
 function ImageRadioCard({ name, checked, label, image, onChange }: { name: string; checked: boolean; label: string; image?: string; onChange: () => void }) {
   return (
-    <label className={`image-radio-card ${checked ? "selected" : ""}`}>
-      <input type="radio" name={name} checked={checked} onChange={onChange} />
+    <button className={`image-radio-card ${checked ? "selected" : ""}`} type="button" role="radio" aria-checked={checked} data-name={name} onClick={onChange}>
+      <span className={`answer-control radio ${checked ? "checked" : ""}`} aria-hidden="true" />
       <span>{label}</span>
       {image && <img src={image} alt="" />}
-    </label>
+    </button>
   );
+}
+
+function toggleSingleOption(selected: string, optionId: string) {
+  return selected === optionId ? "" : optionId;
 }
 
 function toggleOption(selected: string[], optionId: string, exclusive: boolean) {
@@ -963,6 +967,17 @@ function toggleOption(selected: string[], optionId: string, exclusive: boolean) 
   const withoutExclusive = selected.filter((value) => value !== "none");
   if (withoutExclusive.includes(optionId)) return withoutExclusive.filter((value) => value !== optionId);
   return [...withoutExclusive, optionId];
+}
+
+function setGroupAnswerValue(value: Record<string, string | string[]>, groupId: string, nextValue: string | string[]) {
+  const nextValueIsEmpty = Array.isArray(nextValue) ? nextValue.length === 0 : nextValue.trim().length === 0;
+  const next = { ...value };
+  if (nextValueIsEmpty) {
+    delete next[groupId];
+  } else {
+    next[groupId] = nextValue;
+  }
+  return next;
 }
 
 function getProgressStep(step: StepId, assessmentIndex: number, total: number) {
@@ -984,6 +999,16 @@ function splitParagraphs(value: string) {
 
 function isRecord(value: unknown): value is Record<string, string | string[]> {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
+}
+
+function isEmptyAnswerValue(value: AnswerValue | undefined) {
+  if (value === undefined) return true;
+  if (typeof value === "string") return value.trim().length === 0;
+  if (Array.isArray(value)) return value.length === 0;
+  if (isRecord(value)) {
+    return Object.values(value).every((entry) => (Array.isArray(entry) ? entry.length === 0 : entry.trim().length === 0));
+  }
+  return false;
 }
 
 function formatScore(score: number | null) {
