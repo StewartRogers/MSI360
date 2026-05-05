@@ -25,22 +25,34 @@ type StepId =
 type HeaderTone = "blue" | "white";
 type WrapTab = "email" | "review" | "submit";
 
-const onboardingQuestionIds = new Set(["role", "time_in_role", "task_description", "height"]);
-const promptUsesSectionTitle = new Set(["body_makeshift_tool", "handheld_tool_contact", "upper_body_posture", "head_position", "environmental_conditions"]);
+const questionIds = {
+  role: "question-1",
+  timeInRole: "question-2",
+  taskDescription: "question-3",
+  height: "question-4",
+  bodyDiscomfortAreas: "question-10",
+  handheldToolContact: "question-13",
+  bodyMakeshiftTool: "question-14",
+  upperBodyPosture: "question-20",
+  headPosition: "question-25"
+} as const;
+
+const onboardingQuestionIds = new Set<string>([questionIds.role, questionIds.timeInRole, questionIds.taskDescription, questionIds.height]);
+const promptUsesSectionTitle = new Set<string>([questionIds.bodyMakeshiftTool, questionIds.handheldToolContact, questionIds.upperBodyPosture, questionIds.headPosition]);
 
 const standaloneImages: Record<string, string> = {
-  body_makeshift_tool: "/figma-assets/body-makeshift-tool.png"
+  [questionIds.bodyMakeshiftTool]: "/figma-assets/body-makeshift-tool.png"
 };
 
 const groupImages: Record<string, Record<string, string>> = {
-  upper_body_posture: {
+  [questionIds.upperBodyPosture]: {
     forward_backward: "/figma-assets/lean-forward.png",
     sideways: "/figma-assets/lean-sideways.png"
   }
 };
 
 const optionImages: Record<string, Record<string, string>> = {
-  head_position: {
+  [questionIds.headPosition]: {
     neutral: "/figma-assets/head-neutral.png",
     slight_tilt: "/figma-assets/head-slight-tilt.png",
     deep_tilt: "/figma-assets/head-deep-tilt.png"
@@ -71,10 +83,11 @@ export default function App() {
   const totalQuestionSteps = Math.max(5 + assessmentQuestions.length, 5);
   const progressStep = getProgressStep(step, safeAssessmentIndex, totalQuestionSteps);
   const result = scoreResult || scoreAssessment(answers);
-  const canContinueRole = isQuestionAnswered(getQuestionById("role"), answers.role);
-  const canContinueTimeInRole = isQuestionAnswered(getQuestionById("time_in_role"), answers.time_in_role);
-  const canContinueTaskDescription = isQuestionAnswered(getQuestionById("task_description"), answers.task_description);
-  const canContinueHeight = isQuestionAnswered(getQuestionById("height"), answers.height);
+  const taskDescriptionValue = answers[questionIds.taskDescription]?.value;
+  const canContinueRole = isQuestionAnswered(getQuestionById(questionIds.role), answers[questionIds.role]);
+  const canContinueTimeInRole = isQuestionAnswered(getQuestionById(questionIds.timeInRole), answers[questionIds.timeInRole]);
+  const canContinueTaskDescription = isQuestionAnswered(getQuestionById(questionIds.taskDescription), answers[questionIds.taskDescription]);
+  const canContinueHeight = isQuestionAnswered(getQuestionById(questionIds.height), answers[questionIds.height]);
   const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, answers[currentAssessmentQuestion.question_id]) : true;
 
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
@@ -97,11 +110,11 @@ export default function App() {
     if (step === "time_in_role") return setStep("description");
     if (step === "description") return setStep("task_description");
     if (step === "task_description") {
-      const taskQuestion = questions.find((question) => question.question_id === "task_description");
-      const response = answers.task_description?.value;
+      const taskQuestion = questions.find((question) => question.question_id === questionIds.taskDescription);
+      const response = answers[questionIds.taskDescription]?.value;
       if (taskQuestion && typeof response === "string" && response.trim()) {
         const output = await interpretTextAnswer(taskQuestion, response);
-        const nextAiOutputs = { ...aiOutputs, task_description: output };
+        const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
         setAiOutputs(nextAiOutputs);
         setActiveTags(recomputeTags(answers, nextAiOutputs));
         if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
@@ -193,12 +206,12 @@ export default function App() {
 
       {step === "role" && (
         <ChoiceScreen
-          questionId="role"
-          answer={answers.role}
+          questionId={questionIds.role}
+          answer={answers[questionIds.role]}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
-          onAnswer={(value) => updateAnswer("role", "multi_choice", value)}
+          onAnswer={(value) => updateAnswer(questionIds.role, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueRole}
           onContinue={continueFromStep}
@@ -207,12 +220,12 @@ export default function App() {
 
       {step === "time_in_role" && (
         <ChoiceScreen
-          questionId="time_in_role"
-          answer={answers.time_in_role}
+          questionId={questionIds.timeInRole}
+          answer={answers[questionIds.timeInRole]}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
-          onAnswer={(value) => updateAnswer("time_in_role", "multi_choice", value)}
+          onAnswer={(value) => updateAnswer(questionIds.timeInRole, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueTimeInRole}
           onContinue={continueFromStep}
@@ -223,12 +236,12 @@ export default function App() {
 
       {step === "task_description" && (
         <TextScreen
-          questionId="task_description"
-          value={typeof answers.task_description?.value === "string" ? answers.task_description.value : ""}
+          questionId={questionIds.taskDescription}
+          value={typeof taskDescriptionValue === "string" ? taskDescriptionValue : ""}
           status={status}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
-          onAnswer={(value) => updateAnswer("task_description", "text", value)}
+          onAnswer={(value) => updateAnswer(questionIds.taskDescription, "text", value)}
           onBack={goBack}
           canContinue={canContinueTaskDescription}
           onContinue={continueFromStep}
@@ -237,12 +250,12 @@ export default function App() {
 
       {step === "height" && (
         <ChoiceScreen
-          questionId="height"
-          answer={answers.height}
+          questionId={questionIds.height}
+          answer={answers[questionIds.height]}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
-          onAnswer={(value) => updateAnswer("height", "multi_choice", value)}
+          onAnswer={(value) => updateAnswer(questionIds.height, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueHeight}
           onContinue={continueFromStep}
@@ -539,7 +552,7 @@ function QuestionPrompt({ question, text, sectionTitle }: { question: Question; 
     );
   }
 
-  if (question.question_id === "body_discomfort_areas") {
+  if (question.question_id === questionIds.bodyDiscomfortAreas) {
     return (
       <div className="prompt-block prompt-as-title">
         {paragraphs.map((paragraph) => (
@@ -1051,7 +1064,7 @@ function getFactorSummaries(result: ScoreResult) {
 }
 
 function getTaskSummary(answers: Answers) {
-  const value = answers.task_description?.value;
+  const value = answers[questionIds.taskDescription]?.value;
   if (typeof value === "string" && value.trim()) return value.trim();
   return "Work task";
 }

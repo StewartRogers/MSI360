@@ -97,6 +97,8 @@ This file owns:
 - placeholder risk score mappings
 - AI instructions for text questions
 
+Question IDs mirror the source questionnaire labels and use straight numeric IDs from `question-1` through `question-42`. Keep these IDs aligned with the source document when question order or labels change.
+
 Question text lives in language-specific files:
 
 ```text
