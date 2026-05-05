@@ -306,7 +306,7 @@ function IntroScreen({ onContinue }: { onContinue: () => void }) {
             Start
           </button>
           <a className="msi-link" href="https://www.worksafebc.com/en/health-safety/hazards-exposures/ergonomics" target="_blank" rel="noreferrer">
-            What is MSI?
+            What is a MSI?
           </a>
         </div>
       </section>
@@ -432,7 +432,7 @@ function DescriptionScreen(props: { progressStep: number; totalSteps: number; on
         <div className="content-block description-copy">
           <h2>Description</h2>
           <p>
-            The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell ErgoCheck about what you do to get your work done.
+            The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.
           </p>
         </div>
         <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
