@@ -37,7 +37,7 @@ export const en: Translation = {
     },
     task_description: {
       label: "What is the task or work activity you'd like to assess?",
-      help_text: "Be as descriptive as possible."
+      help_text: "Please provide a brief description of the specific task or activity you'd like to assess, include details such as posture, discomfort, workstation ergonomics, and/or break length where applicable."
     },
     height: {
       label: "Please indicate your height using the options below:",
