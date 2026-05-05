@@ -459,7 +459,13 @@ function TextScreen(props: {
       <section className="page page-with-actions">
         <div className="content-block">
           <h2>{text.label}</h2>
-          <input className="single-input" value={props.value} onChange={(event) => props.onAnswer(event.target.value)} aria-label={text.label} />
+          {text.help_text && <p className="question-help">{text.help_text}</p>}
+          <input
+            className="single-input"
+            value={props.value}
+            onChange={(event) => props.onAnswer(event.target.value)}
+            aria-label={text.label}
+          />
           {props.status && <p className="small-status">{props.status}</p>}
         </div>
         <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />

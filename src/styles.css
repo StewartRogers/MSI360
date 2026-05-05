@@ -683,6 +683,17 @@ button {
   padding-top: 38px;
 }
 
+.question-help {
+  margin: 10px 0 0;
+  color: #4f4a46;
+  font-size: 15px;
+  line-height: 1.45;
+}
+
+.question-help + .single-input {
+  margin-top: 18px;
+}
+
 .field-label {
   display: block;
   margin-top: 28px;
