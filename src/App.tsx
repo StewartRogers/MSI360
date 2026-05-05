@@ -29,7 +29,50 @@ const onboardingQuestionIds = new Set(["role", "time_in_role", "task_description
 const promptUsesSectionTitle = new Set(["body_makeshift_tool", "handheld_tool_contact", "upper_body_posture", "head_position", "environmental_conditions"]);
 
 const standaloneImages: Record<string, string> = {
-  body_makeshift_tool: "/figma-assets/body-makeshift-tool.png"
+  // Intro / job context
+  job_setup: "images/question-illustrations/indooroutdoor.png",
+
+  // Organizational
+  equipment_feedback: "images/question-illustrations/input2.png",
+  work_organization_feedback: "images/question-illustrations/input2.png",
+
+  // Contact stress
+  contact_sharp_edges_duration: "images/question-illustrations/lean.png",
+  kneeling_hard_surfaces: "images/question-illustrations/kneel.jpg",
+  handheld_tool_contact: "images/question-illustrations/handletool30.jpg",
+  body_makeshift_tool: "images/question-illustrations/getty.png",
+
+  // Force
+  push_pull_surface_types: "images/question-illustrations/trolley.jpg",
+  push_pull_heavy_frequency: "images/question-illustrations/dolly.png",
+  object_weight: "images/question-illustrations/avg_weight.png",
+  tool_start_force: "images/question-illustrations/thumb.png",
+  push_pull_assistance: "images/question-illustrations/assist.png",
+
+  // Awkward postures
+  upper_body_posture: "images/question-illustrations/neutralleaning.png",
+  torso_twist: "images/question-illustrations/twisting.png",
+  hand_location: "images/question-illustrations/bodyUpdated.png",
+  arms_extended_forward: "images/question-illustrations/armstretch.jpg",
+  outstretched_arm_load: "images/question-illustrations/armsoutstretched.png",
+  head_position: "images/question-illustrations/headPics.png",
+  wrist_side_angle: "images/question-illustrations/hand.png",
+  objects_close_to_body: "images/question-illustrations/objectClose.png",
+
+  // Repetition
+  repetitive_movements_duration: "images/question-illustrations/similar.jpg",
+  wrist_side_duration: "images/question-illustrations/morethan15.png",
+  forceful_exertion_duration: "images/question-illustrations/muscularforce.jpg",
+  pinch_grip_duration: "images/question-illustrations/pinch2lb.png",
+  power_grip_duration: "images/question-illustrations/powerGrip.png",
+  vibration_tools_duration: "images/question-illustrations/hand_body.png",
+  push_pull_rough_soft_heavy_duration: "images/question-illustrations/surface.png",
+
+  // Environmental
+  noise_distraction: "images/question-illustrations/hearing.jpg",
+  glare: "images/question-illustrations/sunglare.jpg",
+  fine_details: "images/question-illustrations/detail.jpg",
+  cold_environment_discomfort: "images/question-illustrations/cold.jpeg"
 };
 
 const groupImages: Record<string, Record<string, string>> = {
@@ -482,7 +525,7 @@ function AssessmentQuestionScreen(props: {
   if (!props.question) {
     return (
       <>
-        <AppHeader tone="white" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
+        <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
         <section className="page page-with-actions">
           <div className="content-block">
             <h2>No additional questions are needed.</h2>
@@ -495,7 +538,7 @@ function AssessmentQuestionScreen(props: {
 
   return (
     <>
-      <AppHeader tone="white" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
+      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
       <section className={`page page-with-actions question-page question-${props.question.question_id}`}>
         <QuestionContent question={props.question} answer={props.answer} translations={props.translations} onAnswer={props.onAnswer} />
         <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
