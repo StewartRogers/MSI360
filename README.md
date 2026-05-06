@@ -127,6 +127,8 @@ Current non-English files are placeholders that export English text. Replace eac
 3. Adding it to `src/data/translations/index.ts`.
 4. Adding the language to `languages` in `src/data/catalog.ts`.
 
+During the assessment flow, option selections are treated as draft answers until the worker clicks Continue. Routing tags and follow-up questions are recomputed only after that commit, so choosing an option does not unexpectedly move the worker to another question.
+
 ## Gemini Integration
 
 Gemini is used in:

@@ -1,11 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { questions } from "../../src/data/catalog";
+import { questions, sectionOrder } from "../../src/data/catalog";
 import { translations } from "../../src/data/translations";
 import { interpretTextAnswer } from "../../src/logic/ai";
+import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
 import { scoreAssessment } from "../../src/logic/scoring";
-import type { AiOutputs, Answers } from "../../src/types";
+import type { AiOutputs, Answer, Answers } from "../../src/types";
 
 test("manual-handling task description routes to the main force and tool follow-up questions", async () => {
   const taskQuestion = questions.find((question) => question.question_id === "question-3");
@@ -85,6 +86,92 @@ test("auto-answered questions can be hidden from assessment navigation while sti
   assert.equal(result.factors.force.score, 3);
 });
 
+test("draft assessment answers do not reroute question 22 until committed", () => {
+  const answers = getAnsweredSeatedAssessmentThroughQuestion21();
+  const tagsBeforeDraft = recomputeTags(answers, {});
+  const questionsBeforeDraft = getVisibleAssessmentQuestions(tagsBeforeDraft, answers);
+  const question22Index = questionsBeforeDraft.findIndex((question) => question.question_id === "question-22");
+  assert.ok(question22Index >= 0);
+
+  const draftAnswers = applyAnswer({}, "question-22", "grouped_multi_choice", { hands_above_shoulders: "never", hands_floor_to_knee: "some" });
+  const displayedAnswer = getDisplayedAssessmentAnswer("question-22", answers, draftAnswers);
+  const questionsAfterDraft = getVisibleAssessmentQuestions(tagsBeforeDraft, answers);
+
+  assert.equal(displayedAnswer?.value && typeof displayedAnswer.value === "object" && !Array.isArray(displayedAnswer.value) ? displayedAnswer.value.hands_floor_to_knee : "", "some");
+  assert.deepEqual(
+    questionsAfterDraft.map((question) => question.question_id),
+    questionsBeforeDraft.map((question) => question.question_id)
+  );
+  assert.equal(questionsAfterDraft[question22Index].question_id, "question-22");
+
+  const committedAnswers = applyAnswer(answers, "question-22", "grouped_multi_choice", displayedAnswer?.value || {});
+  const tagsAfterCommit = recomputeTags(committedAnswers, {});
+  const questionsAfterCommit = getVisibleAssessmentQuestions(tagsAfterCommit, committedAnswers);
+  const nextIndex = findNextAssessmentIndexAfterCommit(questionsBeforeDraft, questionsAfterCommit, "question-22", committedAnswers);
+
+  assert.ok(tagsAfterCommit.includes("low_work"));
+  assert.equal(nextIndex === null ? "" : questionsAfterCommit[nextIndex].question_id, "question-12");
+});
+
+test("question 22 overhead-work follow-ups appear only after commit", () => {
+  const answers = getAnsweredSeatedAssessmentThroughQuestion21();
+  const tagsBeforeDraft = recomputeTags(answers, {});
+  const questionsBeforeDraft = getVisibleAssessmentQuestions(tagsBeforeDraft, answers);
+  const draftAnswers = applyAnswer({}, "question-22", "grouped_multi_choice", { hands_above_shoulders: "some", hands_floor_to_knee: "never" });
+  const displayedAnswer = getDisplayedAssessmentAnswer("question-22", answers, draftAnswers);
+  const questionsAfterDraft = getVisibleAssessmentQuestions(tagsBeforeDraft, answers);
+
+  assert.ok(!questionsAfterDraft.some((question) => question.question_id === "question-23"));
+  assert.ok(!questionsAfterDraft.some((question) => question.question_id === "question-24"));
+
+  const committedAnswers = applyAnswer(answers, "question-22", "grouped_multi_choice", displayedAnswer?.value || {});
+  const questionsAfterCommit = getVisibleAssessmentQuestions(recomputeTags(committedAnswers, {}), committedAnswers);
+  const nextIndex = findNextAssessmentIndexAfterCommit(questionsBeforeDraft, questionsAfterCommit, "question-22", committedAnswers);
+
+  assert.equal(nextIndex === null ? "" : questionsAfterCommit[nextIndex].question_id, "question-23");
+  assert.ok(questionsAfterCommit.some((question) => question.question_id === "question-24"));
+});
+
+test("grouped assessment drafts must answer every required group before continuing", () => {
+  const question22 = questions.find((question) => question.question_id === "question-22");
+  assert.ok(question22);
+
+  const partialDraft: Answer = {
+    type: "grouped_multi_choice",
+    value: { hands_floor_to_knee: "some" }
+  };
+  const completeDraft: Answer = {
+    type: "grouped_multi_choice",
+    value: { hands_above_shoulders: "never", hands_floor_to_knee: "some" }
+  };
+
+  assert.equal(isQuestionAnswered(question22, partialDraft), false);
+  assert.equal(isQuestionAnswered(question22, completeDraft), true);
+});
+
+test("empty drafts override committed assessment answers while editing", () => {
+  const question22 = questions.find((question) => question.question_id === "question-22");
+  assert.ok(question22);
+
+  const committedAnswers = applyAnswer({}, "question-22", "grouped_multi_choice", { hands_above_shoulders: "never", hands_floor_to_knee: "some" });
+  const draftAnswers = applyDraftAnswer({}, "question-22", "grouped_multi_choice", {});
+  const displayedAnswer = getDisplayedAssessmentAnswer("question-22", committedAnswers, draftAnswers);
+
+  assert.deepEqual(displayedAnswer?.value, {});
+  assert.equal(isQuestionAnswered(question22, displayedAnswer), false);
+});
+
+test("draft assessment answers are not scored until committed", () => {
+  const answers = getAnsweredSeatedAssessmentThroughQuestion21();
+  const draftAnswers = applyAnswer({}, "question-22", "grouped_multi_choice", { hands_above_shoulders: "never", hands_floor_to_knee: "some" });
+  const committedScore = scoreAssessment(answers);
+  const scoreAfterCommit = scoreAssessment(applyAnswer(answers, "question-22", "grouped_multi_choice", draftAnswers["question-22"].value));
+
+  assert.equal(answers["question-22"], undefined);
+  assert.equal(committedScore.factors.awkward_posture.score, null);
+  assert.equal(scoreAfterCommit.factors.awkward_posture.score, 2);
+});
+
 test("every configured question has English display text for its options", () => {
   const englishQuestions = translations.en.questions;
 
@@ -106,3 +193,25 @@ test("every configured question has English display text for its options", () =>
     }
   }
 });
+
+function getAnsweredSeatedAssessmentThroughQuestion21(): Answers {
+  return {
+    "question-6": { type: "multi_choice", value: "mostly_sit" },
+    "question-8": { type: "multi_choice", value: "not_at_all" },
+    "question-9": { type: "multi_choice", value: "no" },
+    "question-20": {
+      type: "grouped_multi_choice",
+      value: { forward_backward: "never", sideways: "never" }
+    },
+    "question-21": { type: "multi_choice", value: "never" }
+  };
+}
+
+function getVisibleAssessmentQuestions(activeTags: string[], answers: Answers) {
+  const onboardingQuestionIds = new Set(["question-1", "question-2", "question-3", "question-4"]);
+  return getAssessmentQuestions(
+    getVisibleQuestions(activeTags).sort((a, b) => sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section)),
+    onboardingQuestionIds,
+    []
+  ).filter((question) => question.question_id === "question-22" || !isQuestionAnswered(question, answers[question.question_id]));
+}
