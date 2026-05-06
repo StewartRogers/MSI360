@@ -7,20 +7,20 @@ import type { AiOutputs, Answers } from "../../src/types";
 test("base routing shows always-visible questions and hides conditional follow-ups", () => {
   const visibleIds = getVisibleQuestions(["start"]).map((question) => question.question_id);
 
-  assert.ok(visibleIds.includes("role"));
-  assert.ok(visibleIds.includes("recent_discomfort"));
-  assert.ok(visibleIds.includes("upper_body_posture"));
-  assert.ok(!visibleIds.includes("body_discomfort_areas"));
-  assert.ok(!visibleIds.includes("object_weight"));
+  assert.ok(visibleIds.includes("question-1"));
+  assert.ok(visibleIds.includes("question-3"));
+  assert.ok(visibleIds.includes("question-9"));
+  assert.ok(!visibleIds.includes("question-10"));
+  assert.ok(!visibleIds.includes("question-17"));
 });
 
 test("recomputeTags combines selected option tags and allowed AI tags", () => {
   const answers: Answers = {
-    role: { type: "multi_choice", value: "supervisor" },
-    task_description: { type: "text", value: "I lift boxes and use a drill." }
+    "question-1": { type: "multi_choice", value: "supervisor" },
+    "question-3": { type: "text", value: "I lift boxes and use a drill." }
   };
   const aiOutputs: AiOutputs = {
-    task_description: {
+    "question-3": {
       normalized_answer_en: "I lift boxes and use a drill.",
       add_tags: ["manual_handling", "tool_use", "not_a_real_tag"],
       missing_details: [],
@@ -40,7 +40,7 @@ test("recomputeTags combines selected option tags and allowed AI tags", () => {
 });
 
 test("getSelectedOptions reads grouped question answers", () => {
-  const question = questions.find((item) => item.question_id === "upper_body_posture");
+  const question = questions.find((item) => item.question_id === "question-20");
   assert.ok(question);
 
   const selected = getSelectedOptions(question, {

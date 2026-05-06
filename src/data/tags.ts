@@ -4,6 +4,7 @@ export const tagTaxonomy = [
   // General & Routing
   "start",
   "reported_discomfort",
+  "organizational_context",
 
   // Environment & Work Setting
   "office_computer",

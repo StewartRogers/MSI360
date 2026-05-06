@@ -14,15 +14,15 @@ test("scoreAssessment returns unscored results when no answers are present", () 
 
 test("scoreAssessment uses max selected option score per question and averages by factor", () => {
   const answers: Answers = {
-    recent_discomfort: { type: "multi_choice", value: "yes" },
-    handheld_tool_contact: { type: "select_all", value: ["poor_grip_size", "irregular_unbalanced"] },
-    object_weight: { type: "multi_choice", value: "more_than_18_lb" },
-    upper_body_posture: {
+    "question-9": { type: "multi_choice", value: "yes" },
+    "question-13": { type: "select_all", value: ["poor_grip_size", "irregular_unbalanced"] },
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" },
+    "question-20": {
       type: "grouped_multi_choice",
       value: { forward_backward: "some", sideways: "most" }
     },
-    repetitive_movements_duration: { type: "multi_choice", value: "more_than_4_hours" },
-    noise_distraction: { type: "multi_choice", value: "frequently" }
+    "question-29": { type: "multi_choice", value: "more_than_4_hours" },
+    "question-37": { type: "multi_choice", value: "frequently" }
   };
 
   const result = scoreAssessment(answers);

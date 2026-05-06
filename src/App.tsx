@@ -68,6 +68,7 @@ export default function App() {
   const [activeTags, setActiveTags] = useState<string[]>(["start"]);
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
   const [status, setStatus] = useState("");
+  const [isInterpretingTaskDescription, setIsInterpretingTaskDescription] = useState(false);
   const [email, setEmail] = useState("");
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
 
@@ -110,14 +111,20 @@ export default function App() {
     if (step === "time_in_role") return setStep("description");
     if (step === "description") return setStep("task_description");
     if (step === "task_description") {
+      if (isInterpretingTaskDescription) return;
       const taskQuestion = questions.find((question) => question.question_id === questionIds.taskDescription);
       const response = answers[questionIds.taskDescription]?.value;
       if (taskQuestion && typeof response === "string" && response.trim()) {
-        const output = await interpretTextAnswer(taskQuestion, response);
-        const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
-        setAiOutputs(nextAiOutputs);
-        setActiveTags(recomputeTags(answers, nextAiOutputs));
-        if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
+        setIsInterpretingTaskDescription(true);
+        try {
+          const output = await interpretTextAnswer(taskQuestion, response);
+          const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
+          setAiOutputs(nextAiOutputs);
+          setActiveTags(recomputeTags(answers, nextAiOutputs));
+          if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
+        } finally {
+          setIsInterpretingTaskDescription(false);
+        }
       }
       return setStep("height");
     }
@@ -183,6 +190,7 @@ export default function App() {
     setScoreResult(null);
     setAssessmentIndex(0);
     setStatus("");
+    setIsInterpretingTaskDescription(false);
     setEmail("");
     setNextAssessmentChoice("");
     setStep("intro");
@@ -239,6 +247,7 @@ export default function App() {
           questionId={questionIds.taskDescription}
           value={typeof taskDescriptionValue === "string" ? taskDescriptionValue : ""}
           status={status}
+          isLoading={isInterpretingTaskDescription}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           onAnswer={(value) => updateAnswer(questionIds.taskDescription, "text", value)}
@@ -458,6 +467,7 @@ function TextScreen(props: {
   questionId: string;
   value: string;
   status: string;
+  isLoading: boolean;
   progressStep: number;
   totalSteps: number;
   onAnswer: (value: string) => void;
@@ -478,10 +488,24 @@ function TextScreen(props: {
             value={props.value}
             onChange={(event) => props.onAnswer(event.target.value)}
             aria-label={text.label}
+            disabled={props.isLoading}
           />
-          {props.status && <p className="small-status">{props.status}</p>}
+          {props.isLoading ? (
+            <div className="loading-status" role="status" aria-live="polite">
+              <span className="loading-spinner" aria-hidden="true" />
+              <span>Analyzing your task description...</span>
+            </div>
+          ) : (
+            props.status && <p className="small-status">{props.status}</p>
+          )}
         </div>
-        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+        <ActionButtons
+          onBack={props.onBack}
+          canContinue={props.canContinue}
+          isBusy={props.isLoading}
+          busyLabel="Analyzing"
+          onContinue={props.onContinue}
+        />
       </section>
     </>
   );
@@ -926,27 +950,41 @@ function ActionButtons({
   onBack,
   onContinue,
   canContinue = true,
+  isBusy = false,
   continueLabel = "Continue",
+  busyLabel = "Processing",
   backLabel = "Back"
 }: {
   onBack?: () => void;
   onContinue: () => void;
   canContinue?: boolean;
+  isBusy?: boolean;
   continueLabel?: string;
+  busyLabel?: string;
   backLabel?: string;
 }) {
+  const buttonState = getActionButtonState(canContinue, isBusy);
+
   return (
     <div className="actions">
-      <button className="primary-button" disabled={!canContinue} onClick={onContinue}>
-        {continueLabel}
+      <button className="primary-button" disabled={buttonState.continueDisabled} aria-busy={isBusy} onClick={onContinue}>
+        {isBusy && <span className="button-spinner" aria-hidden="true" />}
+        <span>{isBusy ? busyLabel : continueLabel}</span>
       </button>
       {onBack && (
-        <button className="secondary-button" onClick={onBack}>
+        <button className="secondary-button" disabled={buttonState.backDisabled} onClick={onBack}>
           {backLabel}
         </button>
       )}
     </div>
   );
+}
+
+export function getActionButtonState(canContinue: boolean, isBusy: boolean) {
+  return {
+    continueDisabled: !canContinue || isBusy,
+    backDisabled: isBusy
+  };
 }
 
 function RadioRow({ name, checked, label, onChange }: { name: string; checked: boolean; label: string; onChange: () => void }) {
