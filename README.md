@@ -107,6 +107,8 @@ This file owns:
 - placeholder risk score mappings
 - AI instructions for text questions
 
+Question IDs mirror the source questionnaire labels and use straight numeric IDs from `question-1` through `question-42`. Keep these IDs aligned with the source document when question order or labels change.
+
 Question text lives in language-specific files:
 
 ```text
@@ -146,6 +148,8 @@ The app sends the worker's text task description to Gemini, asks for strict JSON
 ```
 
 Only predefined tags from `tagTaxonomy` are accepted. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation.
+
+When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until the Gemini request or local fallback completes. This prevents duplicate submissions and reassures the worker that their input is still being processed.
 
 ## Scoring
 

@@ -8,46 +8,46 @@ import { scoreAssessment } from "../../src/logic/scoring";
 import type { AiOutputs, Answers } from "../../src/types";
 
 test("manual-handling task description routes to the main force and tool follow-up questions", async () => {
-  const taskQuestion = questions.find((question) => question.question_id === "task_description");
+  const taskQuestion = questions.find((question) => question.question_id === "question-3");
   assert.ok(taskQuestion);
 
   const answers: Answers = {
-    task_description: {
+    "question-3": {
       type: "text",
       value: "I repeatedly lift heavy boxes and use a drill."
     }
   };
-  const aiOutput = await interpretTextAnswer(taskQuestion, String(answers.task_description.value));
-  const aiOutputs: AiOutputs = { task_description: aiOutput };
+  const aiOutput = await interpretTextAnswer(taskQuestion, String(answers["question-3"].value));
+  const aiOutputs: AiOutputs = { "question-3": aiOutput };
   const tags = recomputeTags(answers, aiOutputs);
   const visibleQuestionIds = getVisibleQuestions(tags).map((question) => question.question_id);
 
-  assert.ok(visibleQuestionIds.includes("object_weight"));
-  assert.ok(visibleQuestionIds.includes("handheld_tool_contact"));
-  assert.ok(visibleQuestionIds.includes("repetitive_movements_duration"));
+  assert.ok(visibleQuestionIds.includes("question-13"));
+  assert.ok(visibleQuestionIds.includes("question-17"));
+  assert.ok(visibleQuestionIds.includes("question-32"));
 });
 
 test("reported discomfort answer routes to the body discomfort follow-up", () => {
   const answers: Answers = {
-    recent_discomfort: { type: "multi_choice", value: "yes" }
+    "question-9": { type: "multi_choice", value: "yes" }
   };
 
   const tags = recomputeTags(answers, {});
   const visibleQuestionIds = getVisibleQuestions(tags).map((question) => question.question_id);
 
-  assert.ok(visibleQuestionIds.includes("body_discomfort_areas"));
+  assert.ok(visibleQuestionIds.includes("question-10"));
 });
 
 test("completed high-risk sample answers produce a score summary", () => {
   const answers: Answers = {
-    recent_discomfort: { type: "multi_choice", value: "yes" },
-    object_weight: { type: "multi_choice", value: "more_than_18_lb" },
-    upper_body_posture: {
+    "question-9": { type: "multi_choice", value: "yes" },
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" },
+    "question-20": {
       type: "grouped_multi_choice",
       value: { forward_backward: "most", sideways: "some" }
     },
-    repetitive_movements_duration: { type: "multi_choice", value: "more_than_4_hours" },
-    noise_distraction: { type: "multi_choice", value: "frequently" }
+    "question-29": { type: "multi_choice", value: "more_than_4_hours" },
+    "question-37": { type: "multi_choice", value: "frequently" }
   };
 
   const result = scoreAssessment(answers);

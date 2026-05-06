@@ -26,6 +26,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled,
+input:disabled {
+  cursor: not-allowed;
+}
+
 .app-shell {
   width: min(100vw, 440px);
   min-height: 100vh;
@@ -411,11 +416,49 @@ button {
   font-size: 14px;
 }
 
+.single-input:disabled {
+  background: #f4f2f0;
+  color: #807a75;
+}
+
 .small-status {
   margin: 12px 0 0;
   color: #659db3;
   font-size: 12px;
   line-height: 1.4;
+}
+
+.loading-status {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 26px;
+  margin-top: 12px;
+  color: #4f4a46;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.loading-spinner,
+.button-spinner {
+  flex: 0 0 auto;
+  border: 2px solid rgb(101 157 179 / 25%);
+  border-top-color: #659db3;
+  border-radius: 50%;
+  animation: spinner-rotate 0.8s linear infinite;
+}
+
+.loading-spinner {
+  width: 18px;
+  height: 18px;
+}
+
+.button-spinner {
+  width: 15px;
+  height: 15px;
+  border-color: rgb(255 255 255 / 45%);
+  border-top-color: #ffffff;
 }
 
 .prompt-block h2 + .question-copy {
@@ -539,6 +582,10 @@ button {
 .primary-button,
 .secondary-button,
 .outline-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
   width: 100%;
   min-height: 47px;
   border-radius: 9px;
@@ -562,6 +609,12 @@ button {
   border: 0;
   background: #cbc6c2;
   color: #4f4a46;
+}
+
+.secondary-button:disabled {
+  color: #807a75;
+  cursor: not-allowed;
+  opacity: 0.75;
 }
 
 .outline-button {
@@ -895,5 +948,11 @@ button {
   .report-card {
     padding-right: 14vw;
     padding-left: 14vw;
+  }
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
   }
 }

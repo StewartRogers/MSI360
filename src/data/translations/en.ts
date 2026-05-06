@@ -16,7 +16,7 @@ export const en: Translation = {
     organizational: "Work organization"
   },
   questions: {
-    role: {
+    "question-1": {
       label: "What is your role in the activity you'd like to assess today?",
       options: {
         worker: "Worker",
@@ -26,7 +26,7 @@ export const en: Translation = {
         health_safety_committee: "Member of a H&S Committee"
       }
     },
-    time_in_role: {
+    "question-2": {
       label: "How long have you been in this role with your current employer?",
       options: {
         less_than_year: "Less than a year",
@@ -35,11 +35,11 @@ export const en: Translation = {
         more_than_ten: "More than 10 years"
       }
     },
-    task_description: {
+    "question-3": {
       label: "What is the task or work activity you'd like to assess?",
       help_text: "Please provide a brief description of the specific task or activity you'd like to assess, include details such as posture, discomfort, workstation ergonomics, and/or break length where applicable."
     },
-    height: {
+    "question-4": {
       label: "Please indicate your height using the options below:",
       options: {
         under_5_4: "Less than 5'4\" (< 1.62 m)",
@@ -49,7 +49,7 @@ export const en: Translation = {
         prefer_not_to_say: "Prefer not to say"
       }
     },
-    job_setup: {
+    "question-5": {
       label: "How would you summarize the type of job or task being assessed?",
       options: {
         office_clerical: "Office or clerical (desk-based) job or task",
@@ -57,7 +57,7 @@ export const en: Translation = {
         both_setups: "Both set-ups"
       }
     },
-    work_position: {
+    "question-6": {
       label: "Do you typically sit or stand during your workday?",
       options: {
         mostly_sit: "I usually sit for most of the day",
@@ -65,7 +65,7 @@ export const en: Translation = {
         sit_and_stand: "I sit and stand throughout the day"
       }
     },
-    equipment_feedback: {
+    "question-7": {
       label: "To what extent would you say your employer or supervisor seeks your feedback on tools or equipment before they're purchased?",
       options: {
         great_extent: "To a great extent",
@@ -74,7 +74,7 @@ export const en: Translation = {
         not_at_all: "Not at all"
       }
     },
-    work_organization_feedback: {
+    "question-8": {
       label: "To what extent would you say your employer or supervisor seeks your feedback on how the work you do should be organized and/or performed?",
       options: {
         great_extent: "To a great extent",
@@ -83,14 +83,14 @@ export const en: Translation = {
         not_at_all: "Not at all"
       }
     },
-    recent_discomfort: {
+    "question-9": {
       label: "In the last 7 days, have you experienced work-related pain or discomfort?",
       options: {
         yes: "Yes",
         no: "No"
       }
     },
-    body_discomfort_areas: {
+    "question-10": {
       label:
         "Using the table below, please indicate the specific body parts where you have experienced work-related pain or discomfort during or after performing the job or task being assessed.\n\nIndicate whether a) one or both sides of your body were involved, and b) the pain lasted for 2 or more days.",
       groups: {
@@ -160,7 +160,7 @@ export const en: Translation = {
         }
       }
     },
-    contact_sharp_edges_duration: {
+    "question-11": {
       label:
         "Think about a typical workday - or, if you're assessing a specific task or activity, the part of the workday when you're performing that task. How much time do you spend leaning or resting part of your body on sharp objects or edges?",
       options: {
@@ -170,7 +170,7 @@ export const en: Translation = {
         does_not_apply: "I don't lean on sharp objects or edges at work"
       }
     },
-    kneeling_hard_surfaces: {
+    "question-12": {
       label: "How much time do you spend kneeling on hard or rough surfaces without personal protection (e.g., without knee pads)?",
       options: {
         less_than_30_min: "Less than 30 minutes a day",
@@ -179,7 +179,7 @@ export const en: Translation = {
         does_not_apply: "I don't kneel on hard surfaces without protection at work"
       }
     },
-    handheld_tool_contact: {
+    "question-13": {
       label:
         "Please think about the types of tools or objects you hold for more than 30 minutes at a time. Using the list of descriptions below, select all the statements that apply to these items.\n\nThe last option cannot be selected if any other options have been ticked.",
       options: {
@@ -190,7 +190,7 @@ export const en: Translation = {
         none: "None of the above"
       }
     },
-    body_makeshift_tool: {
+    "question-14": {
       label:
         "Do you use any body part as a makeshift tool to complete your work? (For example, you might use your palm or knee to apply force to a surface.)\n\nThe illustration below is an example of using your body in this way.",
       options: {
@@ -199,7 +199,7 @@ export const en: Translation = {
         no: "No, I don't use my body as a makeshift tool in my work"
       }
     },
-    push_pull_surface_types: {
+    "question-15": {
       label:
         "Think about the types of surfaces you push, pull, or move objects across during the job, task, or work activity you are assessing today. Using the list of descriptions below, select all the statements that apply to these surfaces.",
       options: {
@@ -209,7 +209,7 @@ export const en: Translation = {
         does_not_apply: "I don't push or pull objects across any surfaces to complete my work"
       }
     },
-    push_pull_heavy_frequency: {
+    "question-16": {
       label: "How often do you push, pull, or move objects that you consider to be heavy without a mechanical aid (e.g., a wheelbarrow or dolly)?",
       options: {
         most: "Most of the time",
@@ -217,7 +217,7 @@ export const en: Translation = {
         never: "Never"
       }
     },
-    object_weight: {
+    "question-17": {
       label: "How heavy are the tools or objects you pick up, carry, or support without mechanical assistance?",
       options: {
         less_than_5_lb: "Less than 5 lb / 2 kg",
@@ -226,7 +226,7 @@ export const en: Translation = {
         does_not_apply: "I don't pick up, carry, or support any tools or objects at work"
       }
     },
-    tool_start_force: {
+    "question-18": {
       label:
         "Do any of the tools and/or equipment you use require a lot of force to start? (e.g., a lawnmower with a cord you need to yank or a pedal you need to firmly depress)",
       options: {
@@ -235,7 +235,7 @@ export const en: Translation = {
         no: "No, none of the tools or equipment I use require force to start"
       }
     },
-    push_pull_assistance: {
+    "question-19": {
       label: "When pushing and/or pulling objects that you consider heavy, to what extent do you receive assistance (e.g., from a coworker, by using a dolly or wheelbarrow)?",
       options: {
         great_extent: "To a great extent",
@@ -245,7 +245,7 @@ export const en: Translation = {
         does_not_apply: "I don't push or pull these kinds of objects during the workday"
       }
     },
-    upper_body_posture: {
+    "question-20": {
       label:
         "Think about a typical workday - or, if you're assessing a specific task or activity, the part of the workday when you're performing that task. When either sitting or standing, how often do you work with your upper body leaning forward, backward, or sideways?\n\nPlease select the options that apply to you.",
       groups: {
@@ -267,7 +267,7 @@ export const en: Translation = {
         }
       }
     },
-    torso_twist: {
+    "question-21": {
       label: "When performing your work activities, do you ever twist your upper body to either side without changing the position of your feet while sitting or standing?",
       options: {
         often: "Yes, I do this often during my job, task, or work activity",
@@ -275,7 +275,7 @@ export const en: Translation = {
         never: "No, I never twist my upper body when working"
       }
     },
-    hand_location: {
+    "question-22": {
       label:
         "Thinking about a typical workday - or, if you're assessing a specific task or activity, the part of the workday when you're performing that task. When either sitting or standing, please indicate where your hands are located in relation to your body.\n\nPlease select the options that apply to you.",
       groups: {
@@ -297,7 +297,7 @@ export const en: Translation = {
         }
       }
     },
-    arms_extended_forward: {
+    "question-23": {
       label: "Are one or both of your arms ever fully extended straight forward when you're doing the job, task, or work activity you're assessing today?",
       options: {
         frequently: "Yes, my arms are frequently fully extended straight forward when doing a job, task, or work activity",
@@ -305,7 +305,7 @@ export const en: Translation = {
         never: "No, my arms are never fully extended straight forward when doing a job, task, or work activity"
       }
     },
-    outstretched_arm_load: {
+    "question-24": {
       label: "When your arm(s) are outstretched, do you ever hold a tool or move an object?",
       options: {
         less_than_5_lb: "Yes, and it's often less than 5 lb / 2 kg",
@@ -314,7 +314,7 @@ export const en: Translation = {
         no: "No, I don't hold tools or objects when my arm(s) are outstretched"
       }
     },
-    head_position: {
+    "question-25": {
       label: "How is your head positioned when you're doing the job, task, or work activity you're assessing today?",
       options: {
         neutral: "It's often neutral (directly between shoulders; chin is level)",
@@ -322,7 +322,7 @@ export const en: Translation = {
         deep_tilt: "It's often tilted up, down, or to the side more than 15 degrees"
       }
     },
-    wrist_bend_degrees: {
+    "question-26": {
       label: "How far do you typically bend your wrist up and down? Please use the image below as a reference.",
       options: {
         "0_to_14": "Usually 0 to 14 degrees up or down",
@@ -330,7 +330,7 @@ export const en: Translation = {
         more_than_30: "Usually more than 30 degrees"
       }
     },
-    wrist_side_angle: {
+    "question-27": {
       label: "How far are you angling your wrist from side to side?",
       options: {
         "0_to_10": "Usually 0 to 10 degrees left or right",
@@ -338,7 +338,7 @@ export const en: Translation = {
         more_than_20: "Usually more than 20 degrees"
       }
     },
-    objects_close_to_body: {
+    "question-28": {
       label: "Is it possible for you to keep all objects you need to push, pull, lift, use, etc. close to your body?",
       options: {
         frequently: "Yes, frequently",
@@ -346,7 +346,7 @@ export const en: Translation = {
         never: "No, never"
       }
     },
-    repetitive_movements_duration: {
+    "question-29": {
       label:
         "Think about a typical workday - or, if you're assessing a specific task or activity, the part of the workday when you're performing that task. How much time do you spend performing similar movements over and over?",
       options: {
@@ -356,7 +356,7 @@ export const en: Translation = {
         more_than_4_hours: "More than 4 hours a day"
       }
     },
-    wrist_bend_duration: {
+    "question-30": {
       label: "How much time do you spend bending your wrist up or down more than 15 degrees? Please use the image below as a reference.",
       options: {
         less_than_1_hour: "Less than 1 hour a day",
@@ -365,7 +365,7 @@ export const en: Translation = {
         none: "No time at all"
       }
     },
-    wrist_side_duration: {
+    "question-31": {
       label: "How much time do you spend angling your wrist more than 15 degrees to the left or right? Please use the image below as a reference.",
       options: {
         less_than_1_hour: "Less than 1 hour a day",
@@ -374,7 +374,7 @@ export const en: Translation = {
         none: "No time at all"
       }
     },
-    forceful_exertion_duration: {
+    "question-32": {
       label: "How much time do you spend using forceful muscular exertions (more than 18 pounds / 8 kg with your own strength) when using a tool or handling an object?",
       options: {
         less_than_5_min: "Less than 5 minutes a day",
@@ -384,7 +384,7 @@ export const en: Translation = {
         more_than_5_5_hours: "More than 5.5 hours a day"
       }
     },
-    pinch_grip_duration: {
+    "question-33": {
       label:
         "When you grasp an object between your thumb and fingertips, it's called a pinch grip. When you're doing the job, task, or work activity you're assessing today, how much time do you spend using a pinch grip to hold an object that's heavier than 2 pounds / 1 kg?",
       options: {
@@ -393,7 +393,7 @@ export const en: Translation = {
         none: "No time at all"
       }
     },
-    power_grip_duration: {
+    "question-34": {
       label:
         "When you wrap your hand around an object to hold it, it's called a power grip. How much time do you spend using a power grip to hold an object that's heavier than 10 pounds / 4.5 kg?",
       options: {
@@ -402,7 +402,7 @@ export const en: Translation = {
         none: "No time at all"
       }
     },
-    vibration_tools_duration: {
+    "question-35": {
       label: "If you use tools or equipment that cause vibrations in part or all of your body, how much time do you spend using these tools?",
       options: {
         less_than_1_hour: "Less than 1 hour a day",
@@ -411,7 +411,7 @@ export const en: Translation = {
         does_not_apply: "I don't use these types of tools or equipment"
       }
     },
-    push_pull_rough_soft_heavy_duration: {
+    "question-36": {
       label:
         "If you push or pull any items that are heavier than 80 pounds / 36 kg, how much time do you spend moving these items over rough surfaces (like gravel, tile, or uneven ground) or soft surfaces (like sand, mud, or grass)?",
       options: {
@@ -421,7 +421,7 @@ export const en: Translation = {
         does_not_apply: "I don't move these types of items over rough or soft surfaces"
       }
     },
-    noise_distraction: {
+    "question-37": {
       label:
         "Think about a typical workday - or, if you're assessing a specific task or activity, the part of the workday when you're performing that task. Are you ever distracted by noises (sirens, loud talking, traffic, etc.)?",
       options: {
@@ -430,7 +430,7 @@ export const en: Translation = {
         no: "No"
       }
     },
-    glare: {
+    "question-38": {
       label: "Are you affected by the sun shining or reflecting into your eyes (aka glare)?",
       options: {
         frequently: "Frequently",
@@ -439,7 +439,7 @@ export const en: Translation = {
         never: "Never"
       }
     },
-    fine_details: {
+    "question-39": {
       label: "If your work requires you to look at fine details or read small print, are you able to do this easily?",
       options: {
         frequently: "Frequently",
@@ -449,7 +449,7 @@ export const en: Translation = {
         does_not_apply: "My work doesn't require me to do this"
       }
     },
-    cold_environment_discomfort: {
+    "question-40": {
       label: "If you work in cold environments, do you feel discomfort in your arms, back, legs, fingers and/or toes?",
       options: {
         yes: "Yes",
@@ -457,7 +457,7 @@ export const en: Translation = {
         does_not_apply: "I don't work in cold environments"
       }
     },
-    overtime: {
+    "question-41": {
       label: "Considering your work requirements, how often are you asked to work overtime for one hour or longer?",
       options: {
         frequently: "Frequently",
@@ -466,7 +466,7 @@ export const en: Translation = {
         never: "Never"
       }
     },
-    tight_deadlines: {
+    "question-42": {
       label: "How often are you asked to work to tight deadlines?",
       options: {
         frequently: "Frequently",

@@ -3,7 +3,7 @@ import { tagTaxonomy } from "./tags";
 
 export const questions: Question[] = [
   {
-    question_id: "role",
+    question_id: "question-1",
     section: "intro",
     display_condition_tags: [],
     required: true,
@@ -17,7 +17,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "time_in_role",
+    question_id: "question-2",
     section: "intro",
     display_condition_tags: [],
     required: true,
@@ -30,7 +30,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "task_description",
+    question_id: "question-3",
     section: "intro",
     display_condition_tags: [],
     required: true,
@@ -44,7 +44,7 @@ export const questions: Question[] = [
     }
   },
   {
-    question_id: "height",
+    question_id: "question-4",
     section: "intro",
     display_condition_tags: [],
     required: true,
@@ -57,20 +57,21 @@ export const questions: Question[] = [
       { option_id: "prefer_not_to_say", risk_scores: {} }
     ]
   },
+  // removing this question for now, as it was made redundant by the task_description question
+  // {
+  //   question_id: "question-5",
+  //   section: "intro",
+  //   display_condition_tags: [],
+  //   required: true,
+  //   type: "multi_choice",
+  //   options: [
+  //     { option_id: "office_clerical", risk_scores: {}, add_tags: ["office_computer", "desk_based", "seated_work", "screen_work"] },
+  //     { option_id: "not_desk_based", risk_scores: {}, add_tags: ["standing_work", "walking_moving", "manual_handling"] },
+  //     { option_id: "both_setups", risk_scores: {}, add_tags: ["office_computer", "standing_work", "walking_moving", "manual_handling"] }
+  //   ]
+  // },
   {
-    question_id: "job_setup",
-    section: "intro",
-    display_condition_tags: [],
-    required: true,
-    type: "multi_choice",
-    options: [
-      { option_id: "office_clerical", risk_scores: {}, add_tags: ["office_computer", "desk_based", "seated_work", "screen_work"] },
-      { option_id: "not_desk_based", risk_scores: {}, add_tags: ["standing_work", "walking_moving", "manual_handling"] },
-      { option_id: "both_setups", risk_scores: {}, add_tags: ["office_computer", "standing_work", "walking_moving", "manual_handling"] }
-    ]
-  },
-  {
-    question_id: "work_position",
+    question_id: "question-6",
     section: "intro",
     display_condition_tags: [],
     required: true,
@@ -82,9 +83,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "equipment_feedback",
+    question_id: "question-7",
     section: "organizational",
-    display_condition_tags: [],
+    display_condition_tags: ["office_computer", "manual_handling", "tool_use", "vibrating_tools", "lack_of_mechanical_aids", "no_handles", "awkward_loads"],
     required: true,
     type: "multi_choice",
     options: [
@@ -95,9 +96,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "work_organization_feedback",
+    question_id: "question-8",
     section: "organizational",
-    display_condition_tags: [],
+    display_condition_tags: ["office_computer", "manual_handling", "seated_work", "standing_work", "walking_moving", "low_task_variability", "fast_work_rate", "inadequate_recovery_time"],
     required: true,
     type: "multi_choice",
     options: [
@@ -108,7 +109,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "recent_discomfort",
+    question_id: "question-9",
     section: "symptoms",
     display_condition_tags: [],
     required: true,
@@ -119,7 +120,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "body_discomfort_areas",
+    question_id: "question-10",
     section: "symptoms",
     display_condition_tags: ["reported_discomfort"],
     required: true,
@@ -192,9 +193,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "contact_sharp_edges_duration",
+    question_id: "question-11",
     section: "contact_stress",
-    display_condition_tags: ["office_computer", "desk_based", "manual_handling", "tool_use", "sharp_edges", "standing_work"],
+    display_condition_tags: ["office_computer", "manual_handling", "tool_use", "sharp_edges", "wrist_bending", "no_handles", "awkward_loads"],
     required: true,
     type: "multi_choice",
     options: [
@@ -205,9 +206,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "kneeling_hard_surfaces",
+    question_id: "question-12",
     section: "contact_stress",
-    display_condition_tags: ["kneeling_floor_work", "low_work", "manual_handling", "standing_work"],
+    display_condition_tags: ["kneeling_squatting", "low_work", "manual_handling"],
     required: true,
     type: "multi_choice",
     options: [
@@ -218,23 +219,23 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "handheld_tool_contact",
+    question_id: "question-13",
     section: "contact_stress",
-    display_condition_tags: ["manual_handling", "tool_use", "gripping"],
+    display_condition_tags: ["manual_handling", "tool_use", "pinch_grip", "power_grip", "no_handles", "awkward_loads"],
     required: true,
     type: "select_all",
     options: [
-      { option_id: "poor_grip_size", risk_scores: { contact_stress: 3 }, add_tags: ["gripping"] },
+      { option_id: "poor_grip_size", risk_scores: { contact_stress: 3 }, add_tags: ["tool_use"] },
       { option_id: "irregular_unbalanced", risk_scores: { contact_stress: 2 } },
       { option_id: "sharp_handholds", risk_scores: { contact_stress: 3 }, add_tags: ["sharp_edges"] },
-      { option_id: "slippery", risk_scores: { contact_stress: 2 }, add_tags: ["gripping"] },
+      { option_id: "slippery", risk_scores: { contact_stress: 2 }, add_tags: ["tool_use"] },
       { option_id: "none", risk_scores: {}, exclusive: true }
     ]
   },
   {
-    question_id: "body_makeshift_tool",
+    question_id: "question-14",
     section: "contact_stress",
-    display_condition_tags: ["manual_handling", "tool_use", "standing_work", "body_as_tool"],
+    display_condition_tags: ["manual_handling", "tool_use", "body_as_tool"],
     required: true,
     type: "multi_choice",
     options: [
@@ -244,9 +245,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "push_pull_surface_types",
+    question_id: "question-15",
     section: "force",
-    display_condition_tags: ["pushing_pulling", "manual_handling", "walking_moving"],
+    display_condition_tags: ["pushing_pulling", "walking_moving", "uneven_surfaces"],
     required: true,
     type: "select_all",
     options: [
@@ -257,9 +258,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "push_pull_heavy_frequency",
+    question_id: "question-16",
     section: "force",
-    display_condition_tags: ["pushing_pulling", "manual_handling", "heavy_loads"],
+    display_condition_tags: ["pushing_pulling", "lack_of_mechanical_aids"],
     required: true,
     type: "multi_choice",
     options: [
@@ -269,34 +270,34 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "object_weight",
+    question_id: "question-17",
     section: "force",
-    display_condition_tags: ["manual_handling", "lifting_carrying", "heavy_loads", "tool_use"],
+    display_condition_tags: ["manual_handling", "lifting_lowering", "carrying", "heavy_loads", "tool_use", "awkward_loads"],
     required: true,
     type: "multi_choice",
     options: [
       { option_id: "less_than_5_lb", risk_scores: { force: 1 } },
-      { option_id: "5_to_18_lb", risk_scores: { force: 2 }, add_tags: ["lifting_carrying"] },
-      { option_id: "more_than_18_lb", risk_scores: { force: 3 }, add_tags: ["heavy_loads", "lifting_carrying"] },
+      { option_id: "5_to_18_lb", risk_scores: { force: 2 }, add_tags: ["lifting_lowering", "carrying"] },
+      { option_id: "more_than_18_lb", risk_scores: { force: 3 }, add_tags: ["heavy_loads", "lifting_lowering", "carrying"] },
       { option_id: "does_not_apply", risk_scores: {} }
     ]
   },
   {
-    question_id: "tool_start_force",
+    question_id: "question-18",
     section: "force",
-    display_condition_tags: ["tool_use", "powered_tools", "vehicle_equipment", "manual_handling"],
+    display_condition_tags: ["tool_use", "vibrating_tools"],
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "regularly", risk_scores: { force: 3 }, add_tags: ["powered_tools"] },
-      { option_id: "occasionally", risk_scores: { force: 2 }, add_tags: ["powered_tools"] },
+      { option_id: "regularly", risk_scores: { force: 3 }, add_tags: ["tool_use"] },
+      { option_id: "occasionally", risk_scores: { force: 2 }, add_tags: ["tool_use"] },
       { option_id: "no", risk_scores: {} }
     ]
   },
   {
-    question_id: "push_pull_assistance",
+    question_id: "question-19",
     section: "force",
-    display_condition_tags: ["pushing_pulling", "heavy_loads"],
+    display_condition_tags: ["pushing_pulling", "lack_of_mechanical_aids"],
     required: true,
     type: "multi_choice",
     options: [
@@ -308,9 +309,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "upper_body_posture",
+    question_id: "question-20",
     section: "awkward_postures",
-    display_condition_tags: [],
+    display_condition_tags: ["office_computer", "manual_handling", "seated_work", "standing_work", "static_postures", "reaching_forward", "twisting", "bending_trunk"],
     required: true,
     type: "grouped_multi_choice",
     groups: [
@@ -333,9 +334,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "torso_twist",
+    question_id: "question-21",
     section: "awkward_postures",
-    display_condition_tags: ["twisting", "seated_work", "standing_work", "manual_handling", "office_computer"],
+    display_condition_tags: ["twisting", "seated_work", "standing_work", "manual_handling", "office_computer", "tool_use", "bending_trunk"],
     required: true,
     type: "multi_choice",
     options: [
@@ -345,9 +346,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "hand_location",
+    question_id: "question-22",
     section: "awkward_postures",
-    display_condition_tags: ["seated_work", "standing_work", "manual_handling", "office_computer"],
+    display_condition_tags: ["seated_work", "standing_work", "manual_handling", "office_computer", "tool_use", "overhead_work", "low_work", "reaching_forward"],
     required: true,
     type: "grouped_multi_choice",
     groups: [
@@ -370,9 +371,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "arms_extended_forward",
+    question_id: "question-23",
     section: "awkward_postures",
-    display_condition_tags: ["reaching_forward", "manual_handling", "office_computer", "standing_work", "tool_use"],
+    display_condition_tags: ["reaching_forward", "manual_handling", "office_computer", "standing_work", "tool_use", "overhead_work"],
     required: true,
     type: "multi_choice",
     options: [
@@ -382,9 +383,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "outstretched_arm_load",
+    question_id: "question-24",
     section: "awkward_postures",
-    display_condition_tags: ["reaching_forward"],
+    display_condition_tags: ["reaching_forward", "overhead_work"],
     required: true,
     type: "multi_choice",
     options: [
@@ -395,9 +396,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "head_position",
+    question_id: "question-25",
     section: "awkward_postures",
-    display_condition_tags: [],
+    display_condition_tags: ["office_computer", "manual_handling", "seated_work", "standing_work", "static_postures", "fine_visual_work", "overhead_work", "low_work"],
     required: true,
     type: "multi_choice",
     options: [
@@ -407,33 +408,33 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "wrist_bend_degrees",
+    question_id: "question-26",
     section: "awkward_postures",
-    display_condition_tags: ["wrist_hand_work", "office_computer", "tool_use", "repetitive_work"],
+    display_condition_tags: ["wrist_bending", "office_computer", "tool_use", "repetitive_movements", "mouse_intensive", "pinch_grip", "power_grip"],
     required: true,
     type: "multi_choice",
     options: [
       { option_id: "0_to_14", risk_scores: { awkward_posture: 1 } },
-      { option_id: "15_to_30", risk_scores: { awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
-      { option_id: "more_than_30", risk_scores: { awkward_posture: 3 }, add_tags: ["wrist_hand_work"] }
+      { option_id: "15_to_30", risk_scores: { awkward_posture: 2 }, add_tags: ["wrist_bending"] },
+      { option_id: "more_than_30", risk_scores: { awkward_posture: 3 }, add_tags: ["wrist_bending"] }
     ]
   },
   {
-    question_id: "wrist_side_angle",
+    question_id: "question-27",
     section: "awkward_postures",
-    display_condition_tags: ["wrist_hand_work", "office_computer", "tool_use", "repetitive_work"],
+    display_condition_tags: ["wrist_bending", "office_computer", "tool_use", "repetitive_movements", "mouse_intensive", "pinch_grip", "power_grip"],
     required: true,
     type: "multi_choice",
     options: [
       { option_id: "0_to_10", risk_scores: { awkward_posture: 1 } },
-      { option_id: "10_to_20", risk_scores: { awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
-      { option_id: "more_than_20", risk_scores: { awkward_posture: 3 }, add_tags: ["wrist_hand_work"] }
+      { option_id: "10_to_20", risk_scores: { awkward_posture: 2 }, add_tags: ["wrist_bending"] },
+      { option_id: "more_than_20", risk_scores: { awkward_posture: 3 }, add_tags: ["wrist_bending"] }
     ]
   },
   {
-    question_id: "objects_close_to_body",
+    question_id: "question-28",
     section: "awkward_postures",
-    display_condition_tags: ["manual_handling", "lifting_carrying", "pushing_pulling", "reaching_forward", "tool_use"],
+    display_condition_tags: ["manual_handling", "lifting_lowering", "carrying", "pushing_pulling", "reaching_forward", "tool_use", "awkward_loads", "no_handles"],
     required: true,
     type: "multi_choice",
     options: [
@@ -443,48 +444,48 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "repetitive_movements_duration",
+    question_id: "question-29",
     section: "repetition",
-    display_condition_tags: ["repetitive_work", "office_computer", "manual_handling", "wrist_hand_work"],
+    display_condition_tags: ["repetitive_movements", "office_computer", "manual_handling", "wrist_bending", "mouse_intensive", "low_task_variability", "fast_work_rate"],
     required: true,
     type: "multi_choice",
     options: [
       { option_id: "less_than_30_min", risk_scores: { repetition: 1 } },
-      { option_id: "30_min_to_2_hours", risk_scores: { repetition: 2 }, add_tags: ["repetitive_work"] },
-      { option_id: "2_to_4_hours", risk_scores: { repetition: 3 }, add_tags: ["repetitive_work"] },
-      { option_id: "more_than_4_hours", risk_scores: { repetition: 4 }, add_tags: ["repetitive_work"] }
+      { option_id: "30_min_to_2_hours", risk_scores: { repetition: 2 }, add_tags: ["repetitive_movements"] },
+      { option_id: "2_to_4_hours", risk_scores: { repetition: 3 }, add_tags: ["repetitive_movements"] },
+      { option_id: "more_than_4_hours", risk_scores: { repetition: 4 }, add_tags: ["repetitive_movements"] }
     ]
   },
   {
-    question_id: "wrist_bend_duration",
+    question_id: "question-30",
     section: "repetition",
-    display_condition_tags: ["wrist_hand_work", "repetitive_work", "office_computer", "tool_use"],
+    display_condition_tags: ["wrist_bending", "repetitive_movements", "office_computer", "tool_use", "mouse_intensive", "pinch_grip", "power_grip"],
     required: true,
     type: "multi_choice",
     options: [
       { option_id: "less_than_1_hour", risk_scores: { repetition: 1, awkward_posture: 1 } },
-      { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
-      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_bending"] },
+      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_bending"] },
       { option_id: "none", risk_scores: {} }
     ]
   },
   {
-    question_id: "wrist_side_duration",
+    question_id: "question-31",
     section: "repetition",
-    display_condition_tags: ["wrist_hand_work", "repetitive_work", "office_computer", "tool_use"],
+    display_condition_tags: ["wrist_bending", "repetitive_movements", "office_computer", "tool_use", "mouse_intensive", "pinch_grip", "power_grip"],
     required: true,
     type: "multi_choice",
     options: [
       { option_id: "less_than_1_hour", risk_scores: { repetition: 1, awkward_posture: 1 } },
-      { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_hand_work"] },
-      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_hand_work"] },
+      { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_bending"] },
+      { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_bending"] },
       { option_id: "none", risk_scores: {} }
     ]
   },
   {
-    question_id: "forceful_exertion_duration",
+    question_id: "question-32",
     section: "repetition",
-    display_condition_tags: ["heavy_loads", "manual_handling", "tool_use", "power_grip"],
+    display_condition_tags: ["heavy_loads", "manual_handling", "tool_use", "power_grip", "lifting_lowering", "carrying"],
     required: true,
     type: "multi_choice",
     options: [
@@ -496,9 +497,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "pinch_grip_duration",
+    question_id: "question-33",
     section: "repetition",
-    display_condition_tags: ["pinch_grip", "gripping", "wrist_hand_work", "tool_use", "manual_handling"],
+    display_condition_tags: ["pinch_grip", "tool_use", "manual_handling", "no_handles", "awkward_loads"],
     required: true,
     type: "multi_choice",
     options: [
@@ -508,9 +509,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "power_grip_duration",
+    question_id: "question-34",
     section: "repetition",
-    display_condition_tags: ["power_grip", "gripping", "tool_use", "manual_handling"],
+    display_condition_tags: ["power_grip", "tool_use", "manual_handling", "carrying", "pushing_pulling"],
     required: true,
     type: "multi_choice",
     options: [
@@ -520,9 +521,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "vibration_tools_duration",
+    question_id: "question-35",
     section: "repetition",
-    display_condition_tags: ["vibrating_tools", "powered_tools", "tool_use"],
+    display_condition_tags: ["vibrating_tools", "tool_use"],
     required: true,
     type: "multi_choice",
     options: [
@@ -533,9 +534,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "push_pull_rough_soft_heavy_duration",
+    question_id: "question-36",
     section: "repetition",
-    display_condition_tags: ["pushing_pulling", "heavy_loads"],
+    display_condition_tags: ["pushing_pulling", "uneven_surfaces"],
     required: true,
     type: "multi_choice",
     options: [
@@ -546,9 +547,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "noise_distraction",
+    question_id: "question-37",
     section: "environmental",
-    display_condition_tags: [],
+    display_condition_tags: ["noise_exposure", "outdoor_work", "office_computer", "standing_work", "walking_moving", "tool_use"],
     required: true,
     type: "multi_choice",
     options: [
@@ -558,9 +559,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "glare",
+    question_id: "question-38",
     section: "environmental",
-    display_condition_tags: ["glare_exposure", "outdoor_work", "screen_work", "office_computer"],
+    display_condition_tags: ["glare_exposure", "outdoor_work", "poor_lighting", "office_computer", "laptop_tablet_use", "dual_monitors", "fine_visual_work"],
     required: true,
     type: "multi_choice",
     options: [
@@ -571,9 +572,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "fine_details",
+    question_id: "question-39",
     section: "environmental",
-    display_condition_tags: ["fine_visual_work", "screen_work", "office_computer"],
+    display_condition_tags: ["fine_visual_work", "poor_lighting", "office_computer", "laptop_tablet_use", "dual_monitors"],
     required: true,
     type: "multi_choice",
     options: [
@@ -585,7 +586,7 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "cold_environment_discomfort",
+    question_id: "question-40",
     section: "environmental",
     display_condition_tags: ["cold_environment", "outdoor_work"],
     required: true,
@@ -597,9 +598,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "overtime",
+    question_id: "question-41",
     section: "environmental",
-    display_condition_tags: [],
+    display_condition_tags: ["overtime", "tight_deadlines", "low_task_variability", "fast_work_rate", "inadequate_recovery_time"],
     required: true,
     type: "multi_choice",
     options: [
@@ -610,9 +611,9 @@ export const questions: Question[] = [
     ]
   },
   {
-    question_id: "tight_deadlines",
+    question_id: "question-42",
     section: "environmental",
-    display_condition_tags: [],
+    display_condition_tags: ["tight_deadlines", "fast_work_rate", "low_task_variability", "inadequate_recovery_time", "overtime"],
     required: true,
     type: "multi_choice",
     options: [
