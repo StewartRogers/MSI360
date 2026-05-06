@@ -532,6 +532,7 @@ button {
   display: grid;
   gap: 11px;
   margin-top: auto;
+  padding-top: 32px;
   padding-bottom: 33px;
 }
 
