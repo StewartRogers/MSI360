@@ -32,11 +32,21 @@ Build:
 npm run build
 ```
 
-Type check only:
+Run the full local quality gate:
 
 ```bash
 npm test
 ```
+
+Individual test commands:
+
+```bash
+npm run typecheck
+npm run test:automated
+npm run test:unit
+```
+
+The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, and a few lightweight assessment-flow integration checks.
 
 ## Environment Variables
 
