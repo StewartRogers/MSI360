@@ -1,7 +1,10 @@
 import { tagTaxonomy } from "../data/catalog";
-import type { AiOutput, Question } from "../types";
+import { translations } from "../data/translations";
+import type { AiOutput, AiPreAnswer, AiPreAnswerCandidate, AiPreAnswerOutput, AnswerValue, Answers, Question } from "../types";
 
 const allowedTags = new Set(tagTaxonomy);
+const preAnswerConfidenceThreshold = 0.9;
+const negativeOptionIds = new Set(["no", "none", "never", "does_not_apply", "not_at_all"]);
 
 export async function interpretTextAnswer(question: Question, response: string): Promise<AiOutput> {
   const output = await interpretWithGemini(question, response).catch((error) => ({
@@ -14,6 +17,22 @@ export async function interpretTextAnswer(question: Question, response: string):
     ...output,
     add_tags: output.add_tags.filter((tag) => allowedTags.has(tag) && question.ai_instructions?.allowed_add_tags.includes(tag))
   };
+}
+
+export async function preAnswerQuestions(candidateQuestions: Question[], response: string, existingAnswers: Answers): Promise<AiPreAnswerOutput> {
+  if (!candidateQuestions.length || !response.trim()) {
+    return {
+      auto_answers: [],
+      provider: "client-no-preanswer",
+      notes: "No eligible questions or worker response were available for pre-answering."
+    };
+  }
+
+  return preAnswerWithGemini(candidateQuestions, response, existingAnswers).catch((error) => ({
+    auto_answers: [],
+    provider: "client-no-preanswer",
+    notes: `Gemini pre-answering unavailable; no questions were hidden. ${error instanceof Error ? error.message : ""}`.trim()
+  }));
 }
 
 async function interpretWithGemini(question: Question, response: string): Promise<AiOutput> {
@@ -82,6 +101,140 @@ async function interpretWithGemini(question: Question, response: string): Promis
   };
 }
 
+async function preAnswerWithGemini(candidateQuestions: Question[], response: string, existingAnswers: Answers): Promise<AiPreAnswerOutput> {
+  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
+  if (!apiKey) {
+    return {
+      auto_answers: [],
+      provider: "client-no-preanswer",
+      notes: "No Gemini API key configured; no questions were pre-answered."
+    };
+  }
+
+  const model = import.meta.env.VITE_GEMINI_MODEL || "gemini-2.5-flash";
+  const candidates = createPreAnswerCandidates(candidateQuestions);
+  const prompt = [
+    "You support MSI360, a prototype musculoskeletal injury risk survey.",
+    "The worker already answered a free-text task description. Determine whether that text explicitly answers any candidate questions.",
+    "Return strict JSON only. Do not include markdown or commentary.",
+    "Only pre-answer a question when the answer is clearly stated by the worker response. Do not assume missing details.",
+    "Use only the exact question_id, group ids, and option ids shown in candidate_questions.",
+    "For negative options such as no, none, never, or does_not_apply, only answer when the worker explicitly says the negative fact.",
+    "Do not answer symptom questions unless the response explicitly mentions work-related pain or discomfort and a time context.",
+    "Evidence must be an exact phrase from the worker response that supports the answer.",
+    'Required JSON shape: {"auto_answers":[{"question_id":"string","value":"option_id | option_id[] | grouped object","confidence":0.0,"evidence":"exact phrase from response","notes":"string"}]}',
+    `candidate_questions: ${JSON.stringify(candidates)}`,
+    `worker_response: ${response}`
+  ].join("\n");
+
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  const result = await fetch(apiUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      contents: [{ role: "user", parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0,
+        responseMimeType: "application/json"
+      }
+    })
+  });
+
+  if (!result.ok) {
+    throw new Error(`Gemini pre-answer request failed with ${result.status}`);
+  }
+
+  const data = await result.json();
+  const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (typeof text !== "string" || !text.trim()) {
+    throw new Error("Gemini returned no pre-answer JSON text");
+  }
+
+  const parsed = parseGeminiJson(text);
+  return {
+    auto_answers: validatePreAnswers(parsed, candidateQuestions, response, existingAnswers),
+    provider: "gemini",
+    notes: "Gemini pre-answering completed; only validated high-confidence answers were accepted."
+  };
+}
+
+export function createPreAnswerCandidates(candidateQuestions: Question[]): AiPreAnswerCandidate[] {
+  return candidateQuestions.flatMap((question) => {
+    const text = translations.en.questions[question.question_id];
+    if (!text || question.type === "text") return [];
+
+    const candidate: AiPreAnswerCandidate = {
+      question_id: question.question_id,
+      type: question.type,
+      label: text.label
+    };
+
+    if (question.options && text.options) {
+      candidate.options = Object.fromEntries(question.options.map((option) => [option.option_id, text.options?.[option.option_id] || option.option_id]));
+    }
+
+    if (question.groups && text.groups) {
+      candidate.groups = Object.fromEntries(
+        question.groups.map((group) => [
+          group.group_id,
+          {
+            label: text.groups?.[group.group_id]?.label || group.group_id,
+            options: Object.fromEntries(group.options.map((option) => [option.option_id, text.groups?.[group.group_id]?.options[option.option_id] || option.option_id]))
+          }
+        ])
+      );
+    }
+
+    return [candidate];
+  });
+}
+
+export function validatePreAnswers(rawOutput: unknown, candidateQuestions: Question[], workerResponse: string, existingAnswers: Answers): AiPreAnswer[] {
+  if (!isRecord(rawOutput) || !Array.isArray(rawOutput.auto_answers)) return [];
+
+  const candidateById = new Map(candidateQuestions.map((question) => [question.question_id, question]));
+  const accepted: AiPreAnswer[] = [];
+  const answeredIds = new Set(Object.keys(existingAnswers));
+
+  for (const rawAnswer of rawOutput.auto_answers) {
+    if (!isRecord(rawAnswer)) continue;
+
+    const questionId = typeof rawAnswer.question_id === "string" ? rawAnswer.question_id : "";
+    if (!questionId || answeredIds.has(questionId)) continue;
+
+    const question = candidateById.get(questionId);
+    if (!question || question.type === "text") continue;
+
+    const confidence = typeof rawAnswer.confidence === "number" ? clamp(rawAnswer.confidence, 0, 1) : 0;
+    if (confidence < preAnswerConfidenceThreshold) continue;
+
+    const evidence = typeof rawAnswer.evidence === "string" ? rawAnswer.evidence.trim() : "";
+    if (!isEvidenceGrounded(evidence, workerResponse)) continue;
+
+    if (question.section === "symptoms" && !hasSymptomAndTimeEvidence(workerResponse)) continue;
+
+    const value = validatePreAnswerValue(question, rawAnswer.value);
+    if (value === undefined) continue;
+
+    const selectedOptionIds = getSelectedPreAnswerOptionIds(value);
+    if (selectedOptionIds.some((optionId) => negativeOptionIds.has(optionId)) && !hasExplicitNegativeEvidence(evidence)) continue;
+
+    accepted.push({
+      question_id: question.question_id,
+      value,
+      confidence,
+      evidence,
+      notes: typeof rawAnswer.notes === "string" ? rawAnswer.notes : "",
+      provider: "gemini"
+    });
+    answeredIds.add(questionId);
+  }
+
+  return accepted;
+}
+
 function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
   const lower = text.toLowerCase();
   const tags: string[] = [];
@@ -135,6 +288,97 @@ function parseGeminiJson(text: string): Record<string, unknown> {
     if (!match) throw new Error("Gemini response was not valid JSON");
     return JSON.parse(match[0]);
   }
+}
+
+function validatePreAnswerValue(question: Question, value: unknown): AnswerValue | undefined {
+  if (question.type === "multi_choice" && question.options) {
+    return typeof value === "string" && hasOption(question, value) ? value : undefined;
+  }
+
+  if (question.type === "select_all" && question.options) {
+    if (!Array.isArray(value)) return undefined;
+    const selected = uniqueStrings(value).filter((optionId) => hasOption(question, optionId));
+    if (selected.length !== value.length || selected.length === 0 || hasExclusiveConflict(question, selected)) return undefined;
+    return selected;
+  }
+
+  if (question.type === "grouped_multi_choice" && question.groups) {
+    if (!isRecord(value)) return undefined;
+    const answer: Record<string, string> = {};
+    for (const group of question.groups) {
+      const groupValue = value[group.group_id];
+      if (typeof groupValue !== "string" || !hasGroupOption(group, groupValue)) return undefined;
+      answer[group.group_id] = groupValue;
+    }
+    return answer;
+  }
+
+  if (question.type === "grouped_select_all" && question.groups) {
+    if (!isRecord(value)) return undefined;
+    const answer: Record<string, string[]> = {};
+    for (const [groupId, groupValue] of Object.entries(value)) {
+      const group = question.groups.find((item) => item.group_id === groupId);
+      if (!group || !Array.isArray(groupValue)) return undefined;
+      const selected = uniqueStrings(groupValue).filter((optionId) => hasGroupOption(group, optionId));
+      if (selected.length !== groupValue.length || selected.length === 0 || hasGroupExclusiveConflict(group, selected)) return undefined;
+      answer[groupId] = selected;
+    }
+    return Object.keys(answer).length ? answer : undefined;
+  }
+
+  return undefined;
+}
+
+function hasOption(question: Question, optionId: string) {
+  return Boolean(question.options?.some((option) => option.option_id === optionId));
+}
+
+function hasGroupOption(group: NonNullable<Question["groups"]>[number], optionId: string) {
+  return group.options.some((option) => option.option_id === optionId);
+}
+
+function hasExclusiveConflict(question: Question, selected: string[]) {
+  const exclusiveSelected = question.options?.some((option) => option.exclusive && selected.includes(option.option_id)) ?? false;
+  return exclusiveSelected && selected.length > 1;
+}
+
+function hasGroupExclusiveConflict(group: NonNullable<Question["groups"]>[number], selected: string[]) {
+  const exclusiveSelected = group.options.some((option) => option.exclusive && selected.includes(option.option_id));
+  return exclusiveSelected && selected.length > 1;
+}
+
+function getSelectedPreAnswerOptionIds(value: AnswerValue): string[] {
+  if (typeof value === "string") return [value];
+  if (Array.isArray(value)) return value;
+  return Object.values(value).flatMap((entry) => (Array.isArray(entry) ? entry : [entry]));
+}
+
+function uniqueStrings(value: unknown[]) {
+  return [...new Set(value.filter((item): item is string => typeof item === "string"))];
+}
+
+function isEvidenceGrounded(evidence: string, workerResponse: string) {
+  if (!evidence) return false;
+  return normalizeForEvidence(workerResponse).includes(normalizeForEvidence(evidence));
+}
+
+function normalizeForEvidence(text: string) {
+  return text.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+function hasExplicitNegativeEvidence(evidence: string) {
+  return /\b(no|none|never|not|without|don't|doesn't|do not|does not|isn't|aren't|no time)\b/i.test(evidence);
+}
+
+function hasSymptomAndTimeEvidence(text: string) {
+  const hasSymptom = /\b(pain|discomfort|ache|aches|aching|sore|soreness|numb|numbness|tingling|strain)\b/i.test(text);
+  const hasWorkContext = /\b(work|job|task|desk|shift|performing|activity)\b/i.test(text);
+  const hasTimeContext = /\b(last\s+\d+\s+days?|last\s+week|past\s+\d+\s+days?|today|yesterday|during|after|for\s+\d+\s+(hours?|days?|weeks?))\b/i.test(text);
+  return hasSymptom && hasWorkContext && hasTimeContext;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return Boolean(value && typeof value === "object" && !Array.isArray(value));
 }
 
 function stringOrFallback(value: unknown, fallback: string): string {

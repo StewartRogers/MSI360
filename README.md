@@ -135,7 +135,9 @@ Gemini is used in:
 src/logic/ai.ts
 ```
 
-The app sends the worker's text task description to Gemini, asks for strict JSON, and expects:
+The app uses Gemini in two conservative passes after the worker enters the free-text task description.
+
+First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
 
 ```json
 {
@@ -149,7 +151,25 @@ The app sends the worker's text task description to Gemini, asks for strict JSON
 
 Only predefined tags from `tagTaxonomy` are accepted. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation.
 
-When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until the Gemini request or local fallback completes. This prevents duplicate submissions and reassures the worker that their input is still being processed.
+Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text:
+
+```json
+{
+  "auto_answers": [
+    {
+      "question_id": "question-6",
+      "value": "mostly_sit",
+      "confidence": 0.92,
+      "evidence": "Sitting at a desk",
+      "notes": "The worker explicitly described sitting at a desk."
+    }
+  ]
+}
+```
+
+The client accepts only high-confidence pre-answers that exactly match catalog question IDs, option IDs, and group IDs, include evidence grounded in the worker's text, and do not overwrite user-entered answers. Accepted pre-answers are stored in the normal answer state, hidden from the assessment flow, and included in scoring and PDF reporting. If Gemini is unavailable, malformed, or not confident enough, no questions are hidden.
+
+When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until tag extraction and pre-answering complete. This prevents duplicate submissions and reassures the worker that their input is still being processed.
 
 ## Scoring
 

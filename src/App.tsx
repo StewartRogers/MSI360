@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import { languages, questions, sectionOrder } from "./data/catalog";
 import { translations } from "./data/translations";
-import { interpretTextAnswer } from "./logic/ai";
+import { interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
 import { downloadReport } from "./logic/report";
 import { getVisibleQuestions, recomputeTags } from "./logic/routing";
 import { scoreAssessment } from "./logic/scoring";
-import type { AiOutputs, Answer, Answers, AnswerValue, Language, Question, QuestionText, QuestionType, ScoreResult } from "./types";
+import type { AiOutputs, AiPreAnswer, Answer, Answers, AnswerValue, Language, Question, QuestionText, QuestionType, ScoreResult } from "./types";
 
 type StepId =
   | "intro"
@@ -71,6 +71,7 @@ export default function App() {
   const [isInterpretingTaskDescription, setIsInterpretingTaskDescription] = useState(false);
   const [email, setEmail] = useState("");
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
+  const [autoAnsweredQuestionIds, setAutoAnsweredQuestionIds] = useState<string[]>([]);
 
   const t = translations[language] || translations.en;
   const selectedLanguage = languages.find((item) => item.code === language) || null;
@@ -78,7 +79,7 @@ export default function App() {
     const visible = getVisibleQuestions(activeTags);
     return visible.sort((a, b) => sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section));
   }, [activeTags]);
-  const assessmentQuestions = visibleQuestions.filter((question) => !onboardingQuestionIds.has(question.question_id));
+  const assessmentQuestions = visibleQuestions.filter((question) => !onboardingQuestionIds.has(question.question_id) && !autoAnsweredQuestionIds.includes(question.question_id));
   const safeAssessmentIndex = Math.min(assessmentIndex, Math.max(assessmentQuestions.length - 1, 0));
   const currentAssessmentQuestion = assessmentQuestions[safeAssessmentIndex];
   const totalQuestionSteps = Math.max(5 + assessmentQuestions.length, 5);
@@ -92,15 +93,22 @@ export default function App() {
   const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, answers[currentAssessmentQuestion.question_id]) : true;
 
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
-    const nextAnswers = { ...answers };
+    const isTaskDescriptionUpdate = questionId === questionIds.taskDescription;
+    const nextAiOutputs = isTaskDescriptionUpdate ? withoutKeys(aiOutputs, [questionIds.taskDescription]) : aiOutputs;
+    const nextAutoAnsweredQuestionIds = isTaskDescriptionUpdate ? [] : autoAnsweredQuestionIds.filter((id) => id !== questionId);
+    const nextAnswers = isTaskDescriptionUpdate ? withoutKeys(answers, autoAnsweredQuestionIds) : { ...answers };
+
     if (isEmptyAnswerValue(value)) {
       delete nextAnswers[questionId];
     } else {
       nextAnswers[questionId] = { type, value };
     }
-    const nextTags = recomputeTags(nextAnswers, aiOutputs);
+    const nextTags = recomputeTags(nextAnswers, nextAiOutputs);
     setAnswers(nextAnswers);
+    setAiOutputs(nextAiOutputs);
+    setAutoAnsweredQuestionIds(nextAutoAnsweredQuestionIds);
     setActiveTags(nextTags);
+    setScoreResult(null);
   }
 
   async function continueFromStep() {
@@ -119,8 +127,18 @@ export default function App() {
         try {
           const output = await interpretTextAnswer(taskQuestion, response);
           const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
+          const answersWithoutPreviousAutoAnswers = withoutKeys(answers, autoAnsweredQuestionIds);
+          const routedTags = recomputeTags(answersWithoutPreviousAutoAnswers, nextAiOutputs);
+          const candidateQuestions = getPreAnswerCandidateQuestions(routedTags, answersWithoutPreviousAutoAnswers);
+          const preAnswerOutput = await preAnswerQuestions(candidateQuestions, response, answersWithoutPreviousAutoAnswers);
+          const autoAnswers = toAnswers(preAnswerOutput.auto_answers);
+          const nextAutoAnsweredQuestionIds = preAnswerOutput.auto_answers.map((answer) => answer.question_id);
+          const nextAnswers = { ...answersWithoutPreviousAutoAnswers, ...autoAnswers };
+
+          setAnswers(nextAnswers);
           setAiOutputs(nextAiOutputs);
-          setActiveTags(recomputeTags(answers, nextAiOutputs));
+          setAutoAnsweredQuestionIds(nextAutoAnsweredQuestionIds);
+          setActiveTags(recomputeTags(nextAnswers, nextAiOutputs));
           if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
         } finally {
           setIsInterpretingTaskDescription(false);
@@ -193,6 +211,7 @@ export default function App() {
     setIsInterpretingTaskDescription(false);
     setEmail("");
     setNextAssessmentChoice("");
+    setAutoAnsweredQuestionIds([]);
     setStep("intro");
   }
 
@@ -1099,6 +1118,25 @@ function getFactorSummaries(result: ScoreResult) {
   };
 
   return (Object.keys(result.factors) as Array<keyof ScoreResult["factors"]>).map((key) => ({ key, label: labels[key] }));
+}
+
+function getPreAnswerCandidateQuestions(tags: string[], answers: Answers) {
+  return getVisibleQuestions(tags).filter((question) => !onboardingQuestionIds.has(question.question_id) && !answers[question.question_id]);
+}
+
+function toAnswers(autoAnswers: AiPreAnswer[]): Answers {
+  const nextAnswers: Answers = {};
+  autoAnswers.forEach((autoAnswer) => {
+    const question = getQuestionById(autoAnswer.question_id);
+    if (question) nextAnswers[autoAnswer.question_id] = { type: question.type, value: autoAnswer.value };
+  });
+  return nextAnswers;
+}
+
+function withoutKeys<T>(record: Record<string, T>, keys: string[]) {
+  const next = { ...record };
+  keys.forEach((key) => delete next[key]);
+  return next;
 }
 
 function getTaskSummary(answers: Answers) {

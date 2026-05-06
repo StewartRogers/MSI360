@@ -76,6 +76,29 @@ export interface AiOutput {
 
 export type AiOutputs = Record<string, AiOutput>;
 
+export interface AiPreAnswerCandidate {
+  question_id: string;
+  type: QuestionType;
+  label: string;
+  options?: Record<string, string>;
+  groups?: Record<string, { label: string; options: Record<string, string> }>;
+}
+
+export interface AiPreAnswer {
+  question_id: string;
+  value: AnswerValue;
+  confidence: number;
+  evidence: string;
+  notes: string;
+  provider: string;
+}
+
+export interface AiPreAnswerOutput {
+  auto_answers: AiPreAnswer[];
+  provider: string;
+  notes: string;
+}
+
 export interface FactorScore {
   score: number | null;
   applicable_questions: number;

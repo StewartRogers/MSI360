@@ -57,6 +57,34 @@ test("completed high-risk sample answers produce a score summary", () => {
   assert.ok(typeof result.composite_score === "number");
 });
 
+test("auto-answered questions can be hidden from assessment navigation while still being scored", () => {
+  const onboardingQuestionIds = new Set(["question-1", "question-2", "question-3", "question-4"]);
+  const autoAnsweredQuestionIds = new Set(["question-17"]);
+  const answers: Answers = {
+    "question-3": { type: "text", value: "I lift boxes that are more than 18 lb." },
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" }
+  };
+  const aiOutputs: AiOutputs = {
+    "question-3": {
+      normalized_answer_en: "I lift boxes that are more than 18 lb.",
+      add_tags: ["manual_handling", "lifting_lowering", "heavy_loads"],
+      missing_details: [],
+      confidence: 0.9,
+      notes: "Test output",
+      provider: "test"
+    }
+  };
+
+  const tags = recomputeTags(answers, aiOutputs);
+  const assessmentQuestionIds = getVisibleQuestions(tags)
+    .filter((question) => !onboardingQuestionIds.has(question.question_id) && !autoAnsweredQuestionIds.has(question.question_id))
+    .map((question) => question.question_id);
+  const result = scoreAssessment(answers);
+
+  assert.ok(!assessmentQuestionIds.includes("question-17"));
+  assert.equal(result.factors.force.score, 3);
+});
+
 test("every configured question has English display text for its options", () => {
   const englishQuestions = translations.en.questions;
 
