@@ -319,7 +319,7 @@ function IntroScreen({ onContinue }: { onContinue: () => void }) {
             Start
           </button>
           <a className="msi-link" href="https://www.worksafebc.com/en/health-safety/hazards-exposures/ergonomics" target="_blank" rel="noreferrer">
-            What is a MSI?
+            What is an MSI?
           </a>
         </div>
       </section>
