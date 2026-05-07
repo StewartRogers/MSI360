@@ -141,11 +141,11 @@ input:disabled {
   flex-direction: column;
 }
 
-.app-header.white + .page-with-actions {
+.app-header.white+.page-with-actions {
   min-height: calc(956px - 145px);
 }
 
-.wrap-header + .page-with-actions {
+.wrap-header+.page-with-actions {
   min-height: calc(817px - 128px);
 }
 
@@ -471,11 +471,13 @@ input:disabled {
 
 .question-illustration {
   display: block;
-  width: 260px;
-  height: 260px;
+  width: 100%;
+  max-width: 360px;
+  height: auto;
+  max-height: 280px;
   margin: 31px auto 30px;
   border-radius: 7px;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .group-card-list {
@@ -755,8 +757,8 @@ input:disabled {
   font-size: 13px;
 }
 
-.field-label + .single-input,
-.field-label + .language-select-button {
+.field-label+.single-input,
+.field-label+.language-select-button {
   margin-top: 11px;
 }
 
@@ -913,6 +915,7 @@ input:disabled {
 }
 
 @media (max-width: 439px) {
+
   .app-header,
   .wrap-header,
   .page {
@@ -939,7 +942,14 @@ input:disabled {
     padding-left: 5vw;
   }
 
-  .question-illustration,
+  .question-illustration {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    max-height: 260px;
+    object-fit: contain;
+  }
+
   .card-image {
     width: min(260px, 70vw);
     height: min(260px, 70vw);

@@ -41,21 +41,66 @@ const onboardingQuestionIds = new Set<string>([questionIds.role, questionIds.tim
 const promptUsesSectionTitle = new Set<string>([questionIds.bodyMakeshiftTool, questionIds.handheldToolContact, questionIds.upperBodyPosture, questionIds.headPosition]);
 
 const standaloneImages: Record<string, string> = {
-  [questionIds.bodyMakeshiftTool]: "/figma-assets/body-makeshift-tool.png"
+  // Job context
+  "question-5": "/images/indooroutdoor.png",
+
+  // Organizational
+  "question-7": "/images/input2.png",
+  "question-8": "/images/input2.png",
+
+  // Contact stress
+  "question-11": "/images/lean.png",
+  "question-12": "/images/kneel.jpg",
+  "question-13": "/images/handletool30.jpg",
+  "question-14": "/images/makeshift.png",
+
+  // Force
+  "question-15": "/images/trolley.jpg",
+  "question-16": "/images/dolly.png",
+  "question-17": "/images/avg_weight.png",
+  "question-18": "/images/thumb.png",
+  "question-19": "/images/assist.png",
+
+  // Awkward postures
+  "question-20": "/images/neutralleaning.png",
+  "question-21": "/images/twisting.png",
+  "question-22": "/images/bodyUpdated.png",
+  "question-23": "/images/armstretch.jpg",
+  "question-24": "/images/armsoutstretched.png",
+  "question-25": "/images/headPics.png",
+  "question-26": "/images/figure.png",
+  "question-27": "/images/hand.png",
+  "question-28": "/images/objectClose.png",
+
+  // Repetition
+  "question-29": "/images/similar.jpg",
+  "question-30": "/images/figure.png",
+  "question-31": "/images/morethan15.png",
+  "question-32": "/images/muscularforce.jpg",
+  "question-33": "/images/pinch2lb.png",
+  "question-34": "/images/powerGrip.png",
+  "question-35": "/images/hand_body.png",
+  "question-36": "/images/surface.png",
+
+  // Environmental
+  "question-37": "/images/hearing.jpg",
+  "question-38": "/images/sunglare.jpg",
+  "question-39": "/images/detail.jpg",
+  "question-40": "/images/cold.jpeg"
 };
 
 const groupImages: Record<string, Record<string, string>> = {
   [questionIds.upperBodyPosture]: {
-    forward_backward: "/figma-assets/lean-forward.png",
-    sideways: "/figma-assets/lean-sideways.png"
+    forward_backward: "/images/lean-forward.png",
+    sideways: "/images/lean-sideways.png"
   }
 };
 
 const optionImages: Record<string, Record<string, string>> = {
   [questionIds.headPosition]: {
-    neutral: "/figma-assets/head-neutral.png",
-    slight_tilt: "/figma-assets/head-slight-tilt.png",
-    deep_tilt: "/figma-assets/head-deep-tilt.png"
+    neutral: "/images/head-neutral.png",
+    slight_tilt: "/images/head-slight-tilt.png",
+    deep_tilt: "/images/head-deep-tilt.png"
   }
 };
 
@@ -525,7 +570,7 @@ function AssessmentQuestionScreen(props: {
   if (!props.question) {
     return (
       <>
-        <AppHeader tone="white" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
+        <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
         <section className="page page-with-actions">
           <div className="content-block">
             <h2>No additional questions are needed.</h2>
@@ -538,7 +583,7 @@ function AssessmentQuestionScreen(props: {
 
   return (
     <>
-      <AppHeader tone="white" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
+      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
       <section className={`page page-with-actions question-page question-${props.question.question_id}`}>
         <QuestionContent question={props.question} answer={props.answer} translations={props.translations} onAnswer={props.onAnswer} />
         <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
