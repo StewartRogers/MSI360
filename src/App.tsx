@@ -42,63 +42,63 @@ const promptUsesSectionTitle = new Set<string>([questionIds.bodyMakeshiftTool, q
 
 const standaloneImages: Record<string, string> = {
   // Intro / job context
-  job_setup: "images/question-illustrations/indooroutdoor.png",
+  job_setup: "/images/indooroutdoor.png",
 
   // Organizational
-  equipment_feedback: "images/question-illustrations/input2.png",
-  work_organization_feedback: "images/question-illustrations/input2.png",
+  equipment_feedback: "/images/input2.png",
+  work_organization_feedback: "/images/input2.png",
 
   // Contact stress
-  contact_sharp_edges_duration: "images/question-illustrations/lean.png",
-  kneeling_hard_surfaces: "images/question-illustrations/kneel.jpg",
-  handheld_tool_contact: "images/question-illustrations/handletool30.jpg",
-  [questionIds.bodyMakeshiftTool]: "images/question-illustrations/getty.png",
+  contact_sharp_edges_duration: "/images/lean.png",
+  kneeling_hard_surfaces: "/images/kneel.jpg",
+  handheld_tool_contact: "/images/handletool30.jpg",
+  [questionIds.bodyMakeshiftTool]: "/images/getty.png",
 
   // Force
-  push_pull_surface_types: "images/question-illustrations/trolley.jpg",
-  push_pull_heavy_frequency: "images/question-illustrations/dolly.png",
-  object_weight: "images/question-illustrations/avg_weight.png",
-  tool_start_force: "images/question-illustrations/thumb.png",
-  push_pull_assistance: "images/question-illustrations/assist.png",
+  push_pull_surface_types: "/images/trolley.jpg",
+  push_pull_heavy_frequency: "/images/dolly.png",
+  object_weight: "/images/avg_weight.png",
+  tool_start_force: "/images/thumb.png",
+  push_pull_assistance: "/images/assist.png",
 
   // Awkward postures
-  upper_body_posture: "images/question-illustrations/neutralleaning.png",
-  torso_twist: "images/question-illustrations/twisting.png",
-  hand_location: "images/question-illustrations/bodyUpdated.png",
-  arms_extended_forward: "images/question-illustrations/armstretch.jpg",
-  outstretched_arm_load: "images/question-illustrations/armsoutstretched.png",
-  head_position: "images/question-illustrations/headPics.png",
-  wrist_side_angle: "images/question-illustrations/hand.png",
-  objects_close_to_body: "images/question-illustrations/objectClose.png",
+  upper_body_posture: "/images/neutralleaning.png",
+  torso_twist: "/images/twisting.png",
+  hand_location: "/images/bodyUpdated.png",
+  arms_extended_forward: "/images/armstretch.jpg",
+  outstretched_arm_load: "/images/armsoutstretched.png",
+  head_position: "/images/headPics.png",
+  wrist_side_angle: "/images/hand.png",
+  objects_close_to_body: "/images/objectClose.png",
 
   // Repetition
-  repetitive_movements_duration: "images/question-illustrations/similar.jpg",
-  wrist_side_duration: "images/question-illustrations/morethan15.png",
-  forceful_exertion_duration: "images/question-illustrations/muscularforce.jpg",
-  pinch_grip_duration: "images/question-illustrations/pinch2lb.png",
-  power_grip_duration: "images/question-illustrations/powerGrip.png",
-  vibration_tools_duration: "images/question-illustrations/hand_body.png",
-  push_pull_rough_soft_heavy_duration: "images/question-illustrations/surface.png",
+  repetitive_movements_duration: "/images/similar.jpg",
+  wrist_side_duration: "/images/morethan15.png",
+  forceful_exertion_duration: "/images/muscularforce.jpg",
+  pinch_grip_duration: "/images/pinch2lb.png",
+  power_grip_duration: "/images/powerGrip.png",
+  vibration_tools_duration: "/images/hand_body.png",
+  push_pull_rough_soft_heavy_duration: "/images/surface.png",
 
   // Environmental
-  noise_distraction: "images/question-illustrations/hearing.jpg",
-  glare: "images/question-illustrations/sunglare.jpg",
-  fine_details: "images/question-illustrations/detail.jpg",
-  cold_environment_discomfort: "images/question-illustrations/cold.jpeg"
+  noise_distraction: "/images/hearing.jpg",
+  glare: "/images/sunglare.jpg",
+  fine_details: "/images/detail.jpg",
+  cold_environment_discomfort: "/images/cold.jpeg"
 };
 
 const groupImages: Record<string, Record<string, string>> = {
   [questionIds.upperBodyPosture]: {
-    forward_backward: "/figma-assets/lean-forward.png",
-    sideways: "/figma-assets/lean-sideways.png"
+    forward_backward: "/images/lean-forward.png",
+    sideways: "/images/lean-sideways.png"
   }
 };
 
 const optionImages: Record<string, Record<string, string>> = {
   [questionIds.headPosition]: {
-    neutral: "/figma-assets/head-neutral.png",
-    slight_tilt: "/figma-assets/head-slight-tilt.png",
-    deep_tilt: "/figma-assets/head-deep-tilt.png"
+    neutral: "/images/head-neutral.png",
+    slight_tilt: "/images/head-slight-tilt.png",
+    deep_tilt: "/images/head-deep-tilt.png"
   }
 };
 
