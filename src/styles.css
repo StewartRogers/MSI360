@@ -959,9 +959,6 @@ input:disabled {
     padding-right: 14vw;
     padding-left: 14vw;
   }
-<<<<<<< HEAD
-}
-=======
 }
 
 @keyframes spinner-rotate {
@@ -969,4 +966,3 @@ input:disabled {
     transform: rotate(360deg);
   }
 }
->>>>>>> origin/main
