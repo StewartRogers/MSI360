@@ -32,11 +32,21 @@ Build:
 npm run build
 ```
 
-Type check only:
+Run the full local quality gate:
 
 ```bash
 npm test
 ```
+
+Individual test commands:
+
+```bash
+npm run typecheck
+npm run test:automated
+npm run test:unit
+```
+
+The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, and a few lightweight assessment-flow integration checks.
 
 ## Environment Variables
 
@@ -97,6 +107,8 @@ This file owns:
 - placeholder risk score mappings
 - AI instructions for text questions
 
+Question IDs mirror the source questionnaire labels and use straight numeric IDs from `question-1` through `question-42`. Keep these IDs aligned with the source document when question order or labels change.
+
 Question text lives in language-specific files:
 
 ```text
@@ -136,6 +148,8 @@ The app sends the worker's text task description to Gemini, asks for strict JSON
 ```
 
 Only predefined tags from `tagTaxonomy` are accepted. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation.
+
+When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until the Gemini request or local fallback completes. This prevents duplicate submissions and reassures the worker that their input is still being processed.
 
 ## Scoring
 

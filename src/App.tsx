@@ -25,8 +25,20 @@ type StepId =
 type HeaderTone = "blue" | "white";
 type WrapTab = "email" | "review" | "submit";
 
-const onboardingQuestionIds = new Set(["role", "time_in_role", "task_description", "height"]);
-const promptUsesSectionTitle = new Set(["body_makeshift_tool", "handheld_tool_contact", "upper_body_posture", "head_position", "environmental_conditions"]);
+const questionIds = {
+  role: "question-1",
+  timeInRole: "question-2",
+  taskDescription: "question-3",
+  height: "question-4",
+  bodyDiscomfortAreas: "question-10",
+  handheldToolContact: "question-13",
+  bodyMakeshiftTool: "question-14",
+  upperBodyPosture: "question-20",
+  headPosition: "question-25"
+} as const;
+
+const onboardingQuestionIds = new Set<string>([questionIds.role, questionIds.timeInRole, questionIds.taskDescription, questionIds.height]);
+const promptUsesSectionTitle = new Set<string>([questionIds.bodyMakeshiftTool, questionIds.handheldToolContact, questionIds.upperBodyPosture, questionIds.headPosition]);
 
 const standaloneImages: Record<string, string> = {
   // Intro / job context
@@ -40,7 +52,7 @@ const standaloneImages: Record<string, string> = {
   contact_sharp_edges_duration: "images/question-illustrations/lean.png",
   kneeling_hard_surfaces: "images/question-illustrations/kneel.jpg",
   handheld_tool_contact: "images/question-illustrations/handletool30.jpg",
-  body_makeshift_tool: "images/question-illustrations/getty.png",
+  [questionIds.bodyMakeshiftTool]: "images/question-illustrations/getty.png",
 
   // Force
   push_pull_surface_types: "images/question-illustrations/trolley.jpg",
@@ -76,14 +88,14 @@ const standaloneImages: Record<string, string> = {
 };
 
 const groupImages: Record<string, Record<string, string>> = {
-  upper_body_posture: {
+  [questionIds.upperBodyPosture]: {
     forward_backward: "/figma-assets/lean-forward.png",
     sideways: "/figma-assets/lean-sideways.png"
   }
 };
 
 const optionImages: Record<string, Record<string, string>> = {
-  head_position: {
+  [questionIds.headPosition]: {
     neutral: "/figma-assets/head-neutral.png",
     slight_tilt: "/figma-assets/head-slight-tilt.png",
     deep_tilt: "/figma-assets/head-deep-tilt.png"
@@ -99,6 +111,7 @@ export default function App() {
   const [activeTags, setActiveTags] = useState<string[]>(["start"]);
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
   const [status, setStatus] = useState("");
+  const [isInterpretingTaskDescription, setIsInterpretingTaskDescription] = useState(false);
   const [email, setEmail] = useState("");
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
 
@@ -114,10 +127,11 @@ export default function App() {
   const totalQuestionSteps = Math.max(5 + assessmentQuestions.length, 5);
   const progressStep = getProgressStep(step, safeAssessmentIndex, totalQuestionSteps);
   const result = scoreResult || scoreAssessment(answers);
-  const canContinueRole = isQuestionAnswered(getQuestionById("role"), answers.role);
-  const canContinueTimeInRole = isQuestionAnswered(getQuestionById("time_in_role"), answers.time_in_role);
-  const canContinueTaskDescription = isQuestionAnswered(getQuestionById("task_description"), answers.task_description);
-  const canContinueHeight = isQuestionAnswered(getQuestionById("height"), answers.height);
+  const taskDescriptionValue = answers[questionIds.taskDescription]?.value;
+  const canContinueRole = isQuestionAnswered(getQuestionById(questionIds.role), answers[questionIds.role]);
+  const canContinueTimeInRole = isQuestionAnswered(getQuestionById(questionIds.timeInRole), answers[questionIds.timeInRole]);
+  const canContinueTaskDescription = isQuestionAnswered(getQuestionById(questionIds.taskDescription), answers[questionIds.taskDescription]);
+  const canContinueHeight = isQuestionAnswered(getQuestionById(questionIds.height), answers[questionIds.height]);
   const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, answers[currentAssessmentQuestion.question_id]) : true;
 
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
@@ -140,14 +154,20 @@ export default function App() {
     if (step === "time_in_role") return setStep("description");
     if (step === "description") return setStep("task_description");
     if (step === "task_description") {
-      const taskQuestion = questions.find((question) => question.question_id === "task_description");
-      const response = answers.task_description?.value;
+      if (isInterpretingTaskDescription) return;
+      const taskQuestion = questions.find((question) => question.question_id === questionIds.taskDescription);
+      const response = answers[questionIds.taskDescription]?.value;
       if (taskQuestion && typeof response === "string" && response.trim()) {
-        const output = await interpretTextAnswer(taskQuestion, response);
-        const nextAiOutputs = { ...aiOutputs, task_description: output };
-        setAiOutputs(nextAiOutputs);
-        setActiveTags(recomputeTags(answers, nextAiOutputs));
-        if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
+        setIsInterpretingTaskDescription(true);
+        try {
+          const output = await interpretTextAnswer(taskQuestion, response);
+          const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
+          setAiOutputs(nextAiOutputs);
+          setActiveTags(recomputeTags(answers, nextAiOutputs));
+          if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
+        } finally {
+          setIsInterpretingTaskDescription(false);
+        }
       }
       return setStep("height");
     }
@@ -213,6 +233,7 @@ export default function App() {
     setScoreResult(null);
     setAssessmentIndex(0);
     setStatus("");
+    setIsInterpretingTaskDescription(false);
     setEmail("");
     setNextAssessmentChoice("");
     setStep("intro");
@@ -236,12 +257,12 @@ export default function App() {
 
       {step === "role" && (
         <ChoiceScreen
-          questionId="role"
-          answer={answers.role}
+          questionId={questionIds.role}
+          answer={answers[questionIds.role]}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
-          onAnswer={(value) => updateAnswer("role", "multi_choice", value)}
+          onAnswer={(value) => updateAnswer(questionIds.role, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueRole}
           onContinue={continueFromStep}
@@ -250,12 +271,12 @@ export default function App() {
 
       {step === "time_in_role" && (
         <ChoiceScreen
-          questionId="time_in_role"
-          answer={answers.time_in_role}
+          questionId={questionIds.timeInRole}
+          answer={answers[questionIds.timeInRole]}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
-          onAnswer={(value) => updateAnswer("time_in_role", "multi_choice", value)}
+          onAnswer={(value) => updateAnswer(questionIds.timeInRole, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueTimeInRole}
           onContinue={continueFromStep}
@@ -266,12 +287,13 @@ export default function App() {
 
       {step === "task_description" && (
         <TextScreen
-          questionId="task_description"
-          value={typeof answers.task_description?.value === "string" ? answers.task_description.value : ""}
+          questionId={questionIds.taskDescription}
+          value={typeof taskDescriptionValue === "string" ? taskDescriptionValue : ""}
           status={status}
+          isLoading={isInterpretingTaskDescription}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
-          onAnswer={(value) => updateAnswer("task_description", "text", value)}
+          onAnswer={(value) => updateAnswer(questionIds.taskDescription, "text", value)}
           onBack={goBack}
           canContinue={canContinueTaskDescription}
           onContinue={continueFromStep}
@@ -280,12 +302,12 @@ export default function App() {
 
       {step === "height" && (
         <ChoiceScreen
-          questionId="height"
-          answer={answers.height}
+          questionId={questionIds.height}
+          answer={answers[questionIds.height]}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
-          onAnswer={(value) => updateAnswer("height", "multi_choice", value)}
+          onAnswer={(value) => updateAnswer(questionIds.height, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueHeight}
           onContinue={continueFromStep}
@@ -349,7 +371,7 @@ function IntroScreen({ onContinue }: { onContinue: () => void }) {
             Start
           </button>
           <a className="msi-link" href="https://www.worksafebc.com/en/health-safety/hazards-exposures/ergonomics" target="_blank" rel="noreferrer">
-            What is MSI?
+            What is an MSI?
           </a>
         </div>
       </section>
@@ -475,7 +497,7 @@ function DescriptionScreen(props: { progressStep: number; totalSteps: number; on
         <div className="content-block description-copy">
           <h2>Description</h2>
           <p>
-            The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell ErgoCheck about what you do to get your work done.
+            The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.
           </p>
         </div>
         <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
@@ -488,6 +510,7 @@ function TextScreen(props: {
   questionId: string;
   value: string;
   status: string;
+  isLoading: boolean;
   progressStep: number;
   totalSteps: number;
   onAnswer: (value: string) => void;
@@ -502,10 +525,30 @@ function TextScreen(props: {
       <section className="page page-with-actions">
         <div className="content-block">
           <h2>{text.label}</h2>
-          <input className="single-input" value={props.value} onChange={(event) => props.onAnswer(event.target.value)} aria-label={text.label} />
-          {props.status && <p className="small-status">{props.status}</p>}
+          {text.help_text && <p className="question-help">{text.help_text}</p>}
+          <input
+            className="single-input"
+            value={props.value}
+            onChange={(event) => props.onAnswer(event.target.value)}
+            aria-label={text.label}
+            disabled={props.isLoading}
+          />
+          {props.isLoading ? (
+            <div className="loading-status" role="status" aria-live="polite">
+              <span className="loading-spinner" aria-hidden="true" />
+              <span>Analyzing your task description...</span>
+            </div>
+          ) : (
+            props.status && <p className="small-status">{props.status}</p>
+          )}
         </div>
-        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+        <ActionButtons
+          onBack={props.onBack}
+          canContinue={props.canContinue}
+          isBusy={props.isLoading}
+          busyLabel="Analyzing"
+          onContinue={props.onContinue}
+        />
       </section>
     </>
   );
@@ -576,7 +619,7 @@ function QuestionPrompt({ question, text, sectionTitle }: { question: Question; 
     );
   }
 
-  if (question.question_id === "body_discomfort_areas") {
+  if (question.question_id === questionIds.bodyDiscomfortAreas) {
     return (
       <div className="prompt-block prompt-as-title">
         {paragraphs.map((paragraph) => (
@@ -950,27 +993,41 @@ function ActionButtons({
   onBack,
   onContinue,
   canContinue = true,
+  isBusy = false,
   continueLabel = "Continue",
+  busyLabel = "Processing",
   backLabel = "Back"
 }: {
   onBack?: () => void;
   onContinue: () => void;
   canContinue?: boolean;
+  isBusy?: boolean;
   continueLabel?: string;
+  busyLabel?: string;
   backLabel?: string;
 }) {
+  const buttonState = getActionButtonState(canContinue, isBusy);
+
   return (
     <div className="actions">
-      <button className="primary-button" disabled={!canContinue} onClick={onContinue}>
-        {continueLabel}
+      <button className="primary-button" disabled={buttonState.continueDisabled} aria-busy={isBusy} onClick={onContinue}>
+        {isBusy && <span className="button-spinner" aria-hidden="true" />}
+        <span>{isBusy ? busyLabel : continueLabel}</span>
       </button>
       {onBack && (
-        <button className="secondary-button" onClick={onBack}>
+        <button className="secondary-button" disabled={buttonState.backDisabled} onClick={onBack}>
           {backLabel}
         </button>
       )}
     </div>
   );
+}
+
+export function getActionButtonState(canContinue: boolean, isBusy: boolean) {
+  return {
+    continueDisabled: !canContinue || isBusy,
+    backDisabled: isBusy
+  };
 }
 
 function RadioRow({ name, checked, label, onChange }: { name: string; checked: boolean; label: string; onChange: () => void }) {
@@ -1088,7 +1145,7 @@ function getFactorSummaries(result: ScoreResult) {
 }
 
 function getTaskSummary(answers: Answers) {
-  const value = answers.task_description?.value;
+  const value = answers[questionIds.taskDescription]?.value;
   if (typeof value === "string" && value.trim()) return value.trim();
   return "Work task";
 }
