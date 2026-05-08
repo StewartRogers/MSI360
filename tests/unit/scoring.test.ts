@@ -95,3 +95,29 @@ test("scoreAssessment averages repetition over the number of answered repetition
   assert.equal(result.factors.repetition.applicable_questions, 3);
   assert.equal(result.factors.repetition.score, 2.3);
 });
+
+test("scoreAssessment severity uses the configured risk interpretation boundaries", () => {
+  const possibleRiskAnswers: Answers = {
+    "question-15": { type: "multi_choice", value: "rough" },
+    "question-16": { type: "multi_choice", value: "some" },
+    "question-17": { type: "multi_choice", value: "5_to_18_lb" }
+  };
+  const likelyRiskAnswers: Answers = {
+    ...possibleRiskAnswers,
+    "question-18": { type: "multi_choice", value: "occasionally" },
+    "question-19": { type: "multi_choice", value: "do_not_ask" }
+  };
+  const knownRiskAnswers: Answers = {
+    "question-16": { type: "multi_choice", value: "most" },
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" },
+    "question-18": { type: "multi_choice", value: "occasionally" },
+    "question-19": { type: "multi_choice", value: "ask_but_no_assistance" }
+  };
+
+  assert.equal(scoreAssessment(possibleRiskAnswers).factors.force.score, 2.3);
+  assert.equal(scoreAssessment(possibleRiskAnswers).factors.force.severity, "Possible risk");
+  assert.equal(scoreAssessment(likelyRiskAnswers).factors.force.score, 2.4);
+  assert.equal(scoreAssessment(likelyRiskAnswers).factors.force.severity, "Likely risk");
+  assert.equal(scoreAssessment(knownRiskAnswers).factors.force.score, 3.5);
+  assert.equal(scoreAssessment(knownRiskAnswers).factors.force.severity, "Known risk");
+});

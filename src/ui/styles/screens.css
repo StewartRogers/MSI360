@@ -322,7 +322,7 @@
   border-radius: 14px;
 }
 
-.factor-row div:first-child {
+.factor-row-header {
   display: flex;
   justify-content: space-between;
   color: #4f4a46;
@@ -331,6 +331,13 @@
 
 .factor-row span {
   font-weight: 700;
+}
+
+.factor-interpretation {
+  margin: 7px 0 0;
+  color: #4f4a46;
+  font-size: 12px;
+  line-height: 1.35;
 }
 
 .factor-track {

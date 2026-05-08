@@ -53,7 +53,7 @@ test("completed high-risk sample answers produce a score summary", () => {
 
   const result = scoreAssessment(answers);
 
-  assert.equal(result.factors.force.severity, "Known/high risk");
+  assert.equal(result.factors.force.severity, "Known risk");
   assert.equal(result.factors.repetition.severity, "Likely risk");
   assert.ok(typeof result.composite_score === "number");
 });

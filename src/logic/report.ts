@@ -1,6 +1,7 @@
 import { PDFDocument, PDFFont, StandardFonts, rgb } from "pdf-lib";
 import { questions } from "../data/catalog";
 import { translations } from "../data/translations";
+import { describeFactorRisk, getFactorSummaries } from "./scorePresentation";
 import type { AiOutputs, Answers, Question, ScoreResult } from "../types";
 
 export async function downloadReport(answers: Answers, aiOutputs: AiOutputs, scoreResult: ScoreResult) {
@@ -24,6 +25,11 @@ export async function downloadReport(answers: Answers, aiOutputs: AiOutputs, sco
   write(pdf, state, `Physical score: ${formatScore(scoreResult.grouped_scores.physical)}`, 10, regular);
   write(pdf, state, `Environmental score: ${formatScore(scoreResult.grouped_scores.environmental)}`, 10, regular);
   write(pdf, state, "Organizational/work-design context: included in answers, not scored.", 10, regular);
+  gap(state, 5);
+  getFactorSummaries(scoreResult).forEach((factor) => {
+    const factorScore = scoreResult.factors[factor.key].score;
+    paragraph(pdf, state, `${factor.label}: ${formatScore(factorScore)} - ${describeFactorRisk(factorScore, factor.riskSubject)}`, 10, regular);
+  });
 
   section(pdf, state, "Detailed Questions And Answers");
   questions.forEach((question) => {
