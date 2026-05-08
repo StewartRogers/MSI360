@@ -451,9 +451,9 @@ export const questions: Question[] = [
     type: "multi_choice",
     options: [
       { option_id: "less_than_30_min", risk_scores: { repetition: 1 } },
-      { option_id: "30_min_to_2_hours", risk_scores: { repetition: 2 }, add_tags: ["repetitive_movements"] },
-      { option_id: "2_to_4_hours", risk_scores: { repetition: 3 }, add_tags: ["repetitive_movements"] },
-      { option_id: "more_than_4_hours", risk_scores: { repetition: 4 }, add_tags: ["repetitive_movements"] }
+      { option_id: "30_min_to_2_hours", risk_scores: { repetition: 1 }, add_tags: ["repetitive_movements"] },
+      { option_id: "2_to_4_hours", risk_scores: { repetition: 2 }, add_tags: ["repetitive_movements"] },
+      { option_id: "more_than_4_hours", risk_scores: { repetition: 3 }, add_tags: ["repetitive_movements"] }
     ]
   },
   {
@@ -466,7 +466,7 @@ export const questions: Question[] = [
       { option_id: "less_than_1_hour", risk_scores: { repetition: 1, awkward_posture: 1 } },
       { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_bending"] },
       { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_bending"] },
-      { option_id: "none", risk_scores: {} }
+      { option_id: "none", risk_scores: { repetition: 1 } }
     ]
   },
   {
@@ -479,7 +479,7 @@ export const questions: Question[] = [
       { option_id: "less_than_1_hour", risk_scores: { repetition: 1, awkward_posture: 1 } },
       { option_id: "1_to_2_hours", risk_scores: { repetition: 2, awkward_posture: 2 }, add_tags: ["wrist_bending"] },
       { option_id: "more_than_2_hours", risk_scores: { repetition: 3, awkward_posture: 3 }, add_tags: ["wrist_bending"] },
-      { option_id: "none", risk_scores: {} }
+      { option_id: "none", risk_scores: { repetition: 1 } }
     ]
   },
   {
@@ -490,7 +490,7 @@ export const questions: Question[] = [
     type: "multi_choice",
     options: [
       { option_id: "less_than_5_min", risk_scores: { repetition: 1, force: 1 } },
-      { option_id: "5_to_25_min", risk_scores: { repetition: 2, force: 2 } },
+      { option_id: "5_to_25_min", risk_scores: { repetition: 1, force: 1 } },
       { option_id: "30_min_to_2_5_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["heavy_loads"] },
       { option_id: "2_5_to_5_5_hours", risk_scores: { repetition: 4, force: 4 }, add_tags: ["heavy_loads"] },
       { option_id: "more_than_5_5_hours", risk_scores: { repetition: 4, force: 4 }, add_tags: ["heavy_loads"] }
@@ -505,7 +505,7 @@ export const questions: Question[] = [
     options: [
       { option_id: "less_than_2_hours", risk_scores: { repetition: 2, force: 2 }, add_tags: ["pinch_grip"] },
       { option_id: "more_than_2_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["pinch_grip"] },
-      { option_id: "none", risk_scores: {} }
+      { option_id: "none", risk_scores: { repetition: 1 } }
     ]
   },
   {
@@ -517,7 +517,7 @@ export const questions: Question[] = [
     options: [
       { option_id: "less_than_2_hours", risk_scores: { repetition: 2, force: 2 }, add_tags: ["power_grip"] },
       { option_id: "more_than_2_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["power_grip"] },
-      { option_id: "none", risk_scores: {} }
+      { option_id: "none", risk_scores: { repetition: 1 } }
     ]
   },
   {
@@ -527,10 +527,10 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "less_than_1_hour", risk_scores: { repetition: 1, force: 1 }, add_tags: ["vibrating_tools"] },
-      { option_id: "1_to_4_hours", risk_scores: { repetition: 2, force: 2 }, add_tags: ["vibrating_tools"] },
-      { option_id: "more_than_4_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["vibrating_tools"] },
-      { option_id: "does_not_apply", risk_scores: {} }
+      { option_id: "less_than_1_hour", risk_scores: { repetition: 2, force: 2 }, add_tags: ["vibrating_tools"] },
+      { option_id: "1_to_4_hours", risk_scores: { repetition: 3, force: 3 }, add_tags: ["vibrating_tools"] },
+      { option_id: "more_than_4_hours", risk_scores: { repetition: 4, force: 4 }, add_tags: ["vibrating_tools"] },
+      { option_id: "does_not_apply", risk_scores: { repetition: 1 } }
     ]
   },
   {
@@ -543,7 +543,7 @@ export const questions: Question[] = [
       { option_id: "less_than_5_min", risk_scores: { repetition: 1, force: 1 } },
       { option_id: "5_min_to_1_hour", risk_scores: { repetition: 2, force: 2 } },
       { option_id: "more_than_1_hour", risk_scores: { repetition: 3, force: 3 } },
-      { option_id: "does_not_apply", risk_scores: {} }
+      { option_id: "does_not_apply", risk_scores: { repetition: 1, force: 1 } }
     ]
   },
   {
