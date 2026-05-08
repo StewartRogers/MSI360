@@ -541,3 +541,50 @@
 .complete-page .primary-button {
   margin-top: 75px;
 }
+
+@media (max-width: 439px) {
+
+  .app-header,
+  .wrap-header,
+  .page {
+    padding-left: 8.2vw;
+    padding-right: 8.2vw;
+  }
+
+  .page-intro {
+    padding-left: 12.7vw;
+    padding-right: 9.5vw;
+  }
+
+  .page-intro h1,
+  .page-intro p,
+  .feature-list,
+  .body-copy,
+  .complete-page h1,
+  .complete-page p {
+    width: 100%;
+  }
+
+  .language-page .content-block {
+    padding-right: 5vw;
+    padding-left: 5vw;
+  }
+
+  .question-illustration {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    max-height: 260px;
+    object-fit: contain;
+  }
+
+  .card-image {
+    width: min(260px, 70vw);
+    height: min(260px, 70vw);
+  }
+
+  .report-card {
+    padding-right: 14vw;
+    padding-left: 14vw;
+  }
+}
