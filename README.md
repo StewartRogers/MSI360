@@ -69,6 +69,9 @@ Important: this is a client-only app, so every `VITE_` variable is visible in th
 ```text
 src/
   App.tsx
+  app/
+    questionAssets.ts
+    types.ts
   data/
     catalog.ts
     translations/
@@ -81,9 +84,22 @@ src/
       index.ts
   logic/
     ai.ts
+    answerSelection.ts
+    appFlow.ts
+    assessmentFlow.ts
     report.ts
     routing.ts
     scoring.ts
+    scorePresentation.ts
+  ui/
+    components/
+      ActionButtons.tsx
+      AnswerControls.tsx
+      AppHeader.tsx
+    screens/
+      AssessmentScreen.tsx
+      OnboardingScreens.tsx
+      ResultScreens.tsx
   styles.css
   types.ts
 ```
