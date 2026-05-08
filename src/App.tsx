@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 import { languages, questions, sectionOrder } from "./data/catalog";
 import { translations } from "./data/translations";
-import { interpretTextAnswer } from "./logic/ai";
+import { interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
+import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/assessmentFlow";
 import { downloadReport } from "./logic/report";
 import { getVisibleQuestions, recomputeTags } from "./logic/routing";
 import { scoreAssessment } from "./logic/scoring";
-import type { AiOutputs, Answer, Answers, AnswerValue, Language, Question, QuestionText, QuestionType, ScoreResult } from "./types";
+import type { AiOutputs, AiPreAnswer, Answer, Answers, AnswerValue, Language, Question, QuestionText, QuestionType, ScoreResult } from "./types";
 
 type StepId =
   | "intro"
@@ -116,16 +117,18 @@ export default function App() {
   const [isInterpretingTaskDescription, setIsInterpretingTaskDescription] = useState(false);
   const [email, setEmail] = useState("");
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
+  const [autoAnsweredQuestionIds, setAutoAnsweredQuestionIds] = useState<string[]>([]);
+  const [draftAssessmentAnswers, setDraftAssessmentAnswers] = useState<Answers>({});
 
   const t = translations[language] || translations.en;
   const selectedLanguage = languages.find((item) => item.code === language) || null;
   const visibleQuestions = useMemo(() => {
-    const visible = getVisibleQuestions(activeTags);
-    return visible.sort((a, b) => sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section));
+    return getSortedVisibleQuestions(activeTags);
   }, [activeTags]);
-  const assessmentQuestions = visibleQuestions.filter((question) => !onboardingQuestionIds.has(question.question_id));
+  const assessmentQuestions = getAssessmentQuestions(visibleQuestions, onboardingQuestionIds, autoAnsweredQuestionIds);
   const safeAssessmentIndex = Math.min(assessmentIndex, Math.max(assessmentQuestions.length - 1, 0));
   const currentAssessmentQuestion = assessmentQuestions[safeAssessmentIndex];
+  const displayedAssessmentAnswer = currentAssessmentQuestion ? getDisplayedAssessmentAnswer(currentAssessmentQuestion.question_id, answers, draftAssessmentAnswers) : undefined;
   const totalQuestionSteps = Math.max(5 + assessmentQuestions.length, 5);
   const progressStep = getProgressStep(step, safeAssessmentIndex, totalQuestionSteps);
   const result = scoreResult || scoreAssessment(answers);
@@ -134,18 +137,22 @@ export default function App() {
   const canContinueTimeInRole = isQuestionAnswered(getQuestionById(questionIds.timeInRole), answers[questionIds.timeInRole]);
   const canContinueTaskDescription = isQuestionAnswered(getQuestionById(questionIds.taskDescription), answers[questionIds.taskDescription]);
   const canContinueHeight = isQuestionAnswered(getQuestionById(questionIds.height), answers[questionIds.height]);
-  const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, answers[currentAssessmentQuestion.question_id]) : true;
+  const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, displayedAssessmentAnswer) : true;
 
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
-    const nextAnswers = { ...answers };
-    if (isEmptyAnswerValue(value)) {
-      delete nextAnswers[questionId];
-    } else {
-      nextAnswers[questionId] = { type, value };
-    }
-    const nextTags = recomputeTags(nextAnswers, aiOutputs);
+    const isTaskDescriptionUpdate = questionId === questionIds.taskDescription;
+    const nextAiOutputs = isTaskDescriptionUpdate ? withoutKeys(aiOutputs, [questionIds.taskDescription]) : aiOutputs;
+    const nextAutoAnsweredQuestionIds = isTaskDescriptionUpdate ? [] : autoAnsweredQuestionIds.filter((id) => id !== questionId);
+    const baseAnswers = isTaskDescriptionUpdate ? withoutKeys(answers, autoAnsweredQuestionIds) : answers;
+    const nextAnswers = applyAnswer(baseAnswers, questionId, type, value);
+
+    const nextTags = recomputeTags(nextAnswers, nextAiOutputs);
     setAnswers(nextAnswers);
+    setAiOutputs(nextAiOutputs);
+    setAutoAnsweredQuestionIds(nextAutoAnsweredQuestionIds);
+    if (isTaskDescriptionUpdate) setDraftAssessmentAnswers({});
     setActiveTags(nextTags);
+    setScoreResult(null);
   }
 
   async function continueFromStep() {
@@ -164,8 +171,18 @@ export default function App() {
         try {
           const output = await interpretTextAnswer(taskQuestion, response);
           const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
+          const answersWithoutPreviousAutoAnswers = withoutKeys(answers, autoAnsweredQuestionIds);
+          const routedTags = recomputeTags(answersWithoutPreviousAutoAnswers, nextAiOutputs);
+          const candidateQuestions = getPreAnswerCandidateQuestions(routedTags, answersWithoutPreviousAutoAnswers);
+          const preAnswerOutput = await preAnswerQuestions(candidateQuestions, response, answersWithoutPreviousAutoAnswers);
+          const autoAnswers = toAnswers(preAnswerOutput.auto_answers);
+          const nextAutoAnsweredQuestionIds = preAnswerOutput.auto_answers.map((answer) => answer.question_id);
+          const nextAnswers = { ...answersWithoutPreviousAutoAnswers, ...autoAnswers };
+
+          setAnswers(nextAnswers);
           setAiOutputs(nextAiOutputs);
-          setActiveTags(recomputeTags(answers, nextAiOutputs));
+          setAutoAnsweredQuestionIds(nextAutoAnsweredQuestionIds);
+          setActiveTags(recomputeTags(nextAnswers, nextAiOutputs));
           if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
         } finally {
           setIsInterpretingTaskDescription(false);
@@ -188,6 +205,9 @@ export default function App() {
     if (step === "task_description") return setStep("description");
     if (step === "height") return setStep("task_description");
     if (step === "assessment") {
+      if (currentAssessmentQuestion) {
+        setDraftAssessmentAnswers((draftAnswers) => withoutKeys(draftAnswers, [currentAssessmentQuestion.question_id]));
+      }
       if (safeAssessmentIndex <= 0) return setStep("height");
       return setAssessmentIndex((index) => Math.max(index - 1, 0));
     }
@@ -208,18 +228,32 @@ export default function App() {
       return;
     }
 
-    if (safeAssessmentIndex < assessmentQuestions.length - 1) {
-      setAssessmentIndex(safeAssessmentIndex + 1);
+    if (!displayedAssessmentAnswer) return;
+
+    const nextAnswers = applyAnswer(answers, currentAssessmentQuestion.question_id, currentAssessmentQuestion.type, displayedAssessmentAnswer.value);
+    const nextDraftAssessmentAnswers = withoutKeys(draftAssessmentAnswers, [currentAssessmentQuestion.question_id]);
+    const nextTags = recomputeTags(nextAnswers, aiOutputs);
+    const nextVisibleQuestions = getSortedVisibleQuestions(nextTags);
+    const nextAssessmentQuestions = getAssessmentQuestions(nextVisibleQuestions, onboardingQuestionIds, autoAnsweredQuestionIds);
+    const nextAssessmentIndex = findNextAssessmentIndexAfterCommit(assessmentQuestions, nextAssessmentQuestions, currentAssessmentQuestion.question_id, nextAnswers);
+
+    setAnswers(nextAnswers);
+    setDraftAssessmentAnswers(nextDraftAssessmentAnswers);
+    setActiveTags(nextTags);
+    setScoreResult(null);
+
+    if (nextAssessmentIndex !== null) {
+      setAssessmentIndex(nextAssessmentIndex);
       return;
     }
 
-    const nextResult = scoreAssessment(answers);
+    const nextResult = scoreAssessment(nextAnswers);
     setScoreResult(nextResult);
     setStep("score");
   }
 
   function setAssessmentAnswer(question: Question, value: AnswerValue) {
-    updateAnswer(question.question_id, question.type, value);
+    setDraftAssessmentAnswers((draftAnswers) => applyDraftAnswer(draftAnswers, question.question_id, question.type, value));
   }
 
   async function handleDownloadReport() {
@@ -238,6 +272,8 @@ export default function App() {
     setIsInterpretingTaskDescription(false);
     setEmail("");
     setNextAssessmentChoice("");
+    setAutoAnsweredQuestionIds([]);
+    setDraftAssessmentAnswers({});
     setStep("intro");
   }
 
@@ -319,7 +355,7 @@ export default function App() {
       {step === "assessment" && (
         <AssessmentQuestionScreen
           question={currentAssessmentQuestion}
-          answer={currentAssessmentQuestion ? answers[currentAssessmentQuestion.question_id] : undefined}
+          answer={displayedAssessmentAnswer}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           translations={t}
@@ -1092,6 +1128,11 @@ function getProgressStep(step: StepId, assessmentIndex: number, total: number) {
   return total;
 }
 
+function getSortedVisibleQuestions(activeTags: string[]) {
+  const visible = getVisibleQuestions(activeTags);
+  return visible.sort((a, b) => sectionOrder.indexOf(a.section) - sectionOrder.indexOf(b.section));
+}
+
 function splitParagraphs(value: string) {
   return value
     .split("\n")
@@ -1101,16 +1142,6 @@ function splitParagraphs(value: string) {
 
 function isRecord(value: unknown): value is Record<string, string | string[]> {
   return Boolean(value && typeof value === "object" && !Array.isArray(value));
-}
-
-function isEmptyAnswerValue(value: AnswerValue | undefined) {
-  if (value === undefined) return true;
-  if (typeof value === "string") return value.trim().length === 0;
-  if (Array.isArray(value)) return value.length === 0;
-  if (isRecord(value)) {
-    return Object.values(value).every((entry) => (Array.isArray(entry) ? entry.length === 0 : entry.trim().length === 0));
-  }
-  return false;
 }
 
 function formatScore(score: number | null) {
@@ -1146,6 +1177,25 @@ function getFactorSummaries(result: ScoreResult) {
   return (Object.keys(result.factors) as Array<keyof ScoreResult["factors"]>).map((key) => ({ key, label: labels[key] }));
 }
 
+function getPreAnswerCandidateQuestions(tags: string[], answers: Answers) {
+  return getVisibleQuestions(tags).filter((question) => !onboardingQuestionIds.has(question.question_id) && !answers[question.question_id]);
+}
+
+function toAnswers(autoAnswers: AiPreAnswer[]): Answers {
+  const nextAnswers: Answers = {};
+  autoAnswers.forEach((autoAnswer) => {
+    const question = getQuestionById(autoAnswer.question_id);
+    if (question) nextAnswers[autoAnswer.question_id] = { type: question.type, value: autoAnswer.value };
+  });
+  return nextAnswers;
+}
+
+function withoutKeys<T>(record: Record<string, T>, keys: string[]) {
+  const next = { ...record };
+  keys.forEach((key) => delete next[key]);
+  return next;
+}
+
 function getTaskSummary(answers: Answers) {
   const value = answers[questionIds.taskDescription]?.value;
   if (typeof value === "string" && value.trim()) return value.trim();
@@ -1154,37 +1204,4 @@ function getTaskSummary(answers: Answers) {
 
 function getQuestionById(questionId: string) {
   return questions.find((question) => question.question_id === questionId);
-}
-
-function isQuestionAnswered(question: Question | undefined, answer: Answer | undefined) {
-  if (!question?.required) return true;
-  if (!answer) return false;
-
-  if (question.type === "text") {
-    return typeof answer.value === "string" && answer.value.trim().length > 0;
-  }
-
-  if (question.type === "multi_choice") {
-    return typeof answer.value === "string" && answer.value.length > 0;
-  }
-
-  if (question.type === "select_all") {
-    return Array.isArray(answer.value) && answer.value.length > 0;
-  }
-
-  if (question.type === "grouped_multi_choice") {
-    if (!question.groups?.length || !isRecord(answer.value)) return false;
-    const value = answer.value;
-    return question.groups.every((group) => {
-      const groupValue = value[group.group_id];
-      return typeof groupValue === "string" && groupValue.length > 0;
-    });
-  }
-
-  if (question.type === "grouped_select_all") {
-    if (!isRecord(answer.value)) return false;
-    return Object.values(answer.value).some((value) => Array.isArray(value) && value.length > 0);
-  }
-
-  return false;
 }
