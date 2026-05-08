@@ -2,7 +2,7 @@ import { AppHeader, WrapHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { toggleSingleOption } from "../../logic/answerSelection";
-import { describeRisk, formatScore, formatScoreValue, getFactorSummaries, scorePercent } from "../../logic/scorePresentation";
+import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getFactorSummaries, scorePercent } from "../../logic/scorePresentation";
 import type { ScoreResult } from "../../types";
 
 export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; onBack: () => void; onContinue: () => void }) {
@@ -20,10 +20,11 @@ export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContin
         <div className="factor-list">
           {factors.map((factor) => (
             <div key={factor.key} className="factor-row">
-              <div>
+              <div className="factor-row-header">
                 <strong>{factor.label}</strong>
                 <span>{formatScore(result.factors[factor.key].score)}</span>
               </div>
+              <p className="factor-interpretation">{describeFactorRisk(result.factors[factor.key].score, factor.riskSubject)}</p>
               <div className="factor-track">
                 <span style={{ width: `${scorePercent(result.factors[factor.key].score)}%` }} />
               </div>

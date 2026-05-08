@@ -209,6 +209,13 @@ Current aggregation:
 - average by risk factor
 - average applicable factors for composite score
 
+Risk factor interpretation text uses the averaged factor score:
+
+- less than 1.5: currently low risk associated with that factor
+- 1.5 to less than 2.4: possible risk of discomfort from that factor
+- 2.4 to less than 3.5: likely risk of discomfort from that factor
+- 3.5 or higher: known risk of pain and/or injury
+
 ## PDF Report
 
 Browser-side PDF generation lives in:
@@ -217,7 +224,7 @@ Browser-side PDF generation lives in:
 src/logic/report.ts
 ```
 
-The report uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in the detailed question-and-answer section.
+The report overview includes the averaged factor scores and their risk interpretation text. It uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in the detailed question-and-answer section.
 
 ## Current Limitations
 

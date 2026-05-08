@@ -68,7 +68,7 @@ function round(value: number) {
 function describeScore(score: number | null) {
   if (score === null) return "N/A";
   if (score < 1.5) return "Low";
-  if (score < 2.5) return "Possible risk";
+  if (score < 2.4) return "Possible risk";
   if (score < 3.5) return "Likely risk";
-  return "Known/high risk";
+  return "Known risk";
 }
