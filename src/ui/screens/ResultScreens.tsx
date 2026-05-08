@@ -173,7 +173,7 @@ export function CompleteScreen({ onStartNew }: { onStartNew: () => void }) {
       <AppHeader tone="blue" />
       <section className="page complete-page">
         <div className="checkmark" aria-hidden="true">
-          &#226;&#156;&#147;
+          &#10003;
         </div>
         <h1>Thank You For Completing The MSI 360 Survey</h1>
         <p>Your responses help identify MSI-related hazards in your workplace and contribute to a safer work environment for everyone.</p>
