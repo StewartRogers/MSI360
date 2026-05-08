@@ -251,10 +251,10 @@ export const questions: Question[] = [
     required: true,
     type: "select_all",
     options: [
-      { option_id: "smooth", risk_scores: { force: 1 }, add_tags: ["pushing_pulling"] },
-      { option_id: "soft", risk_scores: { force: 3 }, add_tags: ["pushing_pulling"] },
-      { option_id: "rough", risk_scores: { force: 3 }, add_tags: ["pushing_pulling"] },
-      { option_id: "does_not_apply", risk_scores: {}, exclusive: true }
+      { option_id: "smooth", risk_scores: { force: 2 }, add_tags: ["pushing_pulling"] },
+      { option_id: "soft", risk_scores: { force: 2 }, add_tags: ["pushing_pulling"] },
+      { option_id: "rough", risk_scores: { force: 2 }, add_tags: ["pushing_pulling"] },
+      { option_id: "does_not_apply", risk_scores: { force: 1 }, exclusive: true }
     ]
   },
   {
@@ -264,9 +264,9 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "most", risk_scores: { force: 3 }, add_tags: ["heavy_loads", "pushing_pulling"] },
-      { option_id: "some", risk_scores: { force: 2 }, add_tags: ["pushing_pulling"] },
-      { option_id: "never", risk_scores: {} }
+      { option_id: "most", risk_scores: { force: 4 }, add_tags: ["heavy_loads", "pushing_pulling"] },
+      { option_id: "some", risk_scores: { force: 3 }, add_tags: ["pushing_pulling"] },
+      { option_id: "never", risk_scores: { force: 1 } }
     ]
   },
   {
@@ -278,8 +278,8 @@ export const questions: Question[] = [
     options: [
       { option_id: "less_than_5_lb", risk_scores: { force: 1 } },
       { option_id: "5_to_18_lb", risk_scores: { force: 2 }, add_tags: ["lifting_lowering", "carrying"] },
-      { option_id: "more_than_18_lb", risk_scores: { force: 3 }, add_tags: ["heavy_loads", "lifting_lowering", "carrying"] },
-      { option_id: "does_not_apply", risk_scores: {} }
+      { option_id: "more_than_18_lb", risk_scores: { force: 4 }, add_tags: ["heavy_loads", "lifting_lowering", "carrying"] },
+      { option_id: "does_not_apply", risk_scores: { force: 1 } }
     ]
   },
   {
@@ -291,7 +291,7 @@ export const questions: Question[] = [
     options: [
       { option_id: "regularly", risk_scores: { force: 3 }, add_tags: ["tool_use"] },
       { option_id: "occasionally", risk_scores: { force: 2 }, add_tags: ["tool_use"] },
-      { option_id: "no", risk_scores: {} }
+      { option_id: "no", risk_scores: { force: 1 } }
     ]
   },
   {
@@ -305,7 +305,7 @@ export const questions: Question[] = [
       { option_id: "some_extent", risk_scores: { force: 2 } },
       { option_id: "do_not_ask", risk_scores: { force: 3 } },
       { option_id: "ask_but_no_assistance", risk_scores: { force: 4 } },
-      { option_id: "does_not_apply", risk_scores: {} }
+      { option_id: "does_not_apply", risk_scores: { force: 1 } }
     ]
   },
   {
