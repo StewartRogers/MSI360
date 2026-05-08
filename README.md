@@ -100,7 +100,11 @@ src/
       AssessmentScreen.tsx
       OnboardingScreens.tsx
       ResultScreens.tsx
-  styles.css
+    styles.css
+    styles/
+      base.css
+      components.css
+      screens.css
   types.ts
 ```
 
