@@ -201,8 +201,8 @@ export const questions: Question[] = [
     options: [
       { option_id: "less_than_30_min", risk_scores: { contact_stress: 1 } },
       { option_id: "30_min_to_1_hour", risk_scores: { contact_stress: 2 }, add_tags: ["sharp_edges"] },
-      { option_id: "more_than_1_hour", risk_scores: { contact_stress: 3 }, add_tags: ["sharp_edges"] },
-      { option_id: "does_not_apply", risk_scores: {} }
+      { option_id: "more_than_1_hour", risk_scores: { contact_stress: 4 }, add_tags: ["sharp_edges"] },
+      { option_id: "does_not_apply", risk_scores: { contact_stress: 1 }, }
     ]
   },
   {
@@ -213,9 +213,9 @@ export const questions: Question[] = [
     type: "multi_choice",
     options: [
       { option_id: "less_than_30_min", risk_scores: { contact_stress: 1 } },
-      { option_id: "30_min_to_1_hour", risk_scores: { contact_stress: 2 }, add_tags: ["kneeling_floor_work"] },
-      { option_id: "more_than_1_hour", risk_scores: { contact_stress: 3 }, add_tags: ["kneeling_floor_work"] },
-      { option_id: "does_not_apply", risk_scores: {} }
+      { option_id: "30_min_to_1_hour", risk_scores: { contact_stress: 3 }, add_tags: ["kneeling_floor_work"] },
+      { option_id: "more_than_1_hour", risk_scores: { contact_stress: 4 }, add_tags: ["kneeling_floor_work"] },
+      { option_id: "does_not_apply", risk_scores: { contact_stress: 1 } }
     ]
   },
   {
@@ -226,10 +226,10 @@ export const questions: Question[] = [
     type: "select_all",
     options: [
       { option_id: "poor_grip_size", risk_scores: { contact_stress: 3 }, add_tags: ["tool_use"] },
-      { option_id: "irregular_unbalanced", risk_scores: { contact_stress: 2 } },
+      { option_id: "irregular_unbalanced", risk_scores: { contact_stress: 3 } },
       { option_id: "sharp_handholds", risk_scores: { contact_stress: 3 }, add_tags: ["sharp_edges"] },
-      { option_id: "slippery", risk_scores: { contact_stress: 2 }, add_tags: ["tool_use"] },
-      { option_id: "none", risk_scores: {}, exclusive: true }
+      { option_id: "slippery", risk_scores: { contact_stress: 3 }, add_tags: ["tool_use"] },
+      { option_id: "none", risk_scores: { contact_stress: 1 }, exclusive: true }
     ]
   },
   {
@@ -239,9 +239,9 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "less_than_one_hour", risk_scores: { contact_stress: 2 }, add_tags: ["body_as_tool"] },
-      { option_id: "more_than_one_hour", risk_scores: { contact_stress: 3 }, add_tags: ["body_as_tool"] },
-      { option_id: "no", risk_scores: {} }
+      { option_id: "less_than_one_hour", risk_scores: { contact_stress: 3 }, add_tags: ["body_as_tool"] },
+      { option_id: "more_than_one_hour", risk_scores: { contact_stress: 4 }, add_tags: ["body_as_tool"] },
+      { option_id: "no", risk_scores: { contact_stress: 1 } }
     ]
   },
   {
