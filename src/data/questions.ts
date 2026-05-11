@@ -77,9 +77,9 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "mostly_sit", risk_scores: {}, add_tags: ["seated_work", "desk_based"] },
-      { option_id: "mostly_stand_move", risk_scores: {}, add_tags: ["standing_work", "walking_moving", "manual_handling"] },
-      { option_id: "sit_and_stand", risk_scores: {}, add_tags: ["seated_work", "standing_work", "walking_moving"] }
+      { option_id: "mostly_sit", risk_scores: { awkward_posture: 2 }, add_tags: ["seated_work", "desk_based"] },
+      { option_id: "mostly_stand_move", risk_scores: { awkward_posture: 2 }, add_tags: ["standing_work", "walking_moving", "manual_handling"] },
+      { option_id: "sit_and_stand", risk_scores: { awkward_posture: 1 }, add_tags: ["seated_work", "standing_work", "walking_moving"] }
     ]
   },
   {
@@ -604,8 +604,8 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["overtime"] },
-      { option_id: "sometimes", risk_scores: { environmental: 2 }, add_tags: ["overtime"] },
+      { option_id: "frequently", risk_scores: { environmental: 4 }, add_tags: ["overtime"] },
+      { option_id: "sometimes", risk_scores: { environmental: 3 }, add_tags: ["overtime"] },
       { option_id: "rarely", risk_scores: { environmental: 1 } },
       { option_id: "never", risk_scores: { environmental: 1 } }
     ]
@@ -617,8 +617,8 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "frequently", risk_scores: { environmental: 3 }, add_tags: ["tight_deadlines"] },
-      { option_id: "sometimes", risk_scores: { environmental: 2 }, add_tags: ["tight_deadlines"] },
+      { option_id: "frequently", risk_scores: { environmental: 4 }, add_tags: ["tight_deadlines"] },
+      { option_id: "sometimes", risk_scores: { environmental: 3 }, add_tags: ["tight_deadlines"] },
       { option_id: "rarely", risk_scores: { environmental: 1 } },
       { option_id: "never", risk_scores: { environmental: 1 } }
     ]
