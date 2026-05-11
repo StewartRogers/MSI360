@@ -310,6 +310,17 @@
   font-size: 10px;
 }
 
+.psychosocial-note {
+  display: block;
+  margin: 12px auto 0;
+  max-width: 320px;
+  color: #7a3fa0;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
 .factor-list {
   display: grid;
   gap: 16px;
@@ -455,6 +466,12 @@
 
 .report-card .orange {
   color: #f18a00;
+}
+
+.report-psychosocial-note {
+  margin: -6px 0 16px;
+  max-width: none;
+  text-align: left;
 }
 
 .report-divider {

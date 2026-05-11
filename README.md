@@ -207,7 +207,9 @@ Current aggregation:
 
 - max selected option score per question
 - average by risk factor
-- average applicable factors for composite score
+- average applicable factors for base composite score
+- average answered psychosocial values from Q7, Q8, Q41, and Q42
+- apply the psychosocial multiplier to the base composite score only, capped at 4
 
 Risk factor interpretation text uses the averaged factor score:
 
@@ -215,6 +217,13 @@ Risk factor interpretation text uses the averaged factor score:
 - 1.5 to less than 2.4: possible risk of discomfort from that factor
 - 2.4 to less than 3.5: likely risk of discomfort from that factor
 - 3.5 or higher: known risk of pain and/or injury
+
+Psychosocial scoring is a hidden modifier, not a standalone report category. The current placeholder mappings are:
+
+- Q7/Q8: great extent = 1, some extent = 2, rarely = 3, not at all = 4
+- Q41/Q42: never = 1, rarely = 2, sometimes = 3, frequently = 4
+
+The psychosocial score averages whichever of those four questions were answered in the conditional assessment flow. If none were answered, the multiplier is 1. Scores below 1.5 multiply the base composite by 1, scores from 1.5 to less than 2.4 multiply by 1.3, and scores from 2.4 to 4 multiply by 1.6. The adjusted final composite score is capped at 4. Q41 and Q42 still contribute to the environmental factor score in addition to the psychosocial modifier.
 
 ## PDF Report
 
@@ -224,7 +233,7 @@ Browser-side PDF generation lives in:
 src/logic/report.ts
 ```
 
-The report overview includes the averaged factor scores and their risk interpretation text. It uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in the detailed question-and-answer section.
+The report overview includes the adjusted composite score, averaged factor scores, and their risk interpretation text. When psychosocial responses apply a multiplier above 1, the on-screen summary and PDF overview show a purple note under the overall score. The PDF uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in the detailed question-and-answer section.
 
 ## Current Limitations
 

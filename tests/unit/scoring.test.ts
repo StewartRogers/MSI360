@@ -1,12 +1,20 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { scoreAssessment } from "../../src/logic/scoring";
+import { getPsychosocialMultiplier, scoreAssessment } from "../../src/logic/scoring";
 import type { Answers } from "../../src/types";
 
 test("scoreAssessment returns unscored results when no answers are present", () => {
   const result = scoreAssessment({});
 
+  assert.equal(result.scoring_version, "client-prototype-v2");
   assert.equal(result.composite_score, null);
+  assert.equal(result.base_composite_score, null);
+  assert.deepEqual(result.psychosocial_modifier, {
+    score: null,
+    applicable_questions: 0,
+    multiplier: 1,
+    influenced_score: false
+  });
   assert.equal(result.grouped_scores.physical, null);
   assert.equal(result.grouped_scores.environmental, null);
   assert.equal(result.factors.force.applicable_questions, 0);
@@ -31,11 +39,70 @@ test("scoreAssessment uses max selected option score per question and averages b
   assert.equal(result.factors.force.score, 4);
   assert.equal(result.factors.awkward_posture.score, 3);
   assert.equal(result.factors.repetition.score, 3);
-  assert.equal(result.factors.environmental.score, 3);
+  assert.equal(result.factors.environmental.score, 4);
   assert.equal(result.factors.symptoms.score, 3);
   assert.equal(result.grouped_scores.physical, 3.2);
-  assert.equal(result.grouped_scores.environmental, 3);
-  assert.equal(result.composite_score, 3.2);
+  assert.equal(result.grouped_scores.environmental, 4);
+  assert.equal(result.base_composite_score, 3.3);
+  assert.equal(result.composite_score, 3.3);
+  assert.equal(result.psychosocial_modifier.multiplier, 1);
+});
+
+test("scoreAssessment averages answered psychosocial questions only and applies the modifier to the final score", () => {
+  const answers: Answers = {
+    "question-7": { type: "multi_choice", value: "great_extent" },
+    "question-8": { type: "multi_choice", value: "rarely" },
+    "question-17": { type: "multi_choice", value: "5_to_18_lb" }
+  };
+
+  const result = scoreAssessment(answers);
+
+  assert.equal(result.factors.force.score, 2);
+  assert.equal(result.base_composite_score, 2);
+  assert.equal(result.psychosocial_modifier.score, 2);
+  assert.equal(result.psychosocial_modifier.applicable_questions, 2);
+  assert.equal(result.psychosocial_modifier.multiplier, 1.3);
+  assert.equal(result.psychosocial_modifier.influenced_score, true);
+  assert.equal(result.composite_score, 2.6);
+});
+
+test("psychosocial multiplier uses the configured thresholds", () => {
+  assert.equal(getPsychosocialMultiplier(null), 1);
+  assert.equal(getPsychosocialMultiplier(1.4), 1);
+  assert.equal(getPsychosocialMultiplier(1.5), 1.3);
+  assert.equal(getPsychosocialMultiplier(2.3), 1.3);
+  assert.equal(getPsychosocialMultiplier(2.4), 1.6);
+  assert.equal(getPsychosocialMultiplier(4), 1.6);
+});
+
+test("scoreAssessment caps the psychosocial-adjusted composite score at 4", () => {
+  const answers: Answers = {
+    "question-7": { type: "multi_choice", value: "not_at_all" },
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" }
+  };
+
+  const result = scoreAssessment(answers);
+
+  assert.equal(result.base_composite_score, 4);
+  assert.equal(result.psychosocial_modifier.score, 4);
+  assert.equal(result.psychosocial_modifier.multiplier, 1.6);
+  assert.equal(result.composite_score, 4);
+});
+
+test("scoreAssessment keeps Q41 and Q42 in environmental scoring while using them for psychosocial scoring", () => {
+  const answers: Answers = {
+    "question-41": { type: "multi_choice", value: "frequently" },
+    "question-42": { type: "multi_choice", value: "sometimes" }
+  };
+
+  const result = scoreAssessment(answers);
+
+  assert.equal(result.factors.environmental.score, 3.5);
+  assert.equal(result.grouped_scores.environmental, 3.5);
+  assert.equal(result.base_composite_score, 3.5);
+  assert.equal(result.psychosocial_modifier.score, 3.5);
+  assert.equal(result.psychosocial_modifier.multiplier, 1.6);
+  assert.equal(result.composite_score, 4);
 });
 
 test("scoreAssessment averages contact stress over the number of answered contact stress questions", () => {

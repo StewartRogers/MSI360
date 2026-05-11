@@ -168,8 +168,8 @@ test("draft assessment answers are not scored until committed", () => {
   const scoreAfterCommit = scoreAssessment(applyAnswer(answers, "question-22", "grouped_multi_choice", draftAnswers["question-22"].value));
 
   assert.equal(answers["question-22"], undefined);
-  assert.equal(committedScore.factors.awkward_posture.score, null);
-  assert.equal(scoreAfterCommit.factors.awkward_posture.score, 2);
+  assert.equal(committedScore.factors.awkward_posture.score, 1.3);
+  assert.equal(scoreAfterCommit.factors.awkward_posture.score, 1.5);
 });
 
 test("every configured question has English display text for its options", () => {

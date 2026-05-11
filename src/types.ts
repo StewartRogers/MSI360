@@ -14,6 +14,7 @@ export interface Language {
 export interface Option {
   option_id: string;
   risk_scores: RiskScores;
+  psychosocial_score?: number;
   add_tags?: string[];
   exclusive?: boolean;
 }
@@ -105,6 +106,13 @@ export interface FactorScore {
   severity: string;
 }
 
+export interface PsychosocialModifier {
+  score: number | null;
+  applicable_questions: number;
+  multiplier: number;
+  influenced_score: boolean;
+}
+
 export interface ScoreResult {
   scoring_version: string;
   aggregation: string;
@@ -114,6 +122,8 @@ export interface ScoreResult {
     environmental: number | null;
     organizational: number | null;
   };
+  base_composite_score: number | null;
   composite_score: number | null;
+  psychosocial_modifier: PsychosocialModifier;
   warnings: string[];
 }

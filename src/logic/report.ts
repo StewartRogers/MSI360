@@ -1,7 +1,7 @@
 import { PDFDocument, PDFFont, StandardFonts, rgb } from "pdf-lib";
 import { questions } from "../data/catalog";
 import { translations } from "../data/translations";
-import { describeFactorRisk, getFactorSummaries } from "./scorePresentation";
+import { describeFactorRisk, getFactorSummaries, getPsychosocialInfluenceMessage } from "./scorePresentation";
 import type { AiOutputs, Answers, Question, ScoreResult } from "../types";
 
 export async function downloadReport(answers: Answers, aiOutputs: AiOutputs, scoreResult: ScoreResult) {
@@ -21,10 +21,12 @@ export async function downloadReport(answers: Answers, aiOutputs: AiOutputs, sco
   );
 
   section(pdf, state, "Overview Of Results");
+  const psychosocialMessage = getPsychosocialInfluenceMessage(scoreResult);
   write(pdf, state, `Composite score: ${formatScore(scoreResult.composite_score)}`, 11, bold);
+  if (psychosocialMessage) paragraph(pdf, state, psychosocialMessage, 9, regular, rgb(0.48, 0.25, 0.63));
   write(pdf, state, `Physical score: ${formatScore(scoreResult.grouped_scores.physical)}`, 10, regular);
   write(pdf, state, `Environmental score: ${formatScore(scoreResult.grouped_scores.environmental)}`, 10, regular);
-  write(pdf, state, "Organizational/work-design context: included in answers, not scored.", 10, regular);
+  write(pdf, state, "Organizational/work-design context: included in answers; applicable responses may influence the overall score.", 10, regular);
   gap(state, 5);
   getFactorSummaries(scoreResult).forEach((factor) => {
     const factorScore = scoreResult.factors[factor.key].score;
@@ -93,16 +95,16 @@ function section(pdf: PDFDocument, state: PdfState, title: string) {
   gap(state, 5);
 }
 
-function paragraph(pdf: PDFDocument, state: PdfState, text: string, size: number, font = state.regular) {
-  wrap(text, font, size, 500).forEach((line) => write(pdf, state, line, size, font));
+function paragraph(pdf: PDFDocument, state: PdfState, text: string, size: number, font = state.regular, color = rgb(0.08, 0.08, 0.08)) {
+  wrap(text, font, size, 500).forEach((line) => write(pdf, state, line, size, font, color));
 }
 
-function write(pdf: PDFDocument, state: PdfState, text: string, size: number, font: typeof state.regular) {
+function write(pdf: PDFDocument, state: PdfState, text: string, size: number, font: typeof state.regular, color = rgb(0.08, 0.08, 0.08)) {
   if (state.y < 56) {
     state.page = pdf.addPage([612, 792]);
     state.y = 744;
   }
-  state.page.drawText(text, { x: 56, y: state.y, size, font, color: rgb(0.08, 0.08, 0.08) });
+  state.page.drawText(text, { x: 56, y: state.y, size, font, color });
   state.y -= size + 5;
 }
 
