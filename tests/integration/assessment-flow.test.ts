@@ -242,29 +242,39 @@ test("Punjabi translation has display text for every configured question option"
 });
 
 test("Arabic translation has display text for every configured question option", () => {
-  const arabicQuestions = translations.ar.questions;
-
   assert.equal(translations.ar.app.description_title, "الوصف");
   assert.ok(translations.ar.app.description_body);
+  assertTranslationCoverage("Arabic", translations.ar.questions);
+});
 
+test("French, Spanish, and Korean translations have display text for every configured question option", () => {
+  assert.equal(translations.fr.app.description_title, "Description");
+  assert.equal(translations.es.app.description_title, "Descripción");
+  assert.equal(translations.ko.app.description_title, "설명");
+  assertTranslationCoverage("French", translations.fr.questions);
+  assertTranslationCoverage("Spanish", translations.es.questions);
+  assertTranslationCoverage("Korean", translations.ko.questions);
+});
+
+function assertTranslationCoverage(languageName: string, translatedQuestions: typeof translations.en.questions) {
   for (const question of questions) {
-    const text = arabicQuestions[question.question_id];
-    assert.ok(text, `Missing Arabic text for question ${question.question_id}`);
-    assert.ok(text.label, `Missing Arabic label for question ${question.question_id}`);
+    const text = translatedQuestions[question.question_id];
+    assert.ok(text, `Missing ${languageName} text for question ${question.question_id}`);
+    assert.ok(text.label, `Missing ${languageName} label for question ${question.question_id}`);
 
     for (const option of question.options ?? []) {
-      assert.ok(text.options?.[option.option_id], `Missing Arabic option label for ${question.question_id}.${option.option_id}`);
+      assert.ok(text.options?.[option.option_id], `Missing ${languageName} option label for ${question.question_id}.${option.option_id}`);
     }
 
     for (const group of question.groups ?? []) {
       const groupText = text.groups?.[group.group_id];
-      assert.ok(groupText?.label, `Missing Arabic group label for ${question.question_id}.${group.group_id}`);
+      assert.ok(groupText?.label, `Missing ${languageName} group label for ${question.question_id}.${group.group_id}`);
       for (const option of group.options) {
-        assert.ok(groupText.options[option.option_id], `Missing Arabic grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
+        assert.ok(groupText.options[option.option_id], `Missing ${languageName} grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
       }
     }
   }
-});
+}
 
 function getAnsweredSeatedAssessmentThroughQuestion21(): Answers {
   return {
