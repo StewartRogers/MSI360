@@ -2,7 +2,7 @@ import { groupImages, optionImages, promptUsesSectionTitle, questionIds, standal
 import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { CheckboxRow, ImageRadioCard, RadioRow } from "../components/AnswerControls";
-import { getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getQuestionText } from "../../data/translationText";
 import { isRecord, splitParagraphs } from "../../logic/appFlow";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
@@ -18,6 +18,8 @@ export function AssessmentQuestionScreen(props: {
   canContinue: boolean;
   onContinue: () => void;
 }) {
+  const actionLabels = getActionButtonLabels(props.translations);
+
   if (!props.question) {
     return (
       <>
@@ -26,7 +28,7 @@ export function AssessmentQuestionScreen(props: {
           <div className="content-block">
             <h2>No additional questions are needed.</h2>
           </div>
-          <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+          <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
         </section>
       </>
     );
@@ -37,7 +39,7 @@ export function AssessmentQuestionScreen(props: {
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
       <section className={`page page-with-actions question-page question-${props.question.question_id}`}>
         <QuestionContent question={props.question} answer={props.answer} translations={props.translations} onAnswer={props.onAnswer} />
-        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );

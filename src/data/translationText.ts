@@ -16,6 +16,22 @@ export function getQuestionText(t: Translation, questionId: string): QuestionTex
   };
 }
 
+export function getActionButtonLabels(t: Translation) {
+  return {
+    continueLabel: getAppText(t, "continue_button", "Continue"),
+    backLabel: getAppText(t, "back_button", "Back"),
+    busyLabel: getAppText(t, "processing_button", "Processing")
+  };
+}
+
+export function getAnalyzingButtonLabel(t: Translation) {
+  return getAppText(t, "analyzing_button", "Analyzing");
+}
+
+function getAppText(t: Translation, key: string, fallback: string) {
+  return t.app[key] || translations.en.app[key] || fallback;
+}
+
 function mergeOptions(english?: Record<string, string>, localized?: Record<string, string>) {
   if (!english && !localized) return undefined;
   return { ...(english || {}), ...(localized || {}) };

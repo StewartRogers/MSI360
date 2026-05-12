@@ -4,7 +4,7 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
-import { getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, Language, Translation } from "../../types";
 
@@ -38,12 +38,14 @@ export function LanguageScreen(props: {
   selectedLanguage: Language | null;
   progressStep: number;
   totalSteps: number;
+  translations: Translation;
   onSelect: (language: Language | null) => void;
   onBack: () => void;
   onContinue: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const selectedCode = props.selectedLanguage?.code || "";
+  const actionLabels = getActionButtonLabels(props.translations);
 
   function handleLanguageSelect(nextLanguage: Language) {
     if (selectedCode === nextLanguage.code) {
@@ -96,7 +98,7 @@ export function LanguageScreen(props: {
             )}
           </div>
         </div>
-        <ActionButtons onBack={props.onBack} canContinue={Boolean(props.selectedLanguage)} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={Boolean(props.selectedLanguage)} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -117,6 +119,7 @@ export function ChoiceScreen(props: {
   const question = questions.find((item) => item.question_id === props.questionId);
   const text = getQuestionText(props.translations, props.questionId);
   const selected = typeof props.answer?.value === "string" ? props.answer.value : "";
+  const actionLabels = getActionButtonLabels(props.translations);
 
   if (!question || !question.options || !text?.options) return null;
 
@@ -138,7 +141,7 @@ export function ChoiceScreen(props: {
             ))}
           </div>
         </div>
-        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -149,6 +152,7 @@ export function DescriptionScreen(props: { progressStep: number; totalSteps: num
   const body =
     props.translations.app.description_body ||
     "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.";
+  const actionLabels = getActionButtonLabels(props.translations);
 
   return (
     <>
@@ -158,7 +162,7 @@ export function DescriptionScreen(props: { progressStep: number; totalSteps: num
           <h2>{title}</h2>
           <p>{body}</p>
         </div>
-        <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -178,6 +182,7 @@ export function TextScreen(props: {
   onContinue: () => void;
 }) {
   const text = getQuestionText(props.translations, props.questionId);
+  const actionLabels = getActionButtonLabels(props.translations);
   if (!text) return null;
 
   return (
@@ -207,7 +212,8 @@ export function TextScreen(props: {
           onBack={props.onBack}
           canContinue={props.canContinue}
           isBusy={props.isLoading}
-          busyLabel="Analyzing"
+          {...actionLabels}
+          busyLabel={getAnalyzingButtonLabel(props.translations)}
           onContinue={props.onContinue}
         />
       </section>

@@ -4,6 +4,10 @@ export const ar: Translation = {
   app: {
     title: "MSI360",
     disclosure: "نموذج أولي: تبقى إجاباتك في هذا المتصفح ما لم تختر تنزيل تقريرك أو مشاركته.",
+    continue_button: "متابعة",
+    back_button: "رجوع",
+    processing_button: "جار المعالجة",
+    analyzing_button: "جار التحليل",
     description_title: "الوصف",
     description_body:
       "تتعلق الأسئلة التالية بالعمل الذي تقوم به خلال يوم عمل عادي أو عندما تنجز المهمة أو النشاط المحدد الذي ترغب في تقييمه اليوم. والهدف هو أن تخبر MSI360 بالإجراءات التي تقوم بها لإنجاز عملك."

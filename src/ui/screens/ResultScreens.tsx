@@ -1,13 +1,15 @@
 import { AppHeader, WrapHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
+import { getActionButtonLabels } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
 import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
-import type { ScoreResult } from "../../types";
+import type { ScoreResult, Translation } from "../../types";
 
-export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; onBack: () => void; onContinue: () => void }) {
+export function ScoreScreen({ result, progressStep, totalSteps, translations, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
   const factors = getFactorSummaries(result);
   const psychosocialMessage = getPsychosocialInfluenceMessage(result);
+  const { backLabel } = getActionButtonLabels(translations);
   return (
     <>
       <AppHeader tone="blue" progressStep={progressStep} totalSteps={totalSteps} />
@@ -38,7 +40,7 @@ export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContin
             Download Report
           </button>
           <button className="secondary-button" onClick={onBack}>
-            Back
+            {backLabel}
           </button>
         </div>
       </section>
@@ -46,7 +48,9 @@ export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContin
   );
 }
 
-export function EmailScreen({ value, onChange, onBack, onContinue }: { value: string; onChange: (value: string) => void; onBack: () => void; onContinue: () => void }) {
+export function EmailScreen({ value, translations, onChange, onBack, onContinue }: { value: string; translations: Translation; onChange: (value: string) => void; onBack: () => void; onContinue: () => void }) {
+  const actionLabels = getActionButtonLabels(translations);
+
   return (
     <>
       <WrapHeader active="email" />
@@ -62,7 +66,7 @@ export function EmailScreen({ value, onChange, onBack, onContinue }: { value: st
           </label>
           <input id="email-address" className="single-input" value={value} onChange={(event) => onChange(event.target.value)} inputMode="email" />
         </div>
-        <ActionButtons onBack={onBack} onContinue={onContinue} />
+        <ActionButtons {...actionLabels} onBack={onBack} onContinue={onContinue} />
       </section>
     </>
   );
@@ -139,7 +143,8 @@ export function ReportReadyScreen({
   );
 }
 
-export function SubmitScreen({ value, onChange, onBack, onSubmit }: { value: string; onChange: (value: string) => void; onBack: () => void; onSubmit: () => void }) {
+export function SubmitScreen({ value, translations, onChange, onBack, onSubmit }: { value: string; translations: Translation; onChange: (value: string) => void; onBack: () => void; onSubmit: () => void }) {
+  const { backLabel } = getActionButtonLabels(translations);
   const options = [
     ["reuse", "Yes, and I'd like to complete another report using the same information I provided initially allowing me to edit as needed."],
     ["restart", "Yes, and I'd like to start over with new information"],
@@ -164,7 +169,7 @@ export function SubmitScreen({ value, onChange, onBack, onSubmit }: { value: str
             Submit
           </button>
           <button className="secondary-button" onClick={onBack}>
-            Back
+            {backLabel}
           </button>
         </div>
       </section>

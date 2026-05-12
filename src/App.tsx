@@ -198,6 +198,7 @@ export default function App() {
           selectedLanguage={selectedLanguage}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
+          translations={t}
           onSelect={(nextLanguage) => setLanguage(nextLanguage?.code || "")}
           onBack={goBack}
           onContinue={continueFromStep}
@@ -281,9 +282,9 @@ export default function App() {
         />
       )}
 
-      {step === "score" && <ScoreScreen result={result} progressStep={totalQuestionSteps} totalSteps={totalQuestionSteps} onBack={goBack} onContinue={() => setStep("email")} />}
+      {step === "score" && <ScoreScreen result={result} progressStep={totalQuestionSteps} totalSteps={totalQuestionSteps} translations={t} onBack={goBack} onContinue={() => setStep("email")} />}
 
-      {step === "email" && <EmailScreen value={email} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
+      {step === "email" && <EmailScreen value={email} translations={t} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
 
       {step === "report" && (
         <ReportReadyScreen
@@ -299,7 +300,7 @@ export default function App() {
       )}
 
       {step === "submit" && (
-        <SubmitScreen value={nextAssessmentChoice} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
+        <SubmitScreen value={nextAssessmentChoice} translations={t} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
       )}
 
       {step === "complete" && <CompleteScreen onStartNew={startNewAssessment} />}

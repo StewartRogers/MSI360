@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
 import { translations } from "../../src/data/translations";
-import { getQuestionText } from "../../src/data/translationText";
+import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -254,6 +254,14 @@ test("French, Spanish, and Korean translations have display text for every confi
   assertTranslationCoverage("French", translations.fr.questions);
   assertTranslationCoverage("Spanish", translations.es.questions);
   assertTranslationCoverage("Korean", translations.ko.questions);
+});
+
+test("ready translations provide localized shared action button labels", () => {
+  assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
+  assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
+  assert.equal(getActionButtonLabels(translations.es).backLabel, "Atrás");
+  assert.equal(getActionButtonLabels(translations.ko).continueLabel, "계속");
+  assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
 function assertTranslationCoverage(languageName: string, translatedQuestions: typeof translations.en.questions) {

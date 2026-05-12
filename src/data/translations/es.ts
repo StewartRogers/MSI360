@@ -30,6 +30,10 @@ export const es: Translation = {
   app: {
     title: "MSI360",
     disclosure: "Prototipo: tus respuestas permanecen en este navegador a menos que elijas descargar o compartir tu informe.",
+    continue_button: "Continuar",
+    back_button: "Atrás",
+    processing_button: "Procesando",
+    analyzing_button: "Analizando",
     description_title: "Descripción",
     description_body:
       "Las siguientes preguntas tratan sobre el trabajo que realizas durante un día laboral típico o cuando completas la tarea o actividad específica que deseas evaluar hoy. La intención es que le cuentes a MSI360 las acciones que realizas para hacer tu trabajo."
