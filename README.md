@@ -48,6 +48,8 @@ npm run test:unit
 
 The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, and a few lightweight assessment-flow integration checks.
 
+The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
+
 ## Environment Variables
 
 Create `.env.local` in this repo root:

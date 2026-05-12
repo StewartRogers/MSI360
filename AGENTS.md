@@ -9,3 +9,4 @@
 - Run the full test suite before submitting changes.
 - Fix any test failures or errors found during validation.
 - Add or update unit tests for each pull request.
+- Keep `docs/MSI360_Sprint_Test_Cases.md` accurate after AI/code changes that add, remove, rename, or materially change automated tests.
