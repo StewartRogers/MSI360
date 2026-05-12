@@ -48,6 +48,8 @@ npm run test:unit
 
 The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, and a few lightweight assessment-flow integration checks.
 
+The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
+
 ## Environment Variables
 
 Create `.env.local` in this repo root:
@@ -67,21 +69,69 @@ Important: this is a client-only app, so every `VITE_` variable is visible in th
 ## Project Structure
 
 ```text
+AGENTS.md
+docs/
+  MSI360_Sprint_Test_Cases.md
+public/
+  images/
+    ...
+  worksafebc-logo.png
+scripts/
+  run-tests.mjs
 src/
   App.tsx
+  main.tsx
   app/
     questionAssets.ts
     types.ts
   data/
     catalog.ts
+    languages.ts
+    questions.ts
+    sections.ts
+    tags.ts
     translations/
-      en.ts
-      fr.ts
-      zhHans.ts
-      es.ts
-      ko.ts
-      vi.ts
       index.ts
+      af.ts
+      ar.ts
+      bn.ts
+      ceb.ts
+      cs.ts
+      da.ts
+      de.ts
+      el.ts
+      en.ts
+      es.ts
+      fa.ts
+      faNos.ts
+      fil.ts
+      fr.ts
+      gu.ts
+      hi.ts
+      hr.ts
+      hu.ts
+      id.ts
+      ilo.ts
+      it.ts
+      ja.ts
+      ko.ts
+      ml.ts
+      nan.ts
+      nl.ts
+      pa.ts
+      pl.ts
+      prs.ts
+      pt.ts
+      ro.ts
+      ru.ts
+      sr.ts
+      ta.ts
+      tr.ts
+      uk.ts
+      ur.ts
+      vi.ts
+      yue.ts
+      zhHans.ts
   logic/
     ai.ts
     answerSelection.ts
@@ -106,6 +156,23 @@ src/
       components.css
       screens.css
   types.ts
+  vite-env.d.ts
+tests/
+  integration/
+    assessment-flow.test.ts
+  unit/
+    ai.test.ts
+    answer-selection.test.ts
+    loading-state.test.ts
+    routing.test.ts
+    score-presentation.test.ts
+    scoring.test.ts
+types/
+  node-test.d.ts
+index.html
+package.json
+tsconfig.json
+vite.config.ts
 ```
 
 ## Question Data
@@ -132,12 +199,7 @@ Question IDs mirror the source questionnaire labels and use straight numeric IDs
 Question text lives in language-specific files:
 
 ```text
-src/data/translations/en.ts
-src/data/translations/fr.ts
-src/data/translations/zhHans.ts
-src/data/translations/es.ts
-src/data/translations/ko.ts
-src/data/translations/vi.ts
+src/data/translations/*.ts
 ```
 
 Current non-English files are placeholders that export English text. Replace each file with complete hard-coded translated question text when translations are ready. Add new languages by:
@@ -157,7 +219,7 @@ Gemini is used in:
 src/logic/ai.ts
 ```
 
-The app uses Gemini in two conservative passes after the worker enters the free-text task description.
+The app uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. The app sends the original untranslated text to Gemini and instructs Gemini to interpret the meaning directly, using internal English translation or normalization only if helpful.
 
 First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
 
@@ -171,9 +233,9 @@ First, it sends the worker's text task description to Gemini, asks for strict JS
 }
 ```
 
-Only predefined tags from `tagTaxonomy` are accepted. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation.
+Only predefined tags from `tagTaxonomy` are accepted. Gemini must return exact canonical tag IDs, never translated tag labels. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation, which is currently English-focused.
 
-Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text:
+Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text. Even when the worker response is not English, pre-answer values must use the exact canonical question IDs, option IDs, and group IDs from the catalog:
 
 ```json
 {
@@ -192,6 +254,8 @@ Second, when Gemini is configured, the app sends the worker's original task desc
 The client accepts only high-confidence pre-answers that exactly match catalog question IDs, option IDs, and group IDs, include evidence grounded in the worker's text, and do not overwrite user-entered answers. Accepted pre-answers are stored in the normal answer state, hidden from the assessment flow, and included in scoring and PDF reporting. If Gemini is unavailable, malformed, or not confident enough, no questions are hidden.
 
 When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until tag extraction and pre-answering complete. This prevents duplicate submissions and reassures the worker that their input is still being processed.
+
+If either Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses a 15-second Gemini request timeout; the automated test bundle uses a shorter 8-second timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button.
 
 ## Scoring
 
