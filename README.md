@@ -69,21 +69,69 @@ Important: this is a client-only app, so every `VITE_` variable is visible in th
 ## Project Structure
 
 ```text
+AGENTS.md
+docs/
+  MSI360_Sprint_Test_Cases.md
+public/
+  images/
+    ...
+  worksafebc-logo.png
+scripts/
+  run-tests.mjs
 src/
   App.tsx
+  main.tsx
   app/
     questionAssets.ts
     types.ts
   data/
     catalog.ts
+    languages.ts
+    questions.ts
+    sections.ts
+    tags.ts
     translations/
-      en.ts
-      fr.ts
-      zhHans.ts
-      es.ts
-      ko.ts
-      vi.ts
       index.ts
+      af.ts
+      ar.ts
+      bn.ts
+      ceb.ts
+      cs.ts
+      da.ts
+      de.ts
+      el.ts
+      en.ts
+      es.ts
+      fa.ts
+      faNos.ts
+      fil.ts
+      fr.ts
+      gu.ts
+      hi.ts
+      hr.ts
+      hu.ts
+      id.ts
+      ilo.ts
+      it.ts
+      ja.ts
+      ko.ts
+      ml.ts
+      nan.ts
+      nl.ts
+      pa.ts
+      pl.ts
+      prs.ts
+      pt.ts
+      ro.ts
+      ru.ts
+      sr.ts
+      ta.ts
+      tr.ts
+      uk.ts
+      ur.ts
+      vi.ts
+      yue.ts
+      zhHans.ts
   logic/
     ai.ts
     answerSelection.ts
@@ -108,6 +156,23 @@ src/
       components.css
       screens.css
   types.ts
+  vite-env.d.ts
+tests/
+  integration/
+    assessment-flow.test.ts
+  unit/
+    ai.test.ts
+    answer-selection.test.ts
+    loading-state.test.ts
+    routing.test.ts
+    score-presentation.test.ts
+    scoring.test.ts
+types/
+  node-test.d.ts
+index.html
+package.json
+tsconfig.json
+vite.config.ts
 ```
 
 ## Question Data
@@ -134,12 +199,7 @@ Question IDs mirror the source questionnaire labels and use straight numeric IDs
 Question text lives in language-specific files:
 
 ```text
-src/data/translations/en.ts
-src/data/translations/fr.ts
-src/data/translations/zhHans.ts
-src/data/translations/es.ts
-src/data/translations/ko.ts
-src/data/translations/vi.ts
+src/data/translations/*.ts
 ```
 
 Current non-English files are placeholders that export English text. Replace each file with complete hard-coded translated question text when translations are ready. Add new languages by:
