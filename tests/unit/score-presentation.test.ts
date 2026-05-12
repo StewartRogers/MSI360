@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, scorePercent } from "../../src/logic/scorePresentation";
+import { scoreAssessment } from "../../src/logic/scoring";
+import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getPsychosocialInfluenceMessage, scorePercent } from "../../src/logic/scorePresentation";
 
 test("score presentation helpers preserve existing labels and formatting", () => {
   assert.equal(formatScore(2), "2.0 / 4");
@@ -27,4 +28,22 @@ test("factor risk interpretations match score thresholds", () => {
   assert.equal(describeFactorRisk(2.4, "repetition"), "Likely risk of discomfort from repetition.");
   assert.equal(describeFactorRisk(3.4, "repetition"), "Likely risk of discomfort from repetition.");
   assert.equal(describeFactorRisk(3.5, "repetition"), "Known risk of pain and/or injury.");
+});
+
+test("psychosocial influence message appears only when the final score is negatively influenced", () => {
+  const noInfluence = scoreAssessment({
+    "question-17": { type: "multi_choice", value: "5_to_18_lb" }
+  });
+  const moderateInfluence = scoreAssessment({
+    "question-7": { type: "multi_choice", value: "some_extent" },
+    "question-17": { type: "multi_choice", value: "5_to_18_lb" }
+  });
+  const highInfluence = scoreAssessment({
+    "question-7": { type: "multi_choice", value: "rarely" },
+    "question-17": { type: "multi_choice", value: "5_to_18_lb" }
+  });
+
+  assert.equal(getPsychosocialInfluenceMessage(noInfluence), null);
+  assert.equal(getPsychosocialInfluenceMessage(moderateInfluence), "Psychosocial factors negatively influenced the overall MSI risk score (x1.3).");
+  assert.equal(getPsychosocialInfluenceMessage(highInfluence), "Psychosocial factors negatively influenced the overall MSI risk score (x1.6).");
 });

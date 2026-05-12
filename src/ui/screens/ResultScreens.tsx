@@ -2,11 +2,12 @@ import { AppHeader, WrapHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { toggleSingleOption } from "../../logic/answerSelection";
-import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getFactorSummaries, scorePercent } from "../../logic/scorePresentation";
+import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
 import type { ScoreResult } from "../../types";
 
 export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; onBack: () => void; onContinue: () => void }) {
   const factors = getFactorSummaries(result);
+  const psychosocialMessage = getPsychosocialInfluenceMessage(result);
   return (
     <>
       <AppHeader tone="blue" progressStep={progressStep} totalSteps={totalSteps} />
@@ -16,6 +17,7 @@ export function ScoreScreen({ result, progressStep, totalSteps, onBack, onContin
           <p>Overall MSI Risk</p>
           <strong>{formatScoreValue(result.composite_score)}/4</strong>
           <span>{describeRisk(result.composite_score)}</span>
+          {psychosocialMessage && <em className="psychosocial-note">{psychosocialMessage}</em>}
         </div>
         <div className="factor-list">
           {factors.map((factor) => (
@@ -85,6 +87,7 @@ export function ReportReadyScreen({
   onEmail: () => void;
   onDone: () => void;
 }) {
+  const psychosocialMessage = getPsychosocialInfluenceMessage(result);
   const highest = getFactorSummaries(result)
     .filter((factor) => typeof result.factors[factor.key].score === "number")
     .sort((a, b) => (result.factors[b.key].score || 0) - (result.factors[a.key].score || 0))
@@ -112,6 +115,7 @@ export function ReportReadyScreen({
               <dd className="orange">{formatScore(result.composite_score)}</dd>
             </div>
           </dl>
+          {psychosocialMessage && <p className="psychosocial-note report-psychosocial-note">{psychosocialMessage}</p>}
           <div className="report-divider" />
           <strong>Highest risk categories:</strong>
           <ul>

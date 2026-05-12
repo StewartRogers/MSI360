@@ -28,6 +28,11 @@ export function describeFactorRisk(score: number | null, factorSubject: string) 
   return "Known risk of pain and/or injury.";
 }
 
+export function getPsychosocialInfluenceMessage(result: ScoreResult) {
+  if (!result.psychosocial_modifier.influenced_score) return null;
+  return `Psychosocial factors negatively influenced the overall MSI risk score (${formatMultiplier(result.psychosocial_modifier.multiplier)}).`;
+}
+
 export function getFactorSummaries(result: ScoreResult) {
   const labels: Record<keyof ScoreResult["factors"], { label: string; riskSubject: string }> = {
     contact_stress: { label: "Contact stress", riskSubject: "contact stress" },
@@ -39,4 +44,8 @@ export function getFactorSummaries(result: ScoreResult) {
   };
 
   return (Object.keys(result.factors) as Array<keyof ScoreResult["factors"]>).map((key) => ({ key, ...labels[key] }));
+}
+
+function formatMultiplier(multiplier: number) {
+  return `x${multiplier.toFixed(1).replace(/\.0$/, "")}`;
 }

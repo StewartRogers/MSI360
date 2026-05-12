@@ -89,10 +89,10 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "great_extent", risk_scores: {} },
-      { option_id: "some_extent", risk_scores: {} },
-      { option_id: "rarely", risk_scores: {} },
-      { option_id: "not_at_all", risk_scores: {} }
+      { option_id: "great_extent", risk_scores: {}, psychosocial_score: 1 },
+      { option_id: "some_extent", risk_scores: {}, psychosocial_score: 2 },
+      { option_id: "rarely", risk_scores: {}, psychosocial_score: 3 },
+      { option_id: "not_at_all", risk_scores: {}, psychosocial_score: 4 }
     ]
   },
   {
@@ -102,10 +102,10 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "great_extent", risk_scores: {} },
-      { option_id: "some_extent", risk_scores: {} },
-      { option_id: "rarely", risk_scores: {} },
-      { option_id: "not_at_all", risk_scores: {} }
+      { option_id: "great_extent", risk_scores: {}, psychosocial_score: 1 },
+      { option_id: "some_extent", risk_scores: {}, psychosocial_score: 2 },
+      { option_id: "rarely", risk_scores: {}, psychosocial_score: 3 },
+      { option_id: "not_at_all", risk_scores: {}, psychosocial_score: 4 }
     ]
   },
   {
@@ -604,10 +604,10 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "frequently", risk_scores: { environmental: 4 }, add_tags: ["overtime"] },
-      { option_id: "sometimes", risk_scores: { environmental: 3 }, add_tags: ["overtime"] },
-      { option_id: "rarely", risk_scores: { environmental: 1 } },
-      { option_id: "never", risk_scores: { environmental: 1 } }
+      { option_id: "frequently", risk_scores: { environmental: 4 }, psychosocial_score: 4, add_tags: ["overtime"] },
+      { option_id: "sometimes", risk_scores: { environmental: 3 }, psychosocial_score: 3, add_tags: ["overtime"] },
+      { option_id: "rarely", risk_scores: { environmental: 1 }, psychosocial_score: 2 },
+      { option_id: "never", risk_scores: { environmental: 1 }, psychosocial_score: 1 }
     ]
   },
   {
@@ -617,10 +617,10 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "frequently", risk_scores: { environmental: 4 }, add_tags: ["tight_deadlines"] },
-      { option_id: "sometimes", risk_scores: { environmental: 3 }, add_tags: ["tight_deadlines"] },
-      { option_id: "rarely", risk_scores: { environmental: 1 } },
-      { option_id: "never", risk_scores: { environmental: 1 } }
+      { option_id: "frequently", risk_scores: { environmental: 4 }, psychosocial_score: 4, add_tags: ["tight_deadlines"] },
+      { option_id: "sometimes", risk_scores: { environmental: 3 }, psychosocial_score: 3, add_tags: ["tight_deadlines"] },
+      { option_id: "rarely", risk_scores: { environmental: 1 }, psychosocial_score: 2 },
+      { option_id: "never", risk_scores: { environmental: 1 }, psychosocial_score: 1 }
     ]
   }
 ];
