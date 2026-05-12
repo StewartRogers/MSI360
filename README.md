@@ -157,7 +157,7 @@ Gemini is used in:
 src/logic/ai.ts
 ```
 
-The app uses Gemini in two conservative passes after the worker enters the free-text task description.
+The app uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. The app sends the original untranslated text to Gemini and instructs Gemini to interpret the meaning directly, using internal English translation or normalization only if helpful.
 
 First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
 
@@ -171,9 +171,9 @@ First, it sends the worker's text task description to Gemini, asks for strict JS
 }
 ```
 
-Only predefined tags from `tagTaxonomy` are accepted. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation.
+Only predefined tags from `tagTaxonomy` are accepted. Gemini must return exact canonical tag IDs, never translated tag labels. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation, which is currently English-focused.
 
-Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text:
+Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text. Even when the worker response is not English, pre-answer values must use the exact canonical question IDs, option IDs, and group IDs from the catalog:
 
 ```json
 {
