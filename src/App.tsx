@@ -211,6 +211,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.role, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueRole}
@@ -225,6 +226,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.timeInRole, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueTimeInRole}
@@ -232,7 +234,7 @@ export default function App() {
         />
       )}
 
-      {step === "description" && <DescriptionScreen progressStep={progressStep} totalSteps={totalQuestionSteps} onBack={goBack} onContinue={continueFromStep} />}
+      {step === "description" && <DescriptionScreen progressStep={progressStep} totalSteps={totalQuestionSteps} translations={t} onBack={goBack} onContinue={continueFromStep} />}
 
       {step === "task_description" && (
         <TextScreen
@@ -242,6 +244,7 @@ export default function App() {
           isLoading={isInterpretingTaskDescription}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.taskDescription, "text", value)}
           onBack={goBack}
           canContinue={canContinueTaskDescription}
@@ -256,6 +259,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.height, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueHeight}

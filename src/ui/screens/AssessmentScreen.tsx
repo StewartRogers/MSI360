@@ -2,17 +2,17 @@ import { groupImages, optionImages, promptUsesSectionTitle, questionIds, standal
 import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { CheckboxRow, ImageRadioCard, RadioRow } from "../components/AnswerControls";
-import { translations } from "../../data/translations";
+import { getQuestionText } from "../../data/translationText";
 import { isRecord, splitParagraphs } from "../../logic/appFlow";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/answerSelection";
-import type { Answer, AnswerValue, Question, QuestionText } from "../../types";
+import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
 
 export function AssessmentQuestionScreen(props: {
   question?: Question;
   answer?: Answer;
   progressStep: number;
   totalSteps: number;
-  translations: typeof translations.en;
+  translations: Translation;
   onAnswer: (value: AnswerValue) => void;
   onBack: () => void;
   canContinue: boolean;
@@ -43,8 +43,8 @@ export function AssessmentQuestionScreen(props: {
   );
 }
 
-function QuestionContent({ question, answer, translations: t, onAnswer }: { question: Question; answer?: Answer; translations: typeof translations.en; onAnswer: (value: AnswerValue) => void }) {
-  const text = t.questions[question.question_id] || translations.en.questions[question.question_id];
+function QuestionContent({ question, answer, translations: t, onAnswer }: { question: Question; answer?: Answer; translations: Translation; onAnswer: (value: AnswerValue) => void }) {
+  const text = getQuestionText(t, question.question_id);
   if (!text) return null;
 
   return (

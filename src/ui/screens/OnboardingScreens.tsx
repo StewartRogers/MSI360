@@ -4,9 +4,9 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
-import { translations } from "../../data/translations";
+import { getQuestionText } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
-import type { Answer, Language } from "../../types";
+import type { Answer, Language, Translation } from "../../types";
 
 export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   return (
@@ -108,16 +108,17 @@ export function ChoiceScreen(props: {
   progressStep: number;
   totalSteps: number;
   tone: HeaderTone;
+  translations: Translation;
   onAnswer: (value: string) => void;
   onBack: () => void;
   canContinue: boolean;
   onContinue: () => void;
 }) {
   const question = questions.find((item) => item.question_id === props.questionId);
-  const text = translations.en.questions[props.questionId];
+  const text = getQuestionText(props.translations, props.questionId);
   const selected = typeof props.answer?.value === "string" ? props.answer.value : "";
 
-  if (!question || !question.options || !text.options) return null;
+  if (!question || !question.options || !text?.options) return null;
 
   return (
     <>
@@ -143,16 +144,19 @@ export function ChoiceScreen(props: {
   );
 }
 
-export function DescriptionScreen(props: { progressStep: number; totalSteps: number; onBack: () => void; onContinue: () => void }) {
+export function DescriptionScreen(props: { progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
+  const title = props.translations.app.description_title || "Description";
+  const body =
+    props.translations.app.description_body ||
+    "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.";
+
   return (
     <>
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
       <section className="page page-with-actions">
         <div className="content-block description-copy">
-          <h2>Description</h2>
-          <p>
-            The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.
-          </p>
+          <h2>{title}</h2>
+          <p>{body}</p>
         </div>
         <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
       </section>
@@ -167,12 +171,15 @@ export function TextScreen(props: {
   isLoading: boolean;
   progressStep: number;
   totalSteps: number;
+  translations: Translation;
   onAnswer: (value: string) => void;
   onBack: () => void;
   canContinue: boolean;
   onContinue: () => void;
 }) {
-  const text = translations.en.questions[props.questionId];
+  const text = getQuestionText(props.translations, props.questionId);
+  if (!text) return null;
+
   return (
     <>
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />

@@ -2,7 +2,7 @@ import type { Language } from "../types";
 
 export const languages: Language[] = [
   { code: "en", name: "English", flag: "🇨🇦", ready: true },
-  { code: "pa", name: "Punjabi", flag: "🇮🇳", ready: false },
+  { code: "pa", name: "Punjabi", flag: "🇮🇳", ready: true },
   { code: "zh-Hans", name: "Mandarin", flag: "🇨🇳", ready: false },
   { code: "yue", name: "Cantonese", flag: "🇭🇰", ready: false },
   { code: "fil", name: "Tagalog", flag: "🇵🇭", ready: false },

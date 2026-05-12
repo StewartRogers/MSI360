@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
 import { translations } from "../../src/data/translations";
+import { getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -189,6 +190,52 @@ test("every configured question has English display text for its options", () =>
       assert.ok(groupText?.label, `Missing group label for ${question.question_id}.${group.group_id}`);
       for (const option of group.options) {
         assert.ok(groupText.options[option.option_id], `Missing grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
+      }
+    }
+  }
+});
+
+test("question text uses selected translations with English field fallback", () => {
+  const text = getQuestionText(
+    {
+      ...translations.en,
+      questions: {
+        "question-1": {
+          label: "Translated role question",
+          options: {
+            worker: "Translated worker"
+          }
+        }
+      }
+    },
+    "question-1"
+  );
+
+  assert.equal(text?.label, "Translated role question");
+  assert.equal(text?.options?.worker, "Translated worker");
+  assert.equal(text?.options?.supervisor, "Supervisor");
+});
+
+test("Punjabi translation has display text for every configured question option", () => {
+  const punjabiQuestions = translations.pa.questions;
+
+  assert.equal(translations.pa.app.description_title, "ਵੇਰਵਾ");
+  assert.ok(translations.pa.app.description_body);
+
+  for (const question of questions) {
+    const text = punjabiQuestions[question.question_id];
+    assert.ok(text, `Missing Punjabi text for question ${question.question_id}`);
+    assert.ok(text.label, `Missing Punjabi label for question ${question.question_id}`);
+
+    for (const option of question.options ?? []) {
+      assert.ok(text.options?.[option.option_id], `Missing Punjabi option label for ${question.question_id}.${option.option_id}`);
+    }
+
+    for (const group of question.groups ?? []) {
+      const groupText = text.groups?.[group.group_id];
+      assert.ok(groupText?.label, `Missing Punjabi group label for ${question.question_id}.${group.group_id}`);
+      for (const option of group.options) {
+        assert.ok(groupText.options[option.option_id], `Missing Punjabi grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
       }
     }
   }

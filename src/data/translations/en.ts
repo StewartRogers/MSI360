@@ -3,7 +3,10 @@ import type { Translation } from "../../types";
 export const en: Translation = {
   app: {
     title: "MSI360",
-    disclosure: "Prototype: your answers stay in this browser unless you choose to download or share your report."
+    disclosure: "Prototype: your answers stay in this browser unless you choose to download or share your report.",
+    description_title: "Description",
+    description_body:
+      "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done."
   },
   sections: {
     intro: "About the work",
