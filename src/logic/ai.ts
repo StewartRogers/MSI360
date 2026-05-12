@@ -2,8 +2,12 @@ import { tagTaxonomy } from "../data/catalog";
 import { translations } from "../data/translations";
 import type { AiOutput, AiPreAnswer, AiPreAnswerCandidate, AiPreAnswerOutput, AnswerValue, Answers, Question } from "../types";
 
+declare const __MSI360_TEST_GEMINI_TIMEOUT_MS__: number | undefined;
+
 const allowedTags = new Set(tagTaxonomy);
 const preAnswerConfidenceThreshold = 0.9;
+// Change this number to set how long app should wait for Gemini API call. Default = 15000ms
+const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 15000;
 const multilingualPromptGuidance = [
   "The worker response may be written in any language or may mix languages.",
   "Interpret the original response semantically. You may internally translate or normalize it to English when helpful.",
@@ -53,19 +57,7 @@ async function interpretWithGemini(question: Question, response: string): Promis
   const prompt = buildInterpretTextPrompt(question, response);
 
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const result = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.1,
-        responseMimeType: "application/json"
-      }
-    })
-  });
+  const result = await postGeminiPrompt(apiUrl, prompt, 0.1, "Gemini task analysis response timed out");
 
   if (!result.ok) {
     throw new Error(`Gemini request failed with ${result.status}`);
@@ -104,19 +96,7 @@ async function preAnswerWithGemini(candidateQuestions: Question[], response: str
   const prompt = buildPreAnswerPrompt(candidateQuestions, response);
 
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const result = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0,
-        responseMimeType: "application/json"
-      }
-    })
-  });
+  const result = await postGeminiPrompt(apiUrl, prompt, 0, "Gemini pre-answering response timed out");
 
   if (!result.ok) {
     throw new Error(`Gemini pre-answer request failed with ${result.status}`);
@@ -177,6 +157,37 @@ export function buildPreAnswerPrompt(candidateQuestions: Question[], response: s
     `candidate_questions: ${JSON.stringify(candidates)}`,
     `worker_response: ${response}`
   ].join("\n");
+}
+
+async function postGeminiPrompt(apiUrl: string, prompt: string, temperature: number, timeoutMessage: string): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), geminiRequestTimeoutMs);
+
+  try {
+    return await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature,
+          responseMimeType: "application/json"
+        }
+      })
+    });
+  } catch (error) {
+    if (isAbortError(error)) throw new Error(timeoutMessage);
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function isAbortError(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
 }
 
 export function filterAllowedAddTags(question: Question, tags: string[]): string[] {

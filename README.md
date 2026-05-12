@@ -193,6 +193,8 @@ The client accepts only high-confidence pre-answers that exactly match catalog q
 
 When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until tag extraction and pre-answering complete. This prevents duplicate submissions and reassures the worker that their input is still being processed.
 
+If either Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses a 15-second Gemini request timeout; the automated test bundle uses a shorter 8-second timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button.
+
 ## Scoring
 
 Scoring is currently prototype-only and lives in:
