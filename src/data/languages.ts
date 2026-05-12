@@ -14,7 +14,7 @@ export const languages: Language[] = [
   { code: "hi", name: "Hindi", flag: "🇮🇳", ready: false },
   { code: "vi", name: "Vietnamese", flag: "🇻🇳", ready: false },
   { code: "ru", name: "Russian", flag: "🇷🇺", ready: false },
-  { code: "ar", name: "Arabic", flag: "🇸🇦", ready: false },
+  { code: "ar", name: "Arabic", flag: "🇸🇦", ready: true },
   { code: "pt", name: "Portuguese", flag: "🇵🇹", ready: false },
   { code: "ja", name: "Japanese", flag: "🇯🇵", ready: false },
   { code: "it", name: "Italian", flag: "🇮🇹", ready: false },

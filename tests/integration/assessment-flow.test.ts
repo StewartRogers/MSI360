@@ -241,6 +241,31 @@ test("Punjabi translation has display text for every configured question option"
   }
 });
 
+test("Arabic translation has display text for every configured question option", () => {
+  const arabicQuestions = translations.ar.questions;
+
+  assert.equal(translations.ar.app.description_title, "الوصف");
+  assert.ok(translations.ar.app.description_body);
+
+  for (const question of questions) {
+    const text = arabicQuestions[question.question_id];
+    assert.ok(text, `Missing Arabic text for question ${question.question_id}`);
+    assert.ok(text.label, `Missing Arabic label for question ${question.question_id}`);
+
+    for (const option of question.options ?? []) {
+      assert.ok(text.options?.[option.option_id], `Missing Arabic option label for ${question.question_id}.${option.option_id}`);
+    }
+
+    for (const group of question.groups ?? []) {
+      const groupText = text.groups?.[group.group_id];
+      assert.ok(groupText?.label, `Missing Arabic group label for ${question.question_id}.${group.group_id}`);
+      for (const option of group.options) {
+        assert.ok(groupText.options[option.option_id], `Missing Arabic grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
+      }
+    }
+  }
+});
+
 function getAnsweredSeatedAssessmentThroughQuestion21(): Answers {
   return {
     "question-6": { type: "multi_choice", value: "mostly_sit" },
