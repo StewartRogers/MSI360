@@ -115,8 +115,8 @@ export const questions: Question[] = [
     required: true,
     type: "multi_choice",
     options: [
-      { option_id: "yes", risk_scores: { symptoms: 3 }, add_tags: ["reported_discomfort"] },
-      { option_id: "no", risk_scores: { symptoms: 1 } }
+      { option_id: "yes", risk_scores: {}, add_tags: ["reported_discomfort"] },
+      { option_id: "no", risk_scores: {} }
     ]
   },
   {
@@ -129,65 +129,65 @@ export const questions: Question[] = [
       {
         group_id: "neck",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "shoulders_upper_arms",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "elbows_forearms",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "wrists_hands_fingers",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "lower_back",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "hips_upper_legs",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "knees_lower_legs",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       },
       {
         group_id: "ankles_feet",
         options: [
-          { option_id: "one_side", risk_scores: { symptoms: 2 } },
-          { option_id: "both_sides", risk_scores: { symptoms: 3 } },
-          { option_id: "lasted_two_days", risk_scores: { symptoms: 3 } }
+          { option_id: "one_side", risk_scores: {} },
+          { option_id: "both_sides", risk_scores: {} },
+          { option_id: "lasted_two_days", risk_scores: {} }
         ]
       }
     ]

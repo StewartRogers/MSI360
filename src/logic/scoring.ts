@@ -39,7 +39,7 @@ export function scoreAssessment(answers: Answers): ScoreResult {
     })
   ) as ScoreResult["factors"];
 
-  const physicalValues = ["contact_stress", "force", "awkward_posture", "repetition", "symptoms"]
+  const physicalValues = ["contact_stress", "force", "awkward_posture", "repetition"]
     .map((factor) => factors[factor as RiskFactor].score)
     .filter((score): score is number => typeof score === "number");
   const environmentalValues = [factors.environmental.score].filter((score): score is number => typeof score === "number");
