@@ -3,8 +3,8 @@ import type { Language } from "../types";
 export const languages: Language[] = [
   { code: "en", name: "English", flag: "🇨🇦", flagCode: "ca", ready: true },
   { code: "pa", name: "Punjabi", flag: "🇮🇳", flagCode: "in", ready: true },
-  { code: "zh-Hans", name: "Mandarin", flag: "🇨🇳", flagCode: "cn", ready: true },
-  { code: "yue", name: "Cantonese", flag: "🇭🇰", flagCode: "hk", ready: true },
+  { code: "zh-Hans", name: "Chinese (Simplified)", flag: "🇨🇳", flagCode: "cn", ready: true },
+  { code: "yue", name: "Chinese (Traditional)", flag: "🇭🇰", flagCode: "hk", ready: true },
   { code: "fil", name: "Tagalog", flag: "🇵🇭", flagCode: "ph", ready: true },
   { code: "fr", name: "French", flag: "🇫🇷", flagCode: "fr", ready: true },
   { code: "es", name: "Spanish", flag: "🇪🇸", flagCode: "es", ready: true },

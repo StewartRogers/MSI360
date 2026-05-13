@@ -263,15 +263,15 @@ test("French, Spanish, and Korean translations have display text for every confi
   assertTranslationCoverage("Korean", translations.ko.questions);
 });
 
-test("Mandarin translation has display text for every configured question option", () => {
+test("Chinese (Simplified) translation has display text for every configured question option", () => {
   assert.equal(translations["zh-Hans"].app.description_title, "说明");
-  assertTranslationCoverage("Mandarin", translations["zh-Hans"].questions);
+  assertTranslationCoverage("Chinese (Simplified)", translations["zh-Hans"].questions);
 });
 
-test("Cantonese and Tagalog translations have display text for every configured question option", () => {
+test("Chinese (Traditional) and Tagalog translations have display text for every configured question option", () => {
   assert.equal(translations.yue.app.description_title, "說明");
   assert.equal(translations.fil.app.description_title, "Paglalarawan");
-  assertTranslationCoverage("Cantonese", translations.yue.questions);
+  assertTranslationCoverage("Chinese (Traditional)", translations.yue.questions);
   assertTranslationCoverage("Tagalog", translations.fil.questions);
 });
 
