@@ -71,6 +71,11 @@ npm run test:automated
 | AT-47 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages force over the number of answered force questions. | Force average changes according to the answered force question count. |
 | AT-48 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages repetition over the number of answered repetition questions. | Repetition average uses only answered repetition questions. |
 | AT-49 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` severity uses the configured risk interpretation boundaries. | Severity labels change at the expected score thresholds. |
+| AT-50 | `tests/unit/report-data.test.ts` | Unit/data test | Report data always returns the five MSI categories in the required order and has guidance coverage for all risk-driving answer selections. | Contact stress, Force, Awkward posture, Repetition, and Environmental factors appear once each, and no risk score `>= 2` selection is missing report guidance. |
+| AT-51 | `tests/unit/report-data.test.ts` | Unit test | Report data maps task, worker height, symptoms, and job-specific notes. | Q3, Q4, Q9, Q10, and AI routing tags are reflected in the generated report data. |
+| AT-52 | `tests/unit/report-data.test.ts` | Unit test | Report data computes category priority counts from selected answer scores. | Scores of 4, 3, and 2 count as high, medium, and review priority respectively. |
+| AT-53 | `tests/unit/report-data.test.ts` | Unit test | Report data uses answer-driven suggested actions and clean low-risk fallback text. | Risk-driving answers produce relevant explanations/actions, and categories with no scored hazard use safe fallback guidance. |
+| AT-54 | `tests/unit/report-document.test.ts` | Bundle smoke test | React PDF report document can be bundled for browser rendering. | The report document and React PDF renderer bundle successfully for the browser target. |
 
 ## Manual Test Cases
 
@@ -85,7 +90,7 @@ Each team member will spend one hour per week running manual tests from this che
 | MT-05 | Tool-use scenario | Exploratory test | Enter a task involving tools, gripping, or drilling. | Tool/contact/repetition questions appear where expected. |
 | MT-06 | Reported discomfort scenario | Acceptance test | Answer "Yes" to recent discomfort and select body areas. | Body discomfort follow-up appears and can be completed. |
 | MT-07 | Back navigation | Regression test | Move through several screens and use Back repeatedly. | Previous screens appear correctly and existing answers are preserved. |
-| MT-08 | PDF report | Acceptance test | Complete an assessment and select Download PDF. | PDF downloads and includes the score overview and answered questions. |
+| MT-08 | PDF report | Acceptance test | Complete an assessment and select Download PDF. | PDF downloads and includes the intro/about page, overview page, five-category score summary, category-specific report pages, and full response record. |
 | MT-09 | Restart | Regression test | Complete an assessment and start a new one. | App returns to the intro screen and prior answers are cleared. |
 | MT-10 | Mobile layout | Responsive test | Run the main flow around 390px wide. | Text, buttons, progress, images, and answer rows do not overlap or clip. |
 | MT-11 | Tablet layout | Responsive test | Run the main flow around 768px wide. | Layout remains readable and controls are easy to use. |
@@ -96,3 +101,4 @@ Each team member will spend one hour per week running manual tests from this che
 | MT-16 | French translation | Localization test | Select French and complete a representative flow. | In-app text is French; brand names may remain unchanged. Downloaded PDFs remain English. |
 | MT-17 | Spanish task parity | API/manual integration test | With Gemini configured, enter equivalent English and Spanish lifting task descriptions. | Both runs show the same core lifting/repetition follow-up questions; very small tag variance is acceptable. |
 | MT-18 | French task parity | API/manual integration test | With Gemini configured, enter equivalent English and French desk/computer task descriptions. | Both runs show the same core seated/screen/repetition follow-up questions; very small tag variance is acceptable. |
+| MT-19 | PDF visual layout | Visual/manual test | Open the downloaded PDF from low-risk and high-risk sample assessments. | Layout resembles the Figma report direction, icons/images render, body diagram placeholder appears, text does not overlap, and all five categories appear without duplicates or omissions. |

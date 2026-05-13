@@ -4,39 +4,21 @@ import type { StepId } from "./app/types";
 import { languages, questions } from "./data/catalog";
 import { translations } from "./data/translations";
 import { interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
+import { aiFallbackToastMessages, getAiFallbackToastKinds, type AiFallbackToastKind } from "./logic/aiFallbackToast";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/assessmentFlow";
 import { getPreAnswerCandidateQuestions, getProgressStep, getQuestionById, getSortedVisibleQuestions, getTaskSummary, toAnswers, withoutKeys } from "./logic/appFlow";
-import { downloadReport } from "./logic/report";
 import { recomputeTags } from "./logic/routing";
 import { scoreAssessment } from "./logic/scoring";
 import { AssessmentQuestionScreen } from "./ui/screens/AssessmentScreen";
 import { ChoiceScreen, DescriptionScreen, IntroScreen, LanguageScreen, TextScreen } from "./ui/screens/OnboardingScreens";
 import { CompleteScreen, EmailScreen, ReportReadyScreen, ScoreScreen, SubmitScreen } from "./ui/screens/ResultScreens";
-import type { AiOutput, AiOutputs, AiPreAnswerOutput, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
+import type { AiOutputs, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
 
 export { getActionButtonState } from "./ui/components/ActionButtons";
-
-type AiFallbackToastKind = "task-analysis" | "question-pruning";
 
 interface AiFallbackToast {
   id: number;
   message: string;
-}
-
-const aiFallbackToastMessages: Record<AiFallbackToastKind, string> = {
-  "task-analysis": "AI task analysis response timed out. Local fallback is being used instead.",
-  "question-pruning": "AI question pruning response timed out. Fallback follow-up questions are being used instead."
-};
-
-export function getAiFallbackToastKinds(taskOutput: Pick<AiOutput, "provider" | "notes">, preAnswerOutput: Pick<AiPreAnswerOutput, "provider" | "notes">): AiFallbackToastKind[] {
-  const fallbackToastKinds: AiFallbackToastKind[] = [];
-  if (taskOutput.provider === "client-keyword-fallback" && taskOutput.notes.startsWith("Gemini unavailable")) {
-    fallbackToastKinds.push("task-analysis");
-  }
-  if (preAnswerOutput.provider === "client-no-preanswer" && preAnswerOutput.notes.startsWith("Gemini pre-answering unavailable")) {
-    fallbackToastKinds.push("question-pruning");
-  }
-  return fallbackToastKinds;
 }
 
 export default function App() {
@@ -221,6 +203,7 @@ export default function App() {
   async function handleDownloadReport() {
     const nextResult = scoreResult || scoreAssessment(answers);
     setScoreResult(nextResult);
+    const { downloadReport } = await import("./logic/report");
     await downloadReport(answers, aiOutputs, nextResult);
   }
 
