@@ -159,6 +159,24 @@
   text-align: left;
 }
 
+.language-option.unavailable {
+  cursor: not-allowed;
+  color: #8a837e;
+  opacity: 0.58;
+}
+
+.language-option.unavailable .language-flag-icon {
+  filter: grayscale(1);
+}
+
+.language-unavailable-label {
+  flex: 0 0 auto;
+  margin-left: 12px;
+  color: #8a837e;
+  font-size: 10px;
+  font-weight: 700;
+}
+
 .language-option:last-child {
   border-bottom: 0;
 }

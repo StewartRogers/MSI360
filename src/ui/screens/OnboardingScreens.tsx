@@ -48,6 +48,7 @@ export function LanguageScreen(props: {
   const actionLabels = getActionButtonLabels(props.translations);
 
   function handleLanguageSelect(nextLanguage: Language) {
+    if (!nextLanguage.ready) return;
     if (selectedCode === nextLanguage.code) {
       props.onSelect(null);
       return;
@@ -93,16 +94,19 @@ export function LanguageScreen(props: {
               <div className="language-menu" role="listbox" aria-labelledby="language-select">
                 {props.languages.map((language) => {
                   const isSelected = selectedCode === language.code;
+                  const isUnavailable = !language.ready;
                   return (
                     <button
                       key={language.code}
                       type="button"
-                      className={`language-option ${isSelected ? "selected" : ""}`}
+                      className={`language-option ${isSelected ? "selected" : ""} ${isUnavailable ? "unavailable" : ""}`}
                       role="option"
                       aria-selected={isSelected}
+                      disabled={isUnavailable}
                       onClick={() => handleLanguageSelect(language)}
                     >
                       {renderLanguageLabel(language)}
+                      {isUnavailable && <span className="language-unavailable-label">Coming soon</span>}
                     </button>
                   );
                 })}
