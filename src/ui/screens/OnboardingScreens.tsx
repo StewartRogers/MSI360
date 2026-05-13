@@ -56,6 +56,18 @@ export function LanguageScreen(props: {
     setIsOpen(false);
   }
 
+  function renderLanguageLabel(language: Language) {
+    return (
+      <span className="language-label">
+        <img className="language-flag-icon" src={`https://flagcdn.com/24x18/${language.flagCode}.png`} alt="" aria-hidden="true" loading="lazy" />
+        <span className="language-flag-fallback" aria-hidden="true">
+          {language.flag}
+        </span>
+        <span>{language.name}</span>
+      </span>
+    );
+  }
+
   return (
     <>
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
@@ -75,7 +87,7 @@ export function LanguageScreen(props: {
               aria-expanded={isOpen}
               onClick={() => setIsOpen((open) => !open)}
             >
-              <span>{props.selectedLanguage ? `${props.selectedLanguage.flag} ${props.selectedLanguage.name}` : "Select a language"}</span>
+              {props.selectedLanguage ? renderLanguageLabel(props.selectedLanguage) : <span>Select a language</span>}
             </button>
             {isOpen && (
               <div className="language-menu" role="listbox" aria-labelledby="language-select">
@@ -90,7 +102,7 @@ export function LanguageScreen(props: {
                       aria-selected={isSelected}
                       onClick={() => handleLanguageSelect(language)}
                     >
-                      <span>{language.flag} {language.name}</span>
+                      {renderLanguageLabel(language)}
                     </button>
                   );
                 })}

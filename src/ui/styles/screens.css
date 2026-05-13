@@ -100,6 +100,32 @@
   font-weight: 400;
 }
 
+.language-label {
+  display: inline-flex;
+  align-items: center;
+  min-width: 0;
+  gap: 9px;
+}
+
+.language-flag-icon {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 18px;
+  border: 1px solid #d8d1ce;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 1px 1px rgb(0 0 0 / 8%);
+}
+
+.language-flag-icon:not([src]),
+.language-flag-icon[src=""] {
+  display: none;
+}
+
+.language-flag-fallback {
+  display: none;
+}
+
 .language-select-button:focus,
 .language-option:focus {
   border-color: #659db3;

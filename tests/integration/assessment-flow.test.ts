@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
+import { languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
 import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
@@ -195,6 +196,12 @@ test("every configured question has English display text for its options", () =>
   }
 });
 
+test("every language has a flag icon code for dropdown rendering", () => {
+  for (const language of languages) {
+    assert.ok(/^[a-z]{2}$/.test(language.flagCode), `Missing flag icon code for ${language.name}`);
+  }
+});
+
 test("question text uses selected translations with English field fallback", () => {
   const text = getQuestionText(
     {
@@ -268,6 +275,15 @@ test("Cantonese and Tagalog translations have display text for every configured 
   assertTranslationCoverage("Tagalog", translations.fil.questions);
 });
 
+test("German, Persian, and Hindi translations have display text for every configured question option", () => {
+  assert.equal(translations.de.app.description_title, "Beschreibung");
+  assert.equal(translations.fa.app.description_title, "توضیح");
+  assert.equal(translations.hi.app.description_title, "विवरण");
+  assertTranslationCoverage("German", translations.de.questions);
+  assertTranslationCoverage("Persian", translations.fa.questions);
+  assertTranslationCoverage("Hindi", translations.hi.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -276,6 +292,9 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations["zh-Hans"]).continueLabel, "继续");
   assert.equal(getActionButtonLabels(translations.yue).continueLabel, "繼續");
   assert.equal(getActionButtonLabels(translations.fil).continueLabel, "Magpatuloy");
+  assert.equal(getActionButtonLabels(translations.de).continueLabel, "Weiter");
+  assert.equal(getActionButtonLabels(translations.fa).continueLabel, "ادامه");
+  assert.equal(getActionButtonLabels(translations.hi).continueLabel, "जारी रखें");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
