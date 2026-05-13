@@ -50,6 +50,10 @@ The automated tests use Node's built-in test runner with an esbuild bundle step.
 
 The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
 
+## Score Presentation
+
+The on-screen MSI risk summary displays the overall composite score as `X.X out of 4`. Category-specific scores retain the compact `X.X / 4` format.
+
 ## Environment Variables
 
 Create `.env.local` in this repo root:

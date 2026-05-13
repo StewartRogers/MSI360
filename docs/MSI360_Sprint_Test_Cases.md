@@ -56,7 +56,7 @@ npm run test:automated
 | AT-32 | `tests/unit/routing.test.ts` | Unit test | Base routing shows always-visible questions and hides conditional follow-ups. | Base questions are visible and conditional follow-ups stay hidden until relevant tags are present. |
 | AT-33 | `tests/unit/routing.test.ts` | Unit test | `recomputeTags` combines selected option tags and allowed AI tags. | Valid selected-option and AI tags are included; invalid AI tags are ignored. |
 | AT-34 | `tests/unit/routing.test.ts` | Unit test | `getSelectedOptions` reads grouped question answers. | Grouped answers return the expected selected options and risk scores. |
-| AT-35 | `tests/unit/score-presentation.test.ts` | Unit test | Score presentation helpers preserve existing labels and formatting. | Factor labels exclude Symptoms, and score labels and score formatting remain stable. |
+| AT-35 | `tests/unit/score-presentation.test.ts` | Unit test | Score presentation helpers preserve existing labels and formatting. | Factor labels exclude Symptoms, category score labels keep `/ 4`, and the overall summary score uses `out of 4`. |
 | AT-36 | `tests/unit/score-presentation.test.ts` | Unit test | Risk descriptions match score thresholds. | Composite risk descriptions map to the expected score bands. |
 | AT-37 | `tests/unit/score-presentation.test.ts` | Unit test | Factor risk interpretations match score thresholds. | Factor interpretation text maps to the expected score bands. |
 | AT-38 | `tests/unit/score-presentation.test.ts` | Unit test | Psychosocial influence message appears only when the final score is negatively influenced. | Psychosocial note is present only when the modifier increases the final score. |
