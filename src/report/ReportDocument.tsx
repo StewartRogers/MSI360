@@ -38,11 +38,11 @@ function IntroContent({ report }: { report: ReportData }) {
       <Text style={styles.introTitle}>MSI360 Risk Score Report</Text>
 
       <View style={styles.metaStrip} wrap={false}>
-        <MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} />
+        <View style={{ width: "20%" }}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
         <View style={styles.metaDivider} />
-        <MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task assessed" value={report.taskSummary} />
+        <View style={{ width: "48%" }}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task assessed" value={report.taskSummary} /></View>
         <View style={styles.metaDivider} />
-        <MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} />
+        <View style={{ width: "30%" }}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
       </View>
 
       <View style={styles.noticeBand} wrap={false}>
@@ -455,8 +455,7 @@ const styles = StyleSheet.create({
   metaItem: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    flex: 1
+    paddingHorizontal: 8
   },
   metaDivider: {
     width: 1,
@@ -469,7 +468,8 @@ const styles = StyleSheet.create({
     marginRight: 6
   },
   metaTextCol: {
-    justifyContent: "center"
+    justifyContent: "center",
+    flex: 1
   },
   metaLabel: {
     fontSize: 8,
