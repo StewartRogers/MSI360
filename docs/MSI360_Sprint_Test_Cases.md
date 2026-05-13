@@ -91,3 +91,8 @@ Each team member will spend one hour per week running manual tests from this che
 | MT-12 | Browser check | Compatibility test | Run a representative flow in Chrome and Safari. | Main flow works in both browsers without console errors. |
 | MT-13 | Usability | Usability test | Ask a classmate to complete a simple scenario without coaching. | User can understand the questions, score summary, and report actions; feedback is recorded. |
 | MT-14 | Gemini optional check | API/manual integration test | If a restricted Gemini key is configured, enter a detailed task description. | App continues normally and asks relevant follow-up questions. |
+| MT-15 | Spanish translation | Localization test | Select Spanish and complete a representative flow. | In-app text is Spanish; brand names may remain unchanged. Downloaded PDFs remain English. |
+| MT-16 | French translation | Localization test | Select French and complete a representative flow. | In-app text is French; brand names may remain unchanged. Downloaded PDFs remain English. |
+| MT-17 | Spanish task parity | API/manual integration test | With Gemini configured, enter equivalent English and Spanish lifting task descriptions. | Both runs show the same core lifting/repetition follow-up questions; very small tag variance is acceptable. |
+| MT-18 | French task parity | API/manual integration test | With Gemini configured, enter equivalent English and French desk/computer task descriptions. | Both runs show the same core seated/screen/repetition follow-up questions; very small tag variance is acceptable. |
+
