@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getActionButtonState, getAiFallbackToastKinds } from "../../src/App";
+import { getActionButtonState } from "../../src/ui/components/ActionButtons";
+import { getAiFallbackToastKinds } from "../../src/logic/aiFallbackToast";
 
 test("busy action buttons block repeated submits and back navigation", () => {
   assert.deepEqual(getActionButtonState(true, true), {

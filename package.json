@@ -13,8 +13,8 @@
     "test": "npm run typecheck && npm run test:automated"
   },
   "dependencies": {
+    "@react-pdf/renderer": "^4.5.1",
     "@vitejs/plugin-react": "^4.2.1",
-    "pdf-lib": "^1.17.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.4.5",
