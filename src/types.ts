@@ -1,6 +1,6 @@
 export type QuestionType = "text" | "multi_choice" | "select_all" | "grouped_multi_choice" | "grouped_select_all";
 
-export type RiskFactor = "contact_stress" | "force" | "awkward_posture" | "repetition" | "environmental" | "symptoms";
+export type RiskFactor = "contact_stress" | "force" | "awkward_posture" | "repetition" | "environmental";
 
 export type RiskScores = Partial<Record<RiskFactor, number>>;
 

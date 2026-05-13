@@ -1,4 +1,4 @@
-export const riskFactors = ["contact_stress", "force", "awkward_posture", "repetition", "environmental", "symptoms"] as const;
+export const riskFactors = ["contact_stress", "force", "awkward_posture", "repetition", "environmental"] as const;
 
 export const tagTaxonomy = [
   // General & Routing

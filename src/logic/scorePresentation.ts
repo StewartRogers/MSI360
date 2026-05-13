@@ -4,6 +4,10 @@ export function formatScore(score: number | null) {
   return typeof score === "number" ? `${score.toFixed(1)} / 4` : "N/A";
 }
 
+export function formatOverallScore(score: number | null) {
+  return typeof score === "number" ? `${score.toFixed(1)} out of 4` : "N/A";
+}
+
 export function formatScoreValue(score: number | null) {
   return typeof score === "number" ? score.toFixed(1) : "N/A";
 }
@@ -39,8 +43,7 @@ export function getFactorSummaries(result: ScoreResult) {
     force: { label: "Force", riskSubject: "force" },
     awkward_posture: { label: "Awkward postures", riskSubject: "awkward postures" },
     repetition: { label: "Repetition", riskSubject: "repetition" },
-    environmental: { label: "Environmental factors", riskSubject: "environmental factors" },
-    symptoms: { label: "Symptoms", riskSubject: "reported symptoms" }
+    environmental: { label: "Environmental factors", riskSubject: "environmental factors" }
   };
 
   return (Object.keys(result.factors) as Array<keyof ScoreResult["factors"]>).map((key) => ({ key, ...labels[key] }));

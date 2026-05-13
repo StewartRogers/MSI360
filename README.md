@@ -9,7 +9,7 @@ There is no backend and no database in this version.
 - React
 - TypeScript
 - Vite
-- `pdf-lib` for browser-side PDF generation
+- `@react-pdf/renderer` for browser-side PDF generation
 - Gemini API for text-answer interpretation
 - Azure Translator planned for later user-response/report translation work
 
@@ -46,9 +46,13 @@ npm run test:automated
 npm run test:unit
 ```
 
-The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, and a few lightweight assessment-flow integration checks.
+The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, PDF report data derivation, a React PDF document bundle smoke check, and a few lightweight assessment-flow integration checks.
 
 The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
+
+## Score Presentation
+
+The on-screen MSI risk summary displays the overall composite score as `X.X out of 4`. Category-specific scores retain the compact `X.X / 4` format.
 
 ## Environment Variables
 
@@ -73,6 +77,8 @@ AGENTS.md
 docs/
   MSI360_Sprint_Test_Cases.md
 public/
+  icons/
+    ...
   images/
     ...
   worksafebc-logo.png
@@ -134,6 +140,7 @@ src/
       zhHans.ts
   logic/
     ai.ts
+    aiFallbackToast.ts
     answerSelection.ts
     appFlow.ts
     assessmentFlow.ts
@@ -141,6 +148,11 @@ src/
     routing.ts
     scoring.ts
     scorePresentation.ts
+  report/
+    ReportDocument.tsx
+    reportAssets.ts
+    reportData.ts
+    reportGuidance.ts
   ui/
     components/
       ActionButtons.tsx
@@ -164,6 +176,8 @@ tests/
     ai.test.ts
     answer-selection.test.ts
     loading-state.test.ts
+    report-data.test.ts
+    report-document.test.ts
     routing.test.ts
     score-presentation.test.ts
     scoring.test.ts
@@ -210,6 +224,8 @@ Current non-English files are placeholders that export English text. Replace eac
 4. Adding the language to `languages` in `src/data/catalog.ts`.
 
 During the assessment flow, option selections are treated as draft answers until the worker clicks Continue. Routing tags and follow-up questions are recomputed only after that commit, so choosing an option does not unexpectedly move the worker to another question.
+
+Current symptom/discomfort questions are kept for routing and report context, but they do not contribute to scored risk factors. The scored risk factors are contact stress, force, awkward posture, repetition, and environmental factors.
 
 ## Gemini Integration
 
@@ -291,13 +307,25 @@ The psychosocial score averages whichever of those four questions were answered 
 
 ## PDF Report
 
-Browser-side PDF generation lives in:
+Browser-side PDF download orchestration lives in:
 
 ```text
 src/logic/report.ts
 ```
 
-The report overview includes the adjusted composite score, averaged factor scores, and their risk interpretation text. When psychosocial responses apply a multiplier above 1, the on-screen summary and PDF overview show a purple note under the overall score. The PDF uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in the detailed question-and-answer section.
+The React PDF document and report data model live in:
+
+```text
+src/report/
+```
+
+The PDF is generated in the browser with `@react-pdf/renderer` and keeps the existing Download PDF button flow. It includes an intro/about page, overview page, category score summary, category-specific detail pages, and a full English response-record appendix. The five scored categories are always shown in this order: Contact stress, Force, Awkward posture, Repetition, and Environmental factors.
+
+Report icons are centralized in `src/report/reportAssets.ts` and reference files under `public/icons/`; the hierarchy-of-controls image is loaded from `public/images/hierarchy-of-controls.png`. The current body diagram is a replaceable React PDF vector placeholder with symptom callouts, so a final body asset can be swapped in later without changing report data logic.
+
+Category explanations and suggested actions are derived from selected answers that contribute a category risk score of `2` or higher. Scores of `4` count as high priority, `3` as medium priority, and `2` as review priority. When no scored hazard is identified for a category, the PDF displays `0` for that category in the report presentation while leaving the underlying scoring result as `null`.
+
+The response-record appendix uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in that detailed question-and-answer section.
 
 ## Current Limitations
 

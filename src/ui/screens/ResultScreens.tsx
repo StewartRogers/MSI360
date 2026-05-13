@@ -17,7 +17,7 @@ export function ScoreScreen({ result, progressStep, totalSteps, translations, on
         <h2>Your MSI risk summary</h2>
         <div className="overall-score-card">
           <p>Overall MSI Risk</p>
-          <strong>{formatScoreValue(result.composite_score)}/4</strong>
+          <strong>{formatOverallScore(result.composite_score)}</strong>
           <span>{describeRisk(result.composite_score)}</span>
           {psychosocialMessage && <em className="psychosocial-note">{psychosocialMessage}</em>}
         </div>
