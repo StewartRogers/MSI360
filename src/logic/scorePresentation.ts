@@ -39,8 +39,7 @@ export function getFactorSummaries(result: ScoreResult) {
     force: { label: "Force", riskSubject: "force" },
     awkward_posture: { label: "Awkward postures", riskSubject: "awkward postures" },
     repetition: { label: "Repetition", riskSubject: "repetition" },
-    environmental: { label: "Environmental factors", riskSubject: "environmental factors" },
-    symptoms: { label: "Symptoms", riskSubject: "reported symptoms" }
+    environmental: { label: "Environmental factors", riskSubject: "environmental factors" }
   };
 
   return (Object.keys(result.factors) as Array<keyof ScoreResult["factors"]>).map((key) => ({ key, ...labels[key] }));

@@ -40,12 +40,37 @@ test("scoreAssessment uses max selected option score per question and averages b
   assert.equal(result.factors.awkward_posture.score, 3);
   assert.equal(result.factors.repetition.score, 3);
   assert.equal(result.factors.environmental.score, 4);
-  assert.equal(result.factors.symptoms.score, 3);
-  assert.equal(result.grouped_scores.physical, 3.2);
+  assert.equal(Object.prototype.hasOwnProperty.call(result.factors, "symptoms"), false);
+  assert.equal(result.grouped_scores.physical, 3.3);
   assert.equal(result.grouped_scores.environmental, 4);
-  assert.equal(result.base_composite_score, 3.3);
-  assert.equal(result.composite_score, 3.3);
+  assert.equal(result.base_composite_score, 3.4);
+  assert.equal(result.composite_score, 3.4);
   assert.equal(result.psychosocial_modifier.multiplier, 1);
+});
+
+test("scoreAssessment does not score current symptom answers", () => {
+  const scoredAnswers: Answers = {
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" }
+  };
+  const answersWithCurrentSymptoms: Answers = {
+    ...scoredAnswers,
+    "question-9": { type: "multi_choice", value: "yes" },
+    "question-10": {
+      type: "grouped_select_all",
+      value: {
+        neck: ["both_sides", "lasted_two_days"],
+        lower_back: ["one_side"]
+      }
+    }
+  };
+
+  const scoredResult = scoreAssessment(scoredAnswers);
+  const symptomResult = scoreAssessment(answersWithCurrentSymptoms);
+
+  assert.deepEqual(symptomResult.factors, scoredResult.factors);
+  assert.deepEqual(symptomResult.grouped_scores, scoredResult.grouped_scores);
+  assert.equal(symptomResult.base_composite_score, scoredResult.base_composite_score);
+  assert.equal(symptomResult.composite_score, scoredResult.composite_score);
 });
 
 test("scoreAssessment averages answered psychosocial questions only and applies the modifier to the final score", () => {

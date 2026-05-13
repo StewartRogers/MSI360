@@ -211,6 +211,8 @@ Current non-English files are placeholders that export English text. Replace eac
 
 During the assessment flow, option selections are treated as draft answers until the worker clicks Continue. Routing tags and follow-up questions are recomputed only after that commit, so choosing an option does not unexpectedly move the worker to another question.
 
+Current symptom/discomfort questions are kept for routing and report context, but they do not contribute to scored risk factors. The scored risk factors are contact stress, force, awkward posture, repetition, and environmental factors.
+
 ## Gemini Integration
 
 Gemini is used in:

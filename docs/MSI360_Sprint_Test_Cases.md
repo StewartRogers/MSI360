@@ -56,20 +56,21 @@ npm run test:automated
 | AT-32 | `tests/unit/routing.test.ts` | Unit test | Base routing shows always-visible questions and hides conditional follow-ups. | Base questions are visible and conditional follow-ups stay hidden until relevant tags are present. |
 | AT-33 | `tests/unit/routing.test.ts` | Unit test | `recomputeTags` combines selected option tags and allowed AI tags. | Valid selected-option and AI tags are included; invalid AI tags are ignored. |
 | AT-34 | `tests/unit/routing.test.ts` | Unit test | `getSelectedOptions` reads grouped question answers. | Grouped answers return the expected selected options and risk scores. |
-| AT-35 | `tests/unit/score-presentation.test.ts` | Unit test | Score presentation helpers preserve existing labels and formatting. | Factor labels, score labels, and score formatting remain stable. |
+| AT-35 | `tests/unit/score-presentation.test.ts` | Unit test | Score presentation helpers preserve existing labels and formatting. | Factor labels exclude Symptoms, and score labels and score formatting remain stable. |
 | AT-36 | `tests/unit/score-presentation.test.ts` | Unit test | Risk descriptions match score thresholds. | Composite risk descriptions map to the expected score bands. |
 | AT-37 | `tests/unit/score-presentation.test.ts` | Unit test | Factor risk interpretations match score thresholds. | Factor interpretation text maps to the expected score bands. |
 | AT-38 | `tests/unit/score-presentation.test.ts` | Unit test | Psychosocial influence message appears only when the final score is negatively influenced. | Psychosocial note is present only when the modifier increases the final score. |
 | AT-39 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` returns unscored results when no answers are present. | Composite, grouped, and factor scores are empty or `null` as expected. |
-| AT-40 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` uses max selected option score per question and averages by factor. | Factor, grouped, and composite scores match expected values. |
-| AT-41 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages answered psychosocial questions only and applies the modifier to the final score. | Psychosocial score and multiplier are based only on answered psychosocial questions. |
-| AT-42 | `tests/unit/scoring.test.ts` | Unit test | Psychosocial multiplier uses the configured thresholds. | Multiplier values match the configured psychosocial score bands. |
-| AT-43 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` caps the psychosocial-adjusted composite score at 4. | Final composite score never exceeds 4. |
-| AT-44 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` keeps Q41 and Q42 in environmental scoring while using them for psychosocial scoring. | Q41/Q42 contribute to environmental scoring and the psychosocial modifier. |
-| AT-45 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages contact stress over the number of answered contact stress questions. | Contact stress average changes according to the answered contact-stress question count. |
-| AT-46 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages force over the number of answered force questions. | Force average changes according to the answered force question count. |
-| AT-47 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages repetition over the number of answered repetition questions. | Repetition average uses only answered repetition questions. |
-| AT-48 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` severity uses the configured risk interpretation boundaries. | Severity labels change at the expected score thresholds. |
+| AT-40 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` uses max selected option score per question and averages by factor. | Factor, grouped, and composite scores match expected values, and no Symptoms factor is returned. |
+| AT-41 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` does not score current symptom answers. | Current symptom answers leave factor, grouped, base composite, and final composite scores unchanged. |
+| AT-42 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages answered psychosocial questions only and applies the modifier to the final score. | Psychosocial score and multiplier are based only on answered psychosocial questions. |
+| AT-43 | `tests/unit/scoring.test.ts` | Unit test | Psychosocial multiplier uses the configured thresholds. | Multiplier values match the configured psychosocial score bands. |
+| AT-44 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` caps the psychosocial-adjusted composite score at 4. | Final composite score never exceeds 4. |
+| AT-45 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` keeps Q41 and Q42 in environmental scoring while using them for psychosocial scoring. | Q41/Q42 contribute to environmental scoring and the psychosocial modifier. |
+| AT-46 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages contact stress over the number of answered contact stress questions. | Contact stress average changes according to the answered contact-stress question count. |
+| AT-47 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages force over the number of answered force questions. | Force average changes according to the answered force question count. |
+| AT-48 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` averages repetition over the number of answered repetition questions. | Repetition average uses only answered repetition questions. |
+| AT-49 | `tests/unit/scoring.test.ts` | Unit test | `scoreAssessment` severity uses the configured risk interpretation boundaries. | Severity labels change at the expected score thresholds. |
 
 ## Manual Test Cases
 
@@ -95,4 +96,3 @@ Each team member will spend one hour per week running manual tests from this che
 | MT-16 | French translation | Localization test | Select French and complete a representative flow. | In-app text is French; brand names may remain unchanged. Downloaded PDFs remain English. |
 | MT-17 | Spanish task parity | API/manual integration test | With Gemini configured, enter equivalent English and Spanish lifting task descriptions. | Both runs show the same core lifting/repetition follow-up questions; very small tag variance is acceptable. |
 | MT-18 | French task parity | API/manual integration test | With Gemini configured, enter equivalent English and French desk/computer task descriptions. | Both runs show the same core seated/screen/repetition follow-up questions; very small tag variance is acceptable. |
-
