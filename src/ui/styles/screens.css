@@ -296,8 +296,8 @@
 .overall-score-card strong {
   display: block;
   color: #4b4541;
-  font-size: 72px;
-  line-height: 0.95;
+  font-size: clamp(40px, 13vw, 72px);
+  line-height: 1.05;
 }
 
 .overall-score-card span {

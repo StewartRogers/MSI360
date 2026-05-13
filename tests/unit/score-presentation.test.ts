@@ -1,10 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { scoreAssessment } from "../../src/logic/scoring";
-import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../src/logic/scorePresentation";
+import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../src/logic/scorePresentation";
 
 test("score presentation helpers preserve existing labels and formatting", () => {
   assert.equal(formatScore(2), "2.0 / 4");
+  assert.equal(formatOverallScore(3.7), "3.7 out of 4");
+  assert.equal(formatOverallScore(null), "N/A");
   assert.equal(formatScoreValue(null), "N/A");
   assert.equal(scorePercent(5), 100);
   assert.equal(scorePercent(-1), 0);

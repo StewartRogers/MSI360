@@ -4,6 +4,10 @@ export function formatScore(score: number | null) {
   return typeof score === "number" ? `${score.toFixed(1)} / 4` : "N/A";
 }
 
+export function formatOverallScore(score: number | null) {
+  return typeof score === "number" ? `${score.toFixed(1)} out of 4` : "N/A";
+}
+
 export function formatScoreValue(score: number | null) {
   return typeof score === "number" ? score.toFixed(1) : "N/A";
 }
