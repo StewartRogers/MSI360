@@ -20,7 +20,7 @@ const colors = {
 
 export function ReportDocument({ report }: { report: ReportData }) {
   return (
-    <Document title="MSI 360 Risk Tool Report" author="MSI360">
+    <Document title="MSI 360 Risk Score Report" author="MSI360">
       <Page size={[612, 792]} style={styles.page} wrap>
         <IntroContent report={report} />
         <OverviewContent report={report} />
@@ -35,8 +35,8 @@ export function ReportDocument({ report }: { report: ReportData }) {
 function IntroContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
-      <Text style={styles.introTitle}>MSI 360 Risk Tool Report</Text>
-      
+      <Text style={styles.introTitle}>MSI360 Risk Score Report</Text>
+
       <View style={styles.metaStrip} wrap={false}>
         <MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} />
         <View style={styles.metaDivider} />
@@ -119,55 +119,55 @@ function OverviewContent({ report }: { report: ReportData }) {
     <View style={styles.pageContent}>
       <View style={{ marginTop: 32 }} />
       <Text style={styles.pageHeading}>Overview of results</Text>
-        <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}Detailed category score pages and the full response record appear later in the report.</Text>
+      <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}Detailed category score pages and the full response record appear later in the report.</Text>
 
-        <Text style={styles.sectionHeading}>Current symptoms</Text>
-        <SymptomsAlert symptoms={report.symptoms} />
-        <View style={styles.symptomDiagramRow} wrap={false}>
-          <View style={{ flex: 1, paddingTop: 10 }}>
-            <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
-            <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
-          </View>
-          <BodyDiagramSvg symptoms={report.symptoms} />
+      <Text style={styles.sectionHeading}>Current symptoms</Text>
+      <SymptomsAlert symptoms={report.symptoms} />
+      <View style={styles.symptomDiagramRow} wrap={false}>
+        <View style={{ flex: 1, paddingTop: 10 }}>
+          <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
+          <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
         </View>
+        <BodyDiagramSvg symptoms={report.symptoms} />
+      </View>
 
-        <View style={styles.noteBlock} wrap={false}>
-          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
-          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
-          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
-        </View>
+      <View style={styles.noteBlock} wrap={false}>
+        <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
+        <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
+        {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+      </View>
 
-        <Text style={styles.sectionHeading}>Overall MSI risk summary</Text>
-        <View style={styles.overallSummary} wrap={false}>
-          <View style={styles.bigMetric}>
-            <View style={styles.shieldIconWrapper}>
-              <Image src={reportAssets.icons.shield} style={styles.bigShieldIcon} />
-            </View>
-            <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
-            <Text style={styles.metricValue}>{report.totalHazards}</Text>
-            <Text style={styles.metricHelp}>{report.totalHazards ? "Review category pages for details." : "No scored hazards were identified in\nthis report overview."}</Text>
+      <Text style={styles.sectionHeading}>Overall MSI risk summary</Text>
+      <View style={styles.overallSummary} wrap={false}>
+        <View style={styles.bigMetric}>
+          <View style={styles.shieldIconWrapper}>
+            <Image src={reportAssets.icons.shield} style={styles.bigShieldIcon} />
           </View>
-          <PriorityBreakdown counts={report.priorityTotals} />
+          <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
+          <Text style={styles.metricValue}>{report.totalHazards}</Text>
+          <Text style={styles.metricHelp}>{report.totalHazards ? "Review category pages for details." : "No scored hazards were identified in\nthis report overview."}</Text>
         </View>
-        
-        {report.overallScore.psychosocialMessage && <Text style={styles.psychosocialNote}>{report.overallScore.psychosocialMessage}</Text>}
+        <PriorityBreakdown counts={report.priorityTotals} />
+      </View>
 
-        <View style={styles.infoLineContainer} wrap={false}>
-          <View style={styles.infoIconCircleSmall}>
-            <Text style={styles.infoIconCharSmall}>i</Text>
-          </View>
-          <Text style={styles.infoLine}>Higher-priority risks should be reviewed first. This report remains a starting point for discussion and action.</Text>
+      {report.overallScore.psychosocialMessage && <Text style={styles.psychosocialNote}>{report.overallScore.psychosocialMessage}</Text>}
+
+      <View style={styles.infoLineContainer} wrap={false}>
+        <View style={styles.infoIconCircleSmall}>
+          <Text style={styles.infoIconCharSmall}>i</Text>
         </View>
+        <Text style={styles.infoLine}>Higher-priority risks should be reviewed first. This report remains a starting point for discussion and action.</Text>
+      </View>
 
-        <View style={styles.controlsRow} wrap={false}>
-          <View style={styles.controlsText}>
-            <Text style={styles.sectionHeading}>How to approach reducing risks</Text>
-            <Text style={styles.paragraph}>
-              Risk reduction should begin with the most effective controls first. Where possible, remove or reduce the hazard at the source before relying on personal protective equipment.
-            </Text>
-            <Text style={styles.paragraph}>The following pages present category-specific MSI scores, plain-language explanations, and suggested actions. The full list of questions and answers is provided at the end of the report as a response record.</Text>
-          </View>
-          <Image src={reportAssets.images.hierarchyOfControls} style={styles.hierarchyImage} />
+      <View style={styles.controlsRow} wrap={false}>
+        <View style={styles.controlsText}>
+          <Text style={styles.sectionHeading}>How to approach reducing risks</Text>
+          <Text style={styles.paragraph}>
+            Risk reduction should begin with the most effective controls first. Where possible, remove or reduce the hazard at the source before relying on personal protective equipment.
+          </Text>
+          <Text style={styles.paragraph}>The following pages present category-specific MSI scores, plain-language explanations, and suggested actions. The full list of questions and answers is provided at the end of the report as a response record.</Text>
+        </View>
+        <Image src={reportAssets.images.hierarchyOfControls} style={styles.hierarchyImage} />
       </View>
     </View>
   );
@@ -178,72 +178,72 @@ function CategoriesFlowContent({ report }: { report: ReportData }) {
     <View style={styles.pageContent}>
       <View style={{ marginTop: 32 }} />
       <Text style={styles.pageHeading}>Category score summary</Text>
-        <Text style={styles.pageIntro}>The following table summarizes the MSI score for each assessed risk category.{"\n"}Each score is based on the worker's responses and is intended to help identify which areas may need review first.</Text>
-        
-        <Text style={styles.noteTextBold}>NOTE:</Text>
-        <Text style={styles.noteText}>
-          Even when no scored hazard is identified, reported discomfort should still be reviewed alongside the worker's task, workstation layout, tools or objects handled, and work-organization factors such as pace, recovery, and task variability.
-        </Text>
+      <Text style={styles.pageIntro}>The following table summarizes the MSI score for each assessed risk category.{"\n"}Each score is based on the worker's responses and is intended to help identify which areas may need review first.</Text>
 
-        <View style={styles.categoryTable} wrap={false}>
-          <View style={[styles.tableRow, styles.tableHeader]}>
-            <Text style={[styles.tableCell, styles.categoryNameCell]}>Risk category</Text>
-            <Text style={[styles.tableCell, styles.scoreCell]}>Score</Text>
-            <Text style={[styles.tableCell, styles.statusCell]}>Current status</Text>
-            <Text style={[styles.tableCell, styles.priorityCell]}>Review priority</Text>
-          </View>
-          {report.categories.map((category) => (
-            <View key={category.key} style={styles.tableRow}>
-              <View style={[styles.tableCell, styles.categoryNameCell, styles.tableCategoryName]}>
-                <Image src={category.icon} style={styles.tableIcon} />
-                <Text>{category.label}</Text>
-              </View>
-              <Text style={[styles.tableCell, styles.scoreCell, styles.tableScore]}>{category.scoreDisplay}</Text>
-              <Text style={[styles.tableCell, styles.statusCell, styles.tableStatus]}>{category.currentStatus}</Text>
-              <View style={[styles.tableCell, styles.priorityCell]}>
-                <View style={[styles.priorityPill, priorityPillStyle(category.reviewPriority)]}>
-                  <Text style={[styles.priorityPillText, priorityPillTextStyle(category.reviewPriority)]}>{category.priorityLabel}</Text>
-                </View>
-              </View>
-            </View>
-          ))}
+      <Text style={styles.noteTextBold}>NOTE:</Text>
+      <Text style={styles.noteText}>
+        Even when no scored hazard is identified, reported discomfort should still be reviewed alongside the worker's task, workstation layout, tools or objects handled, and work-organization factors such as pace, recovery, and task variability.
+      </Text>
+
+      <View style={styles.categoryTable} wrap={false}>
+        <View style={[styles.tableRow, styles.tableHeader]}>
+          <Text style={[styles.tableCell, styles.categoryNameCell]}>Risk category</Text>
+          <Text style={[styles.tableCell, styles.scoreCell]}>Score</Text>
+          <Text style={[styles.tableCell, styles.statusCell]}>Current status</Text>
+          <Text style={[styles.tableCell, styles.priorityCell]}>Review priority</Text>
         </View>
-        <Text style={styles.tableFootnote}>A score of 0 means that no scored MSI hazard was identified for that category based on the worker's recorded answers.</Text>
-        
-        <View style={styles.thickDivider} />
-
-        {report.categories.map((category, index) => (
-          <View key={category.key} style={styles.categoryDetailSection}>
-            <Text style={styles.detailHeading}>{category.label} MSI score</Text>
-            
-            <View style={styles.categoryDetailGrid} wrap={false}>
-              <View style={styles.categoryMetricPanel}>
-                <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
-                <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.hazardCount}</Text>
-                <Text style={styles.metricScoreLabel}>Score: {category.scoreDisplay}</Text>
-                <Text style={styles.metricSeverity}>{category.severity === "No scored hazard identified" ? "No scored hazards identified." : category.severity}</Text>
-              </View>
-              <PriorityBreakdown counts={category.priorityCounts} />
-              <View style={styles.tipsPanel}>
-                <Text style={styles.detailLabel}>Tips :</Text>
-                {(category.tips.length ? category.tips : ["Review the selected responses with the worker and look for practical changes to the work."]).map((tip) => (
-                  <Text key={tip} style={styles.tipText}>
-                    {tip}
-                  </Text>
-                ))}
+        {report.categories.map((category) => (
+          <View key={category.key} style={styles.tableRow}>
+            <View style={[styles.tableCell, styles.categoryNameCell, styles.tableCategoryName]}>
+              <Image src={category.icon} style={styles.tableIcon} />
+              <Text>{category.label}</Text>
+            </View>
+            <Text style={[styles.tableCell, styles.scoreCell, styles.tableScore]}>{category.scoreDisplay}</Text>
+            <Text style={[styles.tableCell, styles.statusCell, styles.tableStatus]}>{category.currentStatus}</Text>
+            <View style={[styles.tableCell, styles.priorityCell]}>
+              <View style={[styles.priorityPill, priorityPillStyle(category.reviewPriority)]}>
+                <Text style={[styles.priorityPillText, priorityPillTextStyle(category.reviewPriority)]}>{category.priorityLabel}</Text>
               </View>
             </View>
-
-            <Text style={styles.detailLabel}>Explanation:</Text>
-            <Text style={styles.paragraph}>{category.explanation}</Text>
-
-            <Text style={styles.detailLabel}>Suggested actions</Text>
-            <BulletList items={category.suggestedActions} />
-            {index < report.categories.length - 1 && <View style={styles.thickDivider} />}
           </View>
         ))}
-
       </View>
+      <Text style={styles.tableFootnote}>A score of 0 means that no scored MSI hazard was identified for that category based on the worker's recorded answers.</Text>
+
+      <View style={styles.thickDivider} />
+
+      {report.categories.map((category, index) => (
+        <View key={category.key} style={styles.categoryDetailSection}>
+          <Text style={styles.detailHeading}>{category.label} MSI score</Text>
+
+          <View style={styles.categoryDetailGrid} wrap={false}>
+            <View style={styles.categoryMetricPanel}>
+              <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
+              <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.hazardCount}</Text>
+              <Text style={styles.metricScoreLabel}>Score: {category.scoreDisplay}</Text>
+              <Text style={styles.metricSeverity}>{category.severity === "No scored hazard identified" ? "No scored hazards identified." : category.severity}</Text>
+            </View>
+            <PriorityBreakdown counts={category.priorityCounts} />
+            <View style={styles.tipsPanel}>
+              <Text style={styles.detailLabel}>Tips :</Text>
+              {(category.tips.length ? category.tips : ["Review the selected responses with the worker and look for practical changes to the work."]).map((tip) => (
+                <Text key={tip} style={styles.tipText}>
+                  {tip}
+                </Text>
+              ))}
+            </View>
+          </View>
+
+          <Text style={styles.detailLabel}>Explanation:</Text>
+          <Text style={styles.paragraph}>{category.explanation}</Text>
+
+          <Text style={styles.detailLabel}>Suggested actions</Text>
+          <BulletList items={category.suggestedActions} />
+          {index < report.categories.length - 1 && <View style={styles.thickDivider} />}
+        </View>
+      ))}
+
+    </View>
   );
 }
 
@@ -252,19 +252,19 @@ function ResponseRecordContent({ report }: { report: ReportData }) {
     <View style={styles.pageContent}>
       <View style={{ marginTop: 32 }} />
       <Text style={styles.pageHeading}>Response record</Text>
-        <Text style={styles.pageIntro}>This appendix lists the English question text and recorded answers used to generate the report.</Text>
-        
-        {report.answerRecords.map((record) => (
-          <View key={record.questionId} style={styles.answerRecord} wrap={false}>
-            <Text style={styles.answerQuestion}>{record.question}</Text>
-            {record.answers.map((answer) => (
-              <Text key={answer} style={styles.answerText}>
-                {answer}
-              </Text>
-            ))}
-          </View>
-        ))}
-      </View>
+      <Text style={styles.pageIntro}>This appendix lists the English question text and recorded answers used to generate the report.</Text>
+
+      {report.answerRecords.map((record) => (
+        <View key={record.questionId} style={styles.answerRecord} wrap={false}>
+          <Text style={styles.answerQuestion}>{record.question}</Text>
+          {record.answers.map((answer) => (
+            <Text key={answer} style={styles.answerText}>
+              {answer}
+            </Text>
+          ))}
+        </View>
+      ))}
+    </View>
   );
 }
 
@@ -359,7 +359,7 @@ function PriorityRow({ icon, label, sublabel, count, tone }: { icon: string; lab
         <Text style={styles.prioritySubLabel}>{sublabel}</Text>
       </View>
       <View style={[styles.priorityCountBox, priorityCountBoxStyle(tone)]}>
-         <Text style={[styles.priorityCountText, priorityCountTextStyle(tone)]}>{count}</Text>
+        <Text style={[styles.priorityCountText, priorityCountTextStyle(tone)]}>{count}</Text>
       </View>
     </View>
   );

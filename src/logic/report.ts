@@ -11,7 +11,7 @@ export async function downloadReport(answers: Answers, aiOutputs: AiOutputs, sco
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
-  link.download = "MSI360-risk-report.pdf";
+  link.download = "MSI360-Risk-Score-Report.pdf";
   link.click();
   URL.revokeObjectURL(url);
 }
