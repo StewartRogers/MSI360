@@ -1,6 +1,7 @@
 import { Document, Image, Line, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
 import { reportAssets } from "./reportAssets";
 import type { ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import { BodyDiagramSvg } from "./BodyDiagramSvg";
 
 const colors = {
   black: "#111111",
@@ -125,7 +126,7 @@ function OverviewPage({ report }: { report: ReportData }) {
             <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
             <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
           </View>
-          <BodyDiagram symptoms={report.symptoms} />
+          <BodyDiagramSvg symptoms={report.symptoms} />
         </View>
 
         <View style={styles.noteBlock} wrap={false}>
@@ -353,38 +354,6 @@ function SymptomList({ title, items }: { title: string; items: string[] }) {
   );
 }
 
-function BodyDiagram({ symptoms }: { symptoms: ReportBodySymptoms }) {
-  const symptomCount = symptoms.oneSide.length + symptoms.bothSides.length + symptoms.lastedTwoDays.length;
-  return (
-    <View style={styles.bodyDiagram}>
-      <Svg width={150} height={190} viewBox="0 0 150 190">
-        <Rect x={20} y={8} width={110} height={174} rx={10} fill="#ffffff" stroke={colors.border} />
-        <Path d="M76 42 C91 42 100 54 98 70 C96 85 88 94 76 94 C64 94 56 85 54 70 C52 54 61 42 76 42 Z" fill="#f7f7f7" stroke="#333333" strokeWidth={1.2} />
-        <Path d="M76 94 C73 116 70 133 67 151" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M76 100 C57 108 45 103 35 88" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M77 100 C96 107 109 101 118 87" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M68 151 C56 164 49 173 43 182" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M67 151 C79 164 86 174 91 184" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Line x1={23} y1={116} x2={126} y2={116} stroke={colors.border} strokeWidth={1} />
-        <Line x1={23} y1={154} x2={126} y2={154} stroke={colors.border} strokeWidth={1} />
-      </Svg>
-      <Text style={styles.bodyDiagramCaption}>
-        {symptomCount ? `Callouts: ${formatBodyCallouts(symptoms)}` : "No symptom callouts recorded."}
-      </Text>
-    </View>
-  );
-}
-
-function formatBodyCallouts(symptoms: ReportBodySymptoms) {
-  const callouts = [
-    ...symptoms.bothSides.map((label) => `${label} on both sides`),
-    ...symptoms.oneSide.map((label) => `${label} on one side`),
-    ...symptoms.lastedTwoDays.map((label) => `${label} for 2+ days`)
-  ];
-  const visible = callouts.slice(0, 3);
-  const remaining = callouts.length - visible.length;
-  return `${visible.join("; ")}${remaining > 0 ? `; +${remaining} more` : ""}`;
-}
 
 function PriorityBreakdown({ counts }: { counts: { high: number; medium: number; review: number } }) {
   return (
