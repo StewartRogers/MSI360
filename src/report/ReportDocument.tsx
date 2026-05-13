@@ -216,7 +216,7 @@ function CategoriesFlowContent({ report }: { report: ReportData }) {
           <View key={category.key} style={styles.categoryDetailSection}>
             <Text style={styles.detailHeading}>{category.label} MSI score</Text>
             
-            <View style={styles.categoryDetailGrid}>
+            <View style={styles.categoryDetailGrid} wrap={false}>
               <View style={styles.categoryMetricPanel}>
                 <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
                 <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.scoreDisplay}</Text>

@@ -26,37 +26,54 @@ export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
       <Svg width={250} height={250} viewBox="0 0 500 500">
         <Rect width={500} height={500} fill="#ffffff" />
         <G>
-          <Ellipse cx={FCX} cy={106} rx={14} ry={10} {...highlightProps("Neck")} />
-          <Ellipse cx={BCX} cy={106} rx={14} ry={10} {...highlightProps("Neck")} />
-          <Ellipse cx={FCX - 38} cy={115} rx={18} ry={14} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={FCX + 38} cy={115} rx={18} ry={14} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX - 38} cy={115} rx={18} ry={14} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX + 38} cy={115} rx={18} ry={14} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={FCX - 52} cy={155} rx={14} ry={25} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={FCX + 52} cy={155} rx={14} ry={25} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX - 52} cy={155} rx={14} ry={25} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX + 52} cy={155} rx={14} ry={25} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={FCX - 66} cy={200} rx={12} ry={25} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={FCX + 66} cy={200} rx={12} ry={25} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={BCX - 66} cy={200} rx={12} ry={25} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={BCX + 66} cy={200} rx={12} ry={25} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={FCX - 78} cy={245} rx={10} ry={16} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={FCX + 78} cy={245} rx={10} ry={16} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={BCX - 78} cy={245} rx={10} ry={16} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={BCX + 78} cy={245} rx={10} ry={16} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={BCX} cy={200} rx={25} ry={25} {...highlightProps("Lower back")} />
-          <Ellipse cx={FCX - 14} cy={275} rx={14} ry={40} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={FCX + 14} cy={275} rx={14} ry={40} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={BCX - 14} cy={275} rx={14} ry={40} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={BCX + 14} cy={275} rx={14} ry={40} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={FCX - 13} cy={370} rx={12} ry={45} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={FCX + 13} cy={370} rx={12} ry={45} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={BCX - 13} cy={370} rx={12} ry={45} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={BCX + 13} cy={370} rx={12} ry={45} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={FCX - 14} cy={440} rx={12} ry={8} {...highlightProps("Ankle(s) or foot/feet")} />
-          <Ellipse cx={FCX + 14} cy={440} rx={12} ry={8} {...highlightProps("Ankle(s) or foot/feet")} />
-          <Ellipse cx={BCX - 14} cy={440} rx={12} ry={8} {...highlightProps("Ankle(s) or foot/feet")} />
-          <Ellipse cx={BCX + 14} cy={440} rx={12} ry={8} {...highlightProps("Ankle(s) or foot/feet")} />
+          {/* Neck — snug around the throat/nape area */}
+          <Ellipse cx={FCX} cy={100} rx={12} ry={8} {...highlightProps("Neck")} />
+          <Ellipse cx={BCX} cy={100} rx={12} ry={8} {...highlightProps("Neck")} />
+
+          {/* Shoulders — on the shoulder joint area */}
+          <Ellipse cx={FCX - 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={FCX + 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={BCX - 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={BCX + 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+
+          {/* Upper arms — along the bicep/tricep */}
+          <Ellipse cx={FCX - 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={FCX + 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={BCX - 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={BCX + 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+
+          {/* Elbows/forearms — mid-arm, closer to body than wrists */}
+          <Ellipse cx={FCX - 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
+          <Ellipse cx={FCX + 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
+          <Ellipse cx={BCX - 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
+          <Ellipse cx={BCX + 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
+
+          {/* Wrists/hands/fingers — at the hand level */}
+          <Ellipse cx={FCX - 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
+          <Ellipse cx={FCX + 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
+          <Ellipse cx={BCX - 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
+          <Ellipse cx={BCX + 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
+
+          {/* Lower back — lumbar area, only on back figure */}
+          <Ellipse cx={BCX} cy={195} rx={22} ry={22} {...highlightProps("Lower back")} />
+
+          {/* Hips/thighs — upper leg area */}
+          <Ellipse cx={FCX - 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
+          <Ellipse cx={FCX + 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
+          <Ellipse cx={BCX - 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
+          <Ellipse cx={BCX + 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
+
+          {/* Knees/calves — lower leg, centered on shin/calf */}
+          <Ellipse cx={FCX - 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
+          <Ellipse cx={FCX + 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
+          <Ellipse cx={BCX - 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
+          <Ellipse cx={BCX + 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
+
+          {/* Ankles/feet — at the foot level */}
+          <Ellipse cx={FCX - 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
+          <Ellipse cx={FCX + 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
+          <Ellipse cx={BCX - 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
+          <Ellipse cx={BCX + 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
         </G>
         <G>
 
