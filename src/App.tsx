@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { onboardingQuestionIds, questionIds } from "./app/questionAssets";
 import type { StepId } from "./app/types";
 import { languages, questions } from "./data/catalog";
@@ -12,9 +12,32 @@ import { scoreAssessment } from "./logic/scoring";
 import { AssessmentQuestionScreen } from "./ui/screens/AssessmentScreen";
 import { ChoiceScreen, DescriptionScreen, IntroScreen, LanguageScreen, TextScreen } from "./ui/screens/OnboardingScreens";
 import { CompleteScreen, EmailScreen, ReportReadyScreen, ScoreScreen, SubmitScreen } from "./ui/screens/ResultScreens";
-import type { AiOutputs, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
+import type { AiOutput, AiOutputs, AiPreAnswerOutput, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
 
 export { getActionButtonState } from "./ui/components/ActionButtons";
+
+type AiFallbackToastKind = "task-analysis" | "question-pruning";
+
+interface AiFallbackToast {
+  id: number;
+  message: string;
+}
+
+const aiFallbackToastMessages: Record<AiFallbackToastKind, string> = {
+  "task-analysis": "AI task analysis response timed out. Local fallback is being used instead.",
+  "question-pruning": "AI question pruning response timed out. Fallback follow-up questions are being used instead."
+};
+
+export function getAiFallbackToastKinds(taskOutput: Pick<AiOutput, "provider" | "notes">, preAnswerOutput: Pick<AiPreAnswerOutput, "provider" | "notes">): AiFallbackToastKind[] {
+  const fallbackToastKinds: AiFallbackToastKind[] = [];
+  if (taskOutput.provider === "client-keyword-fallback" && taskOutput.notes.startsWith("Gemini unavailable")) {
+    fallbackToastKinds.push("task-analysis");
+  }
+  if (preAnswerOutput.provider === "client-no-preanswer" && preAnswerOutput.notes.startsWith("Gemini pre-answering unavailable")) {
+    fallbackToastKinds.push("question-pruning");
+  }
+  return fallbackToastKinds;
+}
 
 export default function App() {
   const [step, setStep] = useState<StepId>("intro");
@@ -30,6 +53,22 @@ export default function App() {
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
   const [autoAnsweredQuestionIds, setAutoAnsweredQuestionIds] = useState<string[]>([]);
   const [draftAssessmentAnswers, setDraftAssessmentAnswers] = useState<Answers>({});
+  const [toastQueue, setToastQueue] = useState<AiFallbackToast[]>([]);
+  const [activeToast, setActiveToast] = useState<AiFallbackToast | null>(null);
+  const nextToastId = useRef(1);
+
+  useEffect(() => {
+    if (activeToast || !toastQueue.length) return;
+    const [nextToast, ...remainingToasts] = toastQueue;
+    setActiveToast(nextToast);
+    setToastQueue(remainingToasts);
+  }, [activeToast, toastQueue]);
+
+  useEffect(() => {
+    if (!activeToast) return;
+    const timerId = window.setTimeout(() => setActiveToast(null), 4200);
+    return () => window.clearTimeout(timerId);
+  }, [activeToast]);
 
   const t = translations[language] || translations.en;
   const selectedLanguage = languages.find((item) => item.code === language) || null;
@@ -89,6 +128,8 @@ export default function App() {
           const autoAnswers = toAnswers(preAnswerOutput.auto_answers);
           const nextAutoAnsweredQuestionIds = preAnswerOutput.auto_answers.map((answer) => answer.question_id);
           const nextAnswers = { ...answersWithoutPreviousAutoAnswers, ...autoAnswers };
+          const fallbackToastKinds = getAiFallbackToastKinds(output, preAnswerOutput);
+          if (fallbackToastKinds.length) queueAiFallbackToasts(fallbackToastKinds);
 
           setAnswers(nextAnswers);
           setAiOutputs(nextAiOutputs);
@@ -105,6 +146,16 @@ export default function App() {
       setAssessmentIndex(0);
       return setStep("assessment");
     }
+  }
+
+  function queueAiFallbackToasts(kinds: AiFallbackToastKind[]) {
+    setToastQueue((queuedToasts) => [
+      ...queuedToasts,
+      ...kinds.map((kind) => ({
+        id: nextToastId.current++,
+        message: aiFallbackToastMessages[kind]
+      }))
+    ]);
   }
 
   function goBack() {
@@ -185,6 +236,8 @@ export default function App() {
     setNextAssessmentChoice("");
     setAutoAnsweredQuestionIds([]);
     setDraftAssessmentAnswers({});
+    setToastQueue([]);
+    setActiveToast(null);
     setStep("intro");
   }
 
@@ -304,6 +357,21 @@ export default function App() {
       )}
 
       {step === "complete" && <CompleteScreen onStartNew={startNewAssessment} />}
+
+      <AiFallbackToast toast={activeToast} onDismiss={() => setActiveToast(null)} />
     </main>
+  );
+}
+
+function AiFallbackToast({ toast, onDismiss }: { toast: AiFallbackToast | null; onDismiss: () => void }) {
+  if (!toast) return null;
+
+  return (
+    <div className="ai-fallback-toast" role="status" aria-live="polite">
+      <span>{toast.message}</span>
+      <button type="button" className="ai-fallback-toast-close" aria-label="Dismiss AI fallback notice" onClick={onDismiss}>
+        X
+      </button>
+    </div>
   );
 }

@@ -2,9 +2,17 @@ import { tagTaxonomy } from "../data/catalog";
 import { translations } from "../data/translations";
 import type { AiOutput, AiPreAnswer, AiPreAnswerCandidate, AiPreAnswerOutput, AnswerValue, Answers, Question } from "../types";
 
+declare const __MSI360_TEST_GEMINI_TIMEOUT_MS__: number | undefined;
+
 const allowedTags = new Set(tagTaxonomy);
 const preAnswerConfidenceThreshold = 0.9;
-const negativeOptionIds = new Set(["no", "none", "never", "does_not_apply", "not_at_all"]);
+// Change this number to set how long app should wait for Gemini API call. Default = 15000ms
+const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 15000;
+const multilingualPromptGuidance = [
+  "The worker response may be written in any language or may mix languages.",
+  "Interpret the original response semantically. You may internally translate or normalize it to English when helpful.",
+  "Base decisions on the worker's intended meaning, not literal English keyword matching."
+];
 
 export async function interpretTextAnswer(question: Question, response: string): Promise<AiOutput> {
   const output = await interpretWithGemini(question, response).catch((error) => ({
@@ -15,7 +23,7 @@ export async function interpretTextAnswer(question: Question, response: string):
 
   return {
     ...output,
-    add_tags: output.add_tags.filter((tag) => allowedTags.has(tag) && question.ai_instructions?.allowed_add_tags.includes(tag))
+    add_tags: filterAllowedAddTags(question, output.add_tags)
   };
 }
 
@@ -46,37 +54,10 @@ async function interpretWithGemini(question: Question, response: string): Promis
   }
 
   const model = import.meta.env.VITE_GEMINI_MODEL || "gemini-2.5-flash";
-  const instruction = question.ai_instructions;
-  const allowedAddTags = instruction?.allowed_add_tags ?? [];
-
-  const prompt = [
-    "You support MSI360, a prototype musculoskeletal injury risk survey.",
-    "Analyze the worker's text answer and return strict JSON only. Do not include markdown or commentary.",
-    "Use only tags listed in allowed_add_tags. If no tag clearly applies, return an empty add_tags array.",
-    "Do not invent scoring values. Only extract tags and missing details that help route follow-up MSI questions.",
-    `Question id: ${question.question_id}`,
-    `Purpose: ${instruction?.purpose ?? "interpret_text_answer"}`,
-    `Instruction: ${instruction?.prompt ?? ""}`,
-    `Expected fields to consider: ${(instruction?.expected_fields ?? []).join(", ")}`,
-    `allowed_add_tags: ${allowedAddTags.join(", ")}`,
-    'Required JSON shape: {"normalized_answer_en":"string","add_tags":["tag"],"missing_details":["string"],"confidence":0.0,"notes":"string"}',
-    `Worker response: ${response}`
-  ].join("\n");
+  const prompt = buildInterpretTextPrompt(question, response);
 
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const result = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0.1,
-        responseMimeType: "application/json"
-      }
-    })
-  });
+  const result = await postGeminiPrompt(apiUrl, prompt, 0.1, "Gemini task analysis response timed out");
 
   if (!result.ok) {
     throw new Error(`Gemini request failed with ${result.status}`);
@@ -112,35 +93,10 @@ async function preAnswerWithGemini(candidateQuestions: Question[], response: str
   }
 
   const model = import.meta.env.VITE_GEMINI_MODEL || "gemini-2.5-flash";
-  const candidates = createPreAnswerCandidates(candidateQuestions);
-  const prompt = [
-    "You support MSI360, a prototype musculoskeletal injury risk survey.",
-    "The worker already answered a free-text task description. Determine whether that text explicitly answers any candidate questions.",
-    "Return strict JSON only. Do not include markdown or commentary.",
-    "Only pre-answer a question when the answer is clearly stated by the worker response. Do not assume missing details.",
-    "Use only the exact question_id, group ids, and option ids shown in candidate_questions.",
-    "For negative options such as no, none, never, or does_not_apply, only answer when the worker explicitly says the negative fact.",
-    "Do not answer symptom questions unless the response explicitly mentions work-related pain or discomfort and a time context.",
-    "Evidence must be an exact phrase from the worker response that supports the answer.",
-    'Required JSON shape: {"auto_answers":[{"question_id":"string","value":"option_id | option_id[] | grouped object","confidence":0.0,"evidence":"exact phrase from response","notes":"string"}]}',
-    `candidate_questions: ${JSON.stringify(candidates)}`,
-    `worker_response: ${response}`
-  ].join("\n");
+  const prompt = buildPreAnswerPrompt(candidateQuestions, response);
 
   const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
-  const result = await fetch(apiUrl, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      contents: [{ role: "user", parts: [{ text: prompt }] }],
-      generationConfig: {
-        temperature: 0,
-        responseMimeType: "application/json"
-      }
-    })
-  });
+  const result = await postGeminiPrompt(apiUrl, prompt, 0, "Gemini pre-answering response timed out");
 
   if (!result.ok) {
     throw new Error(`Gemini pre-answer request failed with ${result.status}`);
@@ -158,6 +114,84 @@ async function preAnswerWithGemini(candidateQuestions: Question[], response: str
     provider: "gemini",
     notes: "Gemini pre-answering completed; only validated high-confidence answers were accepted."
   };
+}
+
+export function buildInterpretTextPrompt(question: Question, response: string): string {
+  const instruction = question.ai_instructions;
+  const allowedAddTags = instruction?.allowed_add_tags ?? [];
+
+  return [
+    "You support MSI360, a prototype musculoskeletal injury risk survey.",
+    "Analyze the worker's text answer and return strict JSON only. Do not include markdown or commentary.",
+    ...multilingualPromptGuidance,
+    "Return normalized_answer_en as a concise English interpretation of the original response.",
+    "Use only exact canonical tag IDs listed in allowed_add_tags for add_tags. If no tag clearly applies, return an empty add_tags array.",
+    "Do not invent, translate, localize, rename, or paraphrase tag IDs.",
+    "Do not invent scoring values. Only extract tags and missing details that help route follow-up MSI questions.",
+    `Question id: ${question.question_id}`,
+    `Purpose: ${instruction?.purpose ?? "interpret_text_answer"}`,
+    `Instruction: ${instruction?.prompt ?? ""}`,
+    `Expected fields to consider: ${(instruction?.expected_fields ?? []).join(", ")}`,
+    `allowed_add_tags: ${allowedAddTags.join(", ")}`,
+    'Required JSON shape: {"normalized_answer_en":"string","add_tags":["tag"],"missing_details":["string"],"confidence":0.0,"notes":"string"}',
+    `Worker response: ${response}`
+  ].join("\n");
+}
+
+export function buildPreAnswerPrompt(candidateQuestions: Question[], response: string): string {
+  const candidates = createPreAnswerCandidates(candidateQuestions);
+
+  return [
+    "You support MSI360, a prototype musculoskeletal injury risk survey.",
+    "The worker already answered a free-text task description. Determine whether that text explicitly answers any candidate questions.",
+    "Return strict JSON only. Do not include markdown or commentary.",
+    ...multilingualPromptGuidance,
+    "The candidate question labels and option labels are provided in English, but the worker response may not be English.",
+    "Only pre-answer a question when the answer is clearly stated by the worker response. Do not assume missing details.",
+    "Use only the exact canonical question_id, group ids, and option ids shown in candidate_questions.",
+    "Do not invent, translate, localize, rename, or paraphrase question IDs, group IDs, option IDs, or selected values.",
+    "For negative options such as no, none, never, or does_not_apply, only answer when the worker explicitly says the negative fact.",
+    "Do not answer symptom questions unless the response explicitly mentions work-related pain or discomfort and a time context.",
+    "Evidence must be an exact phrase from the original worker response that supports the answer, even when that phrase is not English.",
+    'Required JSON shape: {"auto_answers":[{"question_id":"string","value":"option_id | option_id[] | grouped object","confidence":0.0,"evidence":"exact phrase from response","notes":"string"}]}',
+    `candidate_questions: ${JSON.stringify(candidates)}`,
+    `worker_response: ${response}`
+  ].join("\n");
+}
+
+async function postGeminiPrompt(apiUrl: string, prompt: string, temperature: number, timeoutMessage: string): Promise<Response> {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), geminiRequestTimeoutMs);
+
+  try {
+    return await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      signal: controller.signal,
+      body: JSON.stringify({
+        contents: [{ role: "user", parts: [{ text: prompt }] }],
+        generationConfig: {
+          temperature,
+          responseMimeType: "application/json"
+        }
+      })
+    });
+  } catch (error) {
+    if (isAbortError(error)) throw new Error(timeoutMessage);
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
+  }
+}
+
+function isAbortError(error: unknown) {
+  return error instanceof DOMException && error.name === "AbortError";
+}
+
+export function filterAllowedAddTags(question: Question, tags: string[]): string[] {
+  return tags.filter((tag) => allowedTags.has(tag) && question.ai_instructions?.allowed_add_tags.includes(tag));
 }
 
 export function createPreAnswerCandidates(candidateQuestions: Question[]): AiPreAnswerCandidate[] {
@@ -213,13 +247,8 @@ export function validatePreAnswers(rawOutput: unknown, candidateQuestions: Quest
     const evidence = typeof rawAnswer.evidence === "string" ? rawAnswer.evidence.trim() : "";
     if (!isEvidenceGrounded(evidence, workerResponse)) continue;
 
-    if (question.section === "symptoms" && !hasSymptomAndTimeEvidence(workerResponse)) continue;
-
     const value = validatePreAnswerValue(question, rawAnswer.value);
     if (value === undefined) continue;
-
-    const selectedOptionIds = getSelectedPreAnswerOptionIds(value);
-    if (selectedOptionIds.some((optionId) => negativeOptionIds.has(optionId)) && !hasExplicitNegativeEvidence(evidence)) continue;
 
     accepted.push({
       question_id: question.question_id,
@@ -347,12 +376,6 @@ function hasGroupExclusiveConflict(group: NonNullable<Question["groups"]>[number
   return exclusiveSelected && selected.length > 1;
 }
 
-function getSelectedPreAnswerOptionIds(value: AnswerValue): string[] {
-  if (typeof value === "string") return [value];
-  if (Array.isArray(value)) return value;
-  return Object.values(value).flatMap((entry) => (Array.isArray(entry) ? entry : [entry]));
-}
-
 function uniqueStrings(value: unknown[]) {
   return [...new Set(value.filter((item): item is string => typeof item === "string"))];
 }
@@ -364,17 +387,6 @@ function isEvidenceGrounded(evidence: string, workerResponse: string) {
 
 function normalizeForEvidence(text: string) {
   return text.toLowerCase().replace(/\s+/g, " ").trim();
-}
-
-function hasExplicitNegativeEvidence(evidence: string) {
-  return /\b(no|none|never|not|without|don't|doesn't|do not|does not|isn't|aren't|no time)\b/i.test(evidence);
-}
-
-function hasSymptomAndTimeEvidence(text: string) {
-  const hasSymptom = /\b(pain|discomfort|ache|aches|aching|sore|soreness|numb|numbness|tingling|strain)\b/i.test(text);
-  const hasWorkContext = /\b(work|job|task|desk|shift|performing|activity)\b/i.test(text);
-  const hasTimeContext = /\b(last\s+\d+\s+days?|last\s+week|past\s+\d+\s+days?|today|yesterday|during|after|for\s+\d+\s+(hours?|days?|weeks?))\b/i.test(text);
-  return hasSymptom && hasWorkContext && hasTimeContext;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

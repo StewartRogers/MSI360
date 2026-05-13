@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions } from "../../src/data/catalog";
-import { interpretTextAnswer, preAnswerQuestions, validatePreAnswers } from "../../src/logic/ai";
+import { buildInterpretTextPrompt, buildPreAnswerPrompt, filterAllowedAddTags, interpretTextAnswer, preAnswerQuestions, validatePreAnswers } from "../../src/logic/ai";
 
 test("interpretTextAnswer uses the local fallback and returns allowed routing tags when Gemini is not configured", async () => {
   const question = questions.find((item) => item.question_id === "question-3");
@@ -20,6 +20,38 @@ test("interpretTextAnswer uses the local fallback and returns allowed routing ta
   assert.ok(output.missing_details.includes("Frequency or duration"));
 });
 
+test("buildInterpretTextPrompt instructs Gemini to handle multilingual text and canonical tags", () => {
+  const question = getQuestion("question-3");
+  const prompt = buildInterpretTextPrompt(question, "Levanto cajas pesadas todos los dias.");
+
+  assert.ok(/may be written in any language/i.test(prompt));
+  assert.ok(/internally translate or normalize/i.test(prompt));
+  assert.ok(/intended meaning/i.test(prompt));
+  assert.ok(/exact canonical tag IDs/i.test(prompt));
+  assert.ok(/Do not invent, translate, localize, rename, or paraphrase tag IDs/i.test(prompt));
+  assert.ok(/allowed_add_tags:/.test(prompt));
+  assert.ok(/manual_handling/.test(prompt));
+});
+
+test("buildPreAnswerPrompt instructs Gemini to handle multilingual text and canonical answer ids", () => {
+  const question = getQuestion("question-6");
+  const prompt = buildPreAnswerPrompt([question], "Sentado en un escritorio todo el dia.");
+
+  assert.ok(/may be written in any language/i.test(prompt));
+  assert.ok(/candidate question labels and option labels are provided in English/i.test(prompt));
+  assert.ok(/exact canonical question_id, group ids, and option ids/i.test(prompt));
+  assert.ok(/Do not invent, translate, localize, rename, or paraphrase question IDs/i.test(prompt));
+  assert.ok(/Evidence must be an exact phrase from the original worker response/i.test(prompt));
+  assert.ok(/mostly_sit/.test(prompt));
+});
+
+test("filterAllowedAddTags removes unknown or translated tags and keeps canonical tags", () => {
+  const question = getQuestion("question-3");
+  const output = filterAllowedAddTags(question, ["manual_handling", "levantamiento", "tool_use", "unknown_tag"]);
+
+  assert.deepEqual(output, ["manual_handling", "tool_use"]);
+});
+
 test("validatePreAnswers accepts high-confidence answers grounded in the worker text", () => {
   const question = getQuestion("question-6");
   const output = validatePreAnswers(
@@ -36,6 +68,30 @@ test("validatePreAnswers accepts high-confidence answers grounded in the worker 
     },
     [question],
     "Sitting at a desk, programming all day",
+    {}
+  );
+
+  assert.equal(output.length, 1);
+  assert.equal(output[0].question_id, "question-6");
+  assert.equal(output[0].value, "mostly_sit");
+});
+
+test("validatePreAnswers accepts multilingual evidence when answer values are canonical ids", () => {
+  const question = getQuestion("question-6");
+  const output = validatePreAnswers(
+    {
+      auto_answers: [
+        {
+          question_id: "question-6",
+          value: "mostly_sit",
+          confidence: 0.95,
+          evidence: "Sentado en un escritorio",
+          notes: "Worker explicitly describes sitting at a desk."
+        }
+      ]
+    },
+    [question],
+    "Sentado en un escritorio, programando todo el dia.",
     {}
   );
 
@@ -63,17 +119,30 @@ test("validatePreAnswers rejects low confidence, unknown ids, invalid values, an
   assert.deepEqual(output, []);
 });
 
-test("validatePreAnswers rejects ungrounded evidence and unsupported negative inference", () => {
+test("validatePreAnswers rejects ungrounded evidence", () => {
   const bodyAsToolQuestion = getQuestion("question-14");
   const output = validatePreAnswers(
     {
       auto_answers: [
-        { question_id: "question-14", value: "no", confidence: 0.99, evidence: "using a drill" },
         { question_id: "question-14", value: "less_than_one_hour", confidence: 0.99, evidence: "uses their palm" }
       ]
     },
     [bodyAsToolQuestion],
     "The worker is using a drill for cabinet installation.",
+    {}
+  );
+
+  assert.deepEqual(output, []);
+});
+
+test("validatePreAnswers rejects translated option labels instead of canonical option ids", () => {
+  const question = getQuestion("question-6");
+  const output = validatePreAnswers(
+    {
+      auto_answers: [{ question_id: "question-6", value: "mayormente sentado", confidence: 0.99, evidence: "Sentado en un escritorio" }]
+    },
+    [question],
+    "Sentado en un escritorio, programando todo el dia.",
     {}
   );
 
@@ -99,18 +168,19 @@ test("validatePreAnswers rejects incomplete grouped answers, invalid group ids, 
   assert.deepEqual(output, []);
 });
 
-test("validatePreAnswers rejects symptom answers without explicit symptom and time context", () => {
+test("validatePreAnswers accepts symptom answers with canonical ids and grounded evidence", () => {
   const symptomQuestion = getQuestion("question-9");
   const output = validatePreAnswers(
     {
-      auto_answers: [{ question_id: "question-9", value: "yes", confidence: 0.99, evidence: "work-related pain" }]
+      auto_answers: [{ question_id: "question-9", value: "yes", confidence: 0.99, evidence: "dolor relacionado con el trabajo" }]
     },
     [symptomQuestion],
-    "The task may involve work-related pain if the workstation is poor.",
+    "Tuve dolor relacionado con el trabajo durante el turno de ayer.",
     {}
   );
 
-  assert.deepEqual(output, []);
+  assert.equal(output.length, 1);
+  assert.equal(output[0].value, "yes");
 });
 
 test("preAnswerQuestions returns no hidden answers when Gemini is not configured", async () => {
