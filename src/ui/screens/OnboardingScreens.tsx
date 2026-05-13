@@ -4,9 +4,9 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
-import { translations } from "../../data/translations";
+import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
-import type { Answer, Language } from "../../types";
+import type { Answer, Language, Translation } from "../../types";
 
 export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   return (
@@ -38,20 +38,35 @@ export function LanguageScreen(props: {
   selectedLanguage: Language | null;
   progressStep: number;
   totalSteps: number;
+  translations: Translation;
   onSelect: (language: Language | null) => void;
   onBack: () => void;
   onContinue: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const selectedCode = props.selectedLanguage?.code || "";
+  const actionLabels = getActionButtonLabels(props.translations);
 
   function handleLanguageSelect(nextLanguage: Language) {
+    if (!nextLanguage.ready) return;
     if (selectedCode === nextLanguage.code) {
       props.onSelect(null);
       return;
     }
     props.onSelect(nextLanguage);
     setIsOpen(false);
+  }
+
+  function renderLanguageLabel(language: Language) {
+    return (
+      <span className="language-label">
+        <img className="language-flag-icon" src={`https://flagcdn.com/24x18/${language.flagCode}.png`} alt="" aria-hidden="true" loading="lazy" />
+        <span className="language-flag-fallback" aria-hidden="true">
+          {language.flag}
+        </span>
+        <span>{language.name}</span>
+      </span>
+    );
   }
 
   return (
@@ -73,22 +88,25 @@ export function LanguageScreen(props: {
               aria-expanded={isOpen}
               onClick={() => setIsOpen((open) => !open)}
             >
-              <span>{props.selectedLanguage ? `${props.selectedLanguage.flag} ${props.selectedLanguage.name}` : "Select a language"}</span>
+              {props.selectedLanguage ? renderLanguageLabel(props.selectedLanguage) : <span>Select a language</span>}
             </button>
             {isOpen && (
               <div className="language-menu" role="listbox" aria-labelledby="language-select">
                 {props.languages.map((language) => {
                   const isSelected = selectedCode === language.code;
+                  const isUnavailable = !language.ready;
                   return (
                     <button
                       key={language.code}
                       type="button"
-                      className={`language-option ${isSelected ? "selected" : ""}`}
+                      className={`language-option ${isSelected ? "selected" : ""} ${isUnavailable ? "unavailable" : ""}`}
                       role="option"
                       aria-selected={isSelected}
+                      disabled={isUnavailable}
                       onClick={() => handleLanguageSelect(language)}
                     >
-                      <span>{language.flag} {language.name}</span>
+                      {renderLanguageLabel(language)}
+                      {isUnavailable && <span className="language-unavailable-label">Coming soon</span>}
                     </button>
                   );
                 })}
@@ -96,7 +114,7 @@ export function LanguageScreen(props: {
             )}
           </div>
         </div>
-        <ActionButtons onBack={props.onBack} canContinue={Boolean(props.selectedLanguage)} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={Boolean(props.selectedLanguage)} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -108,16 +126,18 @@ export function ChoiceScreen(props: {
   progressStep: number;
   totalSteps: number;
   tone: HeaderTone;
+  translations: Translation;
   onAnswer: (value: string) => void;
   onBack: () => void;
   canContinue: boolean;
   onContinue: () => void;
 }) {
   const question = questions.find((item) => item.question_id === props.questionId);
-  const text = translations.en.questions[props.questionId];
+  const text = getQuestionText(props.translations, props.questionId);
   const selected = typeof props.answer?.value === "string" ? props.answer.value : "";
+  const actionLabels = getActionButtonLabels(props.translations);
 
-  if (!question || !question.options || !text.options) return null;
+  if (!question || !question.options || !text?.options) return null;
 
   return (
     <>
@@ -137,24 +157,28 @@ export function ChoiceScreen(props: {
             ))}
           </div>
         </div>
-        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
 }
 
-export function DescriptionScreen(props: { progressStep: number; totalSteps: number; onBack: () => void; onContinue: () => void }) {
+export function DescriptionScreen(props: { progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
+  const title = props.translations.app.description_title || "Description";
+  const body =
+    props.translations.app.description_body ||
+    "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.";
+  const actionLabels = getActionButtonLabels(props.translations);
+
   return (
     <>
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
       <section className="page page-with-actions">
         <div className="content-block description-copy">
-          <h2>Description</h2>
-          <p>
-            The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.
-          </p>
+          <h2>{title}</h2>
+          <p>{body}</p>
         </div>
-        <ActionButtons onBack={props.onBack} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} onContinue={props.onContinue} />
       </section>
     </>
   );
@@ -167,12 +191,16 @@ export function TextScreen(props: {
   isLoading: boolean;
   progressStep: number;
   totalSteps: number;
+  translations: Translation;
   onAnswer: (value: string) => void;
   onBack: () => void;
   canContinue: boolean;
   onContinue: () => void;
 }) {
-  const text = translations.en.questions[props.questionId];
+  const text = getQuestionText(props.translations, props.questionId);
+  const actionLabels = getActionButtonLabels(props.translations);
+  if (!text) return null;
+
   return (
     <>
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
@@ -200,7 +228,8 @@ export function TextScreen(props: {
           onBack={props.onBack}
           canContinue={props.canContinue}
           isBusy={props.isLoading}
-          busyLabel="Analyzing"
+          {...actionLabels}
+          busyLabel={getAnalyzingButtonLabel(props.translations)}
           onContinue={props.onContinue}
         />
       </section>

@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
+import { languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
+import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -193,6 +195,128 @@ test("every configured question has English display text for its options", () =>
     }
   }
 });
+
+test("every language has a flag icon code for dropdown rendering", () => {
+  for (const language of languages) {
+    assert.ok(/^[a-z]{2}$/.test(language.flagCode), `Missing flag icon code for ${language.name}`);
+  }
+});
+
+test("question text uses selected translations with English field fallback", () => {
+  const text = getQuestionText(
+    {
+      ...translations.en,
+      questions: {
+        "question-1": {
+          label: "Translated role question",
+          options: {
+            worker: "Translated worker"
+          }
+        }
+      }
+    },
+    "question-1"
+  );
+
+  assert.equal(text?.label, "Translated role question");
+  assert.equal(text?.options?.worker, "Translated worker");
+  assert.equal(text?.options?.supervisor, "Supervisor");
+});
+
+test("Punjabi translation has display text for every configured question option", () => {
+  const punjabiQuestions = translations.pa.questions;
+
+  assert.equal(translations.pa.app.description_title, "ਵੇਰਵਾ");
+  assert.ok(translations.pa.app.description_body);
+
+  for (const question of questions) {
+    const text = punjabiQuestions[question.question_id];
+    assert.ok(text, `Missing Punjabi text for question ${question.question_id}`);
+    assert.ok(text.label, `Missing Punjabi label for question ${question.question_id}`);
+
+    for (const option of question.options ?? []) {
+      assert.ok(text.options?.[option.option_id], `Missing Punjabi option label for ${question.question_id}.${option.option_id}`);
+    }
+
+    for (const group of question.groups ?? []) {
+      const groupText = text.groups?.[group.group_id];
+      assert.ok(groupText?.label, `Missing Punjabi group label for ${question.question_id}.${group.group_id}`);
+      for (const option of group.options) {
+        assert.ok(groupText.options[option.option_id], `Missing Punjabi grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
+      }
+    }
+  }
+});
+
+test("Arabic translation has display text for every configured question option", () => {
+  assert.equal(translations.ar.app.description_title, "الوصف");
+  assert.ok(translations.ar.app.description_body);
+  assertTranslationCoverage("Arabic", translations.ar.questions);
+});
+
+test("French, Spanish, and Korean translations have display text for every configured question option", () => {
+  assert.equal(translations.fr.app.description_title, "Description");
+  assert.equal(translations.es.app.description_title, "Descripción");
+  assert.equal(translations.ko.app.description_title, "설명");
+  assertTranslationCoverage("French", translations.fr.questions);
+  assertTranslationCoverage("Spanish", translations.es.questions);
+  assertTranslationCoverage("Korean", translations.ko.questions);
+});
+
+test("Mandarin translation has display text for every configured question option", () => {
+  assert.equal(translations["zh-Hans"].app.description_title, "说明");
+  assertTranslationCoverage("Mandarin", translations["zh-Hans"].questions);
+});
+
+test("Cantonese and Tagalog translations have display text for every configured question option", () => {
+  assert.equal(translations.yue.app.description_title, "說明");
+  assert.equal(translations.fil.app.description_title, "Paglalarawan");
+  assertTranslationCoverage("Cantonese", translations.yue.questions);
+  assertTranslationCoverage("Tagalog", translations.fil.questions);
+});
+
+test("German, Persian, and Hindi translations have display text for every configured question option", () => {
+  assert.equal(translations.de.app.description_title, "Beschreibung");
+  assert.equal(translations.fa.app.description_title, "توضیح");
+  assert.equal(translations.hi.app.description_title, "विवरण");
+  assertTranslationCoverage("German", translations.de.questions);
+  assertTranslationCoverage("Persian", translations.fa.questions);
+  assertTranslationCoverage("Hindi", translations.hi.questions);
+});
+
+test("ready translations provide localized shared action button labels", () => {
+  assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
+  assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
+  assert.equal(getActionButtonLabels(translations.es).backLabel, "Atrás");
+  assert.equal(getActionButtonLabels(translations.ko).continueLabel, "계속");
+  assert.equal(getActionButtonLabels(translations["zh-Hans"]).continueLabel, "继续");
+  assert.equal(getActionButtonLabels(translations.yue).continueLabel, "繼續");
+  assert.equal(getActionButtonLabels(translations.fil).continueLabel, "Magpatuloy");
+  assert.equal(getActionButtonLabels(translations.de).continueLabel, "Weiter");
+  assert.equal(getActionButtonLabels(translations.fa).continueLabel, "ادامه");
+  assert.equal(getActionButtonLabels(translations.hi).continueLabel, "जारी रखें");
+  assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
+});
+
+function assertTranslationCoverage(languageName: string, translatedQuestions: typeof translations.en.questions) {
+  for (const question of questions) {
+    const text = translatedQuestions[question.question_id];
+    assert.ok(text, `Missing ${languageName} text for question ${question.question_id}`);
+    assert.ok(text.label, `Missing ${languageName} label for question ${question.question_id}`);
+
+    for (const option of question.options ?? []) {
+      assert.ok(text.options?.[option.option_id], `Missing ${languageName} option label for ${question.question_id}.${option.option_id}`);
+    }
+
+    for (const group of question.groups ?? []) {
+      const groupText = text.groups?.[group.group_id];
+      assert.ok(groupText?.label, `Missing ${languageName} group label for ${question.question_id}.${group.group_id}`);
+      for (const option of group.options) {
+        assert.ok(groupText.options[option.option_id], `Missing ${languageName} grouped option label for ${question.question_id}.${group.group_id}.${option.option_id}`);
+      }
+    }
+  }
+}
 
 function getAnsweredSeatedAssessmentThroughQuestion21(): Answers {
   return {

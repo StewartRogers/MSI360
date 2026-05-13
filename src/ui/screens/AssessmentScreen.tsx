@@ -2,22 +2,24 @@ import { groupImages, optionImages, promptUsesSectionTitle, questionIds, standal
 import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { CheckboxRow, ImageRadioCard, RadioRow } from "../components/AnswerControls";
-import { translations } from "../../data/translations";
+import { getActionButtonLabels, getQuestionText } from "../../data/translationText";
 import { isRecord, splitParagraphs } from "../../logic/appFlow";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/answerSelection";
-import type { Answer, AnswerValue, Question, QuestionText } from "../../types";
+import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
 
 export function AssessmentQuestionScreen(props: {
   question?: Question;
   answer?: Answer;
   progressStep: number;
   totalSteps: number;
-  translations: typeof translations.en;
+  translations: Translation;
   onAnswer: (value: AnswerValue) => void;
   onBack: () => void;
   canContinue: boolean;
   onContinue: () => void;
 }) {
+  const actionLabels = getActionButtonLabels(props.translations);
+
   if (!props.question) {
     return (
       <>
@@ -26,7 +28,7 @@ export function AssessmentQuestionScreen(props: {
           <div className="content-block">
             <h2>No additional questions are needed.</h2>
           </div>
-          <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+          <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
         </section>
       </>
     );
@@ -37,14 +39,14 @@ export function AssessmentQuestionScreen(props: {
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
       <section className={`page page-with-actions question-page question-${props.question.question_id}`}>
         <QuestionContent question={props.question} answer={props.answer} translations={props.translations} onAnswer={props.onAnswer} />
-        <ActionButtons onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
+        <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
 }
 
-function QuestionContent({ question, answer, translations: t, onAnswer }: { question: Question; answer?: Answer; translations: typeof translations.en; onAnswer: (value: AnswerValue) => void }) {
-  const text = t.questions[question.question_id] || translations.en.questions[question.question_id];
+function QuestionContent({ question, answer, translations: t, onAnswer }: { question: Question; answer?: Answer; translations: Translation; onAnswer: (value: AnswerValue) => void }) {
+  const text = getQuestionText(t, question.question_id);
   if (!text) return null;
 
   return (

@@ -234,6 +234,7 @@ export default function App() {
           selectedLanguage={selectedLanguage}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
+          translations={t}
           onSelect={(nextLanguage) => setLanguage(nextLanguage?.code || "")}
           onBack={goBack}
           onContinue={continueFromStep}
@@ -247,6 +248,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.role, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueRole}
@@ -261,6 +263,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.timeInRole, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueTimeInRole}
@@ -268,7 +271,7 @@ export default function App() {
         />
       )}
 
-      {step === "description" && <DescriptionScreen progressStep={progressStep} totalSteps={totalQuestionSteps} onBack={goBack} onContinue={continueFromStep} />}
+      {step === "description" && <DescriptionScreen progressStep={progressStep} totalSteps={totalQuestionSteps} translations={t} onBack={goBack} onContinue={continueFromStep} />}
 
       {step === "task_description" && (
         <TextScreen
@@ -278,6 +281,7 @@ export default function App() {
           isLoading={isInterpretingTaskDescription}
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.taskDescription, "text", value)}
           onBack={goBack}
           canContinue={canContinueTaskDescription}
@@ -292,6 +296,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           tone="blue"
+          translations={t}
           onAnswer={(value) => updateAnswer(questionIds.height, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueHeight}
@@ -313,9 +318,9 @@ export default function App() {
         />
       )}
 
-      {step === "score" && <ScoreScreen result={result} progressStep={totalQuestionSteps} totalSteps={totalQuestionSteps} onBack={goBack} onContinue={() => setStep("email")} />}
+      {step === "score" && <ScoreScreen result={result} progressStep={totalQuestionSteps} totalSteps={totalQuestionSteps} translations={t} onBack={goBack} onContinue={() => setStep("email")} />}
 
-      {step === "email" && <EmailScreen value={email} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
+      {step === "email" && <EmailScreen value={email} translations={t} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
 
       {step === "report" && (
         <ReportReadyScreen
@@ -331,7 +336,7 @@ export default function App() {
       )}
 
       {step === "submit" && (
-        <SubmitScreen value={nextAssessmentChoice} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
+        <SubmitScreen value={nextAssessmentChoice} translations={t} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
       )}
 
       {step === "complete" && <CompleteScreen onStartNew={startNewAssessment} />}

@@ -8,6 +8,7 @@ export interface Language {
   code: string;
   name: string;
   flag: string;
+  flagCode: string;
   ready: boolean;
 }
 
