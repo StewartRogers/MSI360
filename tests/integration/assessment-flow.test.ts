@@ -256,11 +256,17 @@ test("French, Spanish, and Korean translations have display text for every confi
   assertTranslationCoverage("Korean", translations.ko.questions);
 });
 
+test("Mandarin translation has display text for every configured question option", () => {
+  assert.equal(translations["zh-Hans"].app.description_title, "说明");
+  assertTranslationCoverage("Mandarin", translations["zh-Hans"].questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
   assert.equal(getActionButtonLabels(translations.es).backLabel, "Atrás");
   assert.equal(getActionButtonLabels(translations.ko).continueLabel, "계속");
+  assert.equal(getActionButtonLabels(translations["zh-Hans"]).continueLabel, "继续");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
