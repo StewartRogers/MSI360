@@ -219,8 +219,9 @@ function CategoriesFlowContent({ report }: { report: ReportData }) {
             <View style={styles.categoryDetailGrid} wrap={false}>
               <View style={styles.categoryMetricPanel}>
                 <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
-                <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.scoreDisplay}</Text>
-                <Text style={styles.metricHelp}>{category.severity === "No scored hazard identified" ? "No scored hazards were identified in\nthis report overview." : category.severity}</Text>
+                <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.hazardCount}</Text>
+                <Text style={styles.metricScoreLabel}>Score: {category.scoreDisplay}</Text>
+                <Text style={styles.metricSeverity}>{category.severity === "No scored hazard identified" ? "No scored hazards identified." : category.severity}</Text>
               </View>
               <PriorityBreakdown counts={category.priorityCounts} />
               <View style={styles.tipsPanel}>
@@ -747,10 +748,24 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   metricHelp: {
-    color: colors.border,
+    color: colors.muted,
     fontSize: 7.5,
     lineHeight: 1.25,
     textAlign: "center"
+  },
+  metricScoreLabel: {
+    color: colors.muted,
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 4
+  },
+  metricSeverity: {
+    color: colors.muted,
+    fontSize: 7.5,
+    lineHeight: 1.25,
+    textAlign: "center",
+    fontStyle: "italic"
   },
   priorityBreakdown: {
     width: "35%"
