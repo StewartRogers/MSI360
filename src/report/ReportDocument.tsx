@@ -21,17 +21,20 @@ const colors = {
 export function ReportDocument({ report }: { report: ReportData }) {
   return (
     <Document title="MSI 360 Risk Tool Report" author="MSI360">
-      <IntroPage report={report} />
-      <OverviewPage report={report} />
-      <CategoriesFlowPage report={report} />
-      <ResponseRecordPage report={report} />
+      <Page size={[612, 792]} style={styles.page} wrap>
+        <IntroContent report={report} />
+        <OverviewContent report={report} />
+        <CategoriesFlowContent report={report} />
+        <ResponseRecordContent report={report} />
+        <PageNumber />
+      </Page>
     </Document>
   );
 }
 
-function IntroPage({ report }: { report: ReportData }) {
+function IntroContent({ report }: { report: ReportData }) {
   return (
-    <Page size={[612, 792]} style={styles.introPage}>
+    <View style={styles.pageContent}>
       <Text style={styles.introTitle}>MSI 360 Risk Tool Report</Text>
       
       <View style={styles.metaStrip} wrap={false}>
@@ -107,16 +110,15 @@ function IntroPage({ report }: { report: ReportData }) {
           />
         </View>
       </NumberedSection>
-      <PageNumber />
-    </Page>
+    </View>
   );
 }
 
-function OverviewPage({ report }: { report: ReportData }) {
+function OverviewContent({ report }: { report: ReportData }) {
   return (
-    <Page size={[612, 792]} style={styles.page}>
-      <View style={styles.pageContent}>
-        <Text style={styles.pageHeading}>Overview of results</Text>
+    <View style={styles.pageContent}>
+      <View style={{ marginTop: 32 }} />
+      <Text style={styles.pageHeading}>Overview of results</Text>
         <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}Detailed category score pages and the full response record appear later in the report.</Text>
 
         <Text style={styles.sectionHeading}>Current symptoms</Text>
@@ -166,18 +168,16 @@ function OverviewPage({ report }: { report: ReportData }) {
             <Text style={styles.paragraph}>The following pages present category-specific MSI scores, plain-language explanations, and suggested actions. The full list of questions and answers is provided at the end of the report as a response record.</Text>
           </View>
           <Image src={reportAssets.images.hierarchyOfControls} style={styles.hierarchyImage} />
-        </View>
       </View>
-      <PageNumber />
-    </Page>
+    </View>
   );
 }
 
-function CategoriesFlowPage({ report }: { report: ReportData }) {
+function CategoriesFlowContent({ report }: { report: ReportData }) {
   return (
-    <Page size={[612, 792]} style={styles.page} wrap>
-      <View style={styles.pageContent}>
-        <Text style={styles.pageHeading}>Category score summary</Text>
+    <View style={styles.pageContent}>
+      <View style={{ marginTop: 32 }} />
+      <Text style={styles.pageHeading}>Category score summary</Text>
         <Text style={styles.pageIntro}>The following table summarizes the MSI score for each assessed risk category.{"\n"}Each score is based on the worker's responses and is intended to help identify which areas may need review first.</Text>
         
         <Text style={styles.noteTextBold}>NOTE:</Text>
@@ -213,7 +213,7 @@ function CategoriesFlowPage({ report }: { report: ReportData }) {
         <View style={styles.thickDivider} />
 
         {report.categories.map((category, index) => (
-          <View key={category.key} wrap={false} style={styles.categoryDetailSection}>
+          <View key={category.key} style={styles.categoryDetailSection}>
             <Text style={styles.detailHeading}>{category.label} MSI score</Text>
             
             <View style={styles.categoryDetailGrid}>
@@ -236,18 +236,6 @@ function CategoriesFlowPage({ report }: { report: ReportData }) {
             <Text style={styles.detailLabel}>Explanation:</Text>
             <Text style={styles.paragraph}>{category.explanation}</Text>
 
-            {category.drivers.length > 0 && (
-              <View style={styles.driverBox}>
-                <Text style={styles.detailLabel}>Responses contributing to this category:</Text>
-                {category.drivers.slice(0, 8).map((driver) => (
-                  <Text key={`${driver.questionId}-${driver.groupLabel || "main"}-${driver.optionId}-${driver.factor}`} style={styles.driverText}>
-                    {driver.groupLabel ? `${driver.groupLabel}: ` : ""}
-                    {driver.optionLabel} ({driver.score}/4)
-                  </Text>
-                ))}
-              </View>
-            )}
-
             <Text style={styles.detailLabel}>Suggested actions</Text>
             <BulletList items={category.suggestedActions} />
             {index < report.categories.length - 1 && <View style={styles.thickDivider} />}
@@ -255,16 +243,14 @@ function CategoriesFlowPage({ report }: { report: ReportData }) {
         ))}
 
       </View>
-      <PageNumber />
-    </Page>
   );
 }
 
-function ResponseRecordPage({ report }: { report: ReportData }) {
+function ResponseRecordContent({ report }: { report: ReportData }) {
   return (
-    <Page size={[612, 792]} style={styles.page} wrap>
-      <View style={styles.pageContent}>
-        <Text style={styles.pageHeading}>Response record</Text>
+    <View style={styles.pageContent}>
+      <View style={{ marginTop: 32 }} />
+      <Text style={styles.pageHeading}>Response record</Text>
         <Text style={styles.pageIntro}>This appendix lists the English question text and recorded answers used to generate the report.</Text>
         
         {report.answerRecords.map((record) => (
@@ -278,8 +264,6 @@ function ResponseRecordPage({ report }: { report: ReportData }) {
           </View>
         ))}
       </View>
-      <PageNumber />
-    </Page>
   );
 }
 
@@ -769,7 +753,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   priorityBreakdown: {
-    flex: 1
+    width: "35%"
   },
   priorityRow: {
     flexDirection: "row",
@@ -956,7 +940,7 @@ const styles = StyleSheet.create({
     margin: "6 0"
   },
   tipsPanel: {
-    flex: 1,
+    width: "35%",
     paddingLeft: 20,
     borderLeft: `1 solid ${colors.border}`
   },
@@ -969,19 +953,6 @@ const styles = StyleSheet.create({
     fontSize: 9,
     lineHeight: 1.4,
     marginBottom: 8
-  },
-  driverBox: {
-    border: `1 solid ${colors.border}`,
-    backgroundColor: colors.bgGray,
-    padding: "10 12",
-    borderRadius: 4,
-    margin: "12 0"
-  },
-  driverText: {
-    color: colors.text,
-    fontSize: 9,
-    lineHeight: 1.3,
-    marginBottom: 4
   },
   answerRecord: {
     borderBottom: `1 solid ${colors.border}`,

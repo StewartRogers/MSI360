@@ -22,7 +22,7 @@ export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
   const symptomCount = symptoms.oneSide.length + symptoms.bothSides.length + symptoms.lastedTwoDays.length;
 
   return (
-    <View style={{ width: "100%", alignItems: "center" }}>
+    <View style={{ flex: 1, alignItems: "center" }}>
       <Svg width={250} height={250} viewBox="0 0 500 500">
         <Rect width={500} height={500} fill="#ffffff" />
         <G>
