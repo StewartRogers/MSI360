@@ -8,6 +8,7 @@ export const en: Translation = {
     back_button: "Back",
     processing_button: "Processing",
     analyzing_button: "Analyzing",
+    question_progress: "Question {current} of {total}",
     description_title: "Description",
     description_body:
       "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done."

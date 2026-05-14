@@ -34,6 +34,7 @@ export const vi: Translation = {
     back_button: "Quay lại",
     processing_button: "Đang xử lý",
     analyzing_button: "Đang phân tích",
+    question_progress: "Câu hỏi {current} trên {total}",
     description_title: "Mô tả",
     description_body:
       "Các câu hỏi sau đây nói về công việc bạn làm trong một ngày làm việc điển hình, hoặc khi bạn đang thực hiện nhiệm vụ hoặc hoạt động cụ thể mà bạn muốn đánh giá hôm nay. Mục đích là để bạn cho MSI360 biết các hành động bạn thực hiện để hoàn thành công việc."

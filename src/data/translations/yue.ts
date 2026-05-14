@@ -34,6 +34,7 @@ export const yue: Translation = {
     back_button: "返回",
     processing_button: "處理中",
     analyzing_button: "分析中",
+    question_progress: "第 {current} 題，共 {total} 題",
     description_title: "說明",
     description_body:
       "以下問題係關於你喺一般工作日所做嘅工作，或者你今日想評估嘅特定任務或活動。目的係俾你話俾 MSI360 知，你為咗完成工作會做啲咩動作。"

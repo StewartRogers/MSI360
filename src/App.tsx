@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { onboardingQuestionIds, questionIds } from "./app/questionAssets";
 import type { StepId } from "./app/types";
 import { languages, questions } from "./data/catalog";
+import { isRtlLanguage } from "./data/languages";
 import { translations } from "./data/translations";
 import { interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
 import { aiFallbackToastMessages, getAiFallbackToastKinds, type AiFallbackToastKind } from "./logic/aiFallbackToast";
@@ -53,6 +54,7 @@ export default function App() {
   }, [activeToast]);
 
   const t = translations[language] || translations.en;
+  const isRtl = isRtlLanguage(language);
   const selectedLanguage = languages.find((item) => item.code === language) || null;
   const visibleQuestions = useMemo(() => {
     return getSortedVisibleQuestions(activeTags);
@@ -249,6 +251,7 @@ export default function App() {
           totalSteps={totalQuestionSteps}
           tone="blue"
           translations={t}
+          isRtl={isRtl}
           onAnswer={(value) => updateAnswer(questionIds.role, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueRole}
@@ -264,6 +267,7 @@ export default function App() {
           totalSteps={totalQuestionSteps}
           tone="blue"
           translations={t}
+          isRtl={isRtl}
           onAnswer={(value) => updateAnswer(questionIds.timeInRole, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueTimeInRole}
@@ -297,6 +301,7 @@ export default function App() {
           totalSteps={totalQuestionSteps}
           tone="blue"
           translations={t}
+          isRtl={isRtl}
           onAnswer={(value) => updateAnswer(questionIds.height, "multi_choice", value)}
           onBack={goBack}
           canContinue={canContinueHeight}
@@ -311,6 +316,7 @@ export default function App() {
           progressStep={progressStep}
           totalSteps={totalQuestionSteps}
           translations={t}
+          isRtl={isRtl}
           onAnswer={(value) => currentAssessmentQuestion && setAssessmentAnswer(currentAssessmentQuestion, value)}
           onBack={goBack}
           canContinue={canContinueAssessmentQuestion}
@@ -329,6 +335,7 @@ export default function App() {
           taskSummary={getTaskSummary(answers)}
           progressStep={totalQuestionSteps}
           totalSteps={totalQuestionSteps}
+          translations={t}
           onDownload={() => void handleDownloadReport()}
           onEmail={() => setStep("email")}
           onDone={() => setStep("submit")}
@@ -336,7 +343,7 @@ export default function App() {
       )}
 
       {step === "submit" && (
-        <SubmitScreen value={nextAssessmentChoice} translations={t} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
+        <SubmitScreen value={nextAssessmentChoice} translations={t} isRtl={isRtl} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
       )}
 
       {step === "complete" && <CompleteScreen onStartNew={startNewAssessment} />}

@@ -218,6 +218,13 @@
   margin-top: 31px;
 }
 
+.rtl-answer-content .prompt-block h2,
+.rtl-answer-content .question-copy,
+.rtl-answer-card h3 {
+  direction: rtl;
+  text-align: right;
+}
+
 .question-card {
   padding: 15px 12px 14px;
   border: 1px solid #eeeeee;
@@ -273,6 +280,22 @@
   font-size: 14px;
   line-height: 1.45;
   text-align: left;
+}
+
+.image-radio-card.rtl-answer-row {
+  grid-template-columns: minmax(0, 1fr) 18px;
+  direction: rtl;
+  text-align: right;
+}
+
+.image-radio-card.rtl-answer-row .answer-control {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.image-radio-card.rtl-answer-row .answer-label,
+.image-radio-card.rtl-answer-row img {
+  grid-column: 1;
 }
 
 .image-radio-card.selected {

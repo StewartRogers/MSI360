@@ -8,6 +8,7 @@ export const ar: Translation = {
     back_button: "رجوع",
     processing_button: "جار المعالجة",
     analyzing_button: "جار التحليل",
+    question_progress: "السؤال {current} من {total}",
     description_title: "الوصف",
     description_body:
       "تتعلق الأسئلة التالية بالعمل الذي تقوم به خلال يوم عمل عادي أو عندما تنجز المهمة أو النشاط المحدد الذي ترغب في تقييمه اليوم. والهدف هو أن تخبر MSI360 بالإجراءات التي تقوم بها لإنجاز عملك."

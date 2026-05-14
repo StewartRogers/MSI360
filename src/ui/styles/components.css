@@ -26,6 +26,23 @@
   text-align: left;
 }
 
+.answer-row.rtl-answer-row {
+  grid-template-columns: minmax(0, 1fr) 18px;
+  direction: rtl;
+  text-align: right;
+}
+
+.answer-row.rtl-answer-row .answer-control,
+.answer-row.rtl-answer-row input {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.answer-row.rtl-answer-row .answer-label {
+  grid-column: 1;
+  grid-row: 1;
+}
+
 .answer-row.selected {
   background: #efeeee;
   font-weight: 700;

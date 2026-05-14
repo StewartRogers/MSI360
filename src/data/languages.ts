@@ -1,5 +1,7 @@
 import type { Language } from "../types";
 
+const rtlLanguageCodes = new Set(["ar", "fa", "fa-x-nos", "prs", "ur"]);
+
 export const languages: Language[] = [
   { code: "en", name: "English", flag: "🇨🇦", flagCode: "ca", ready: true },
   { code: "pa", name: "Punjabi", flag: "🇮🇳", flagCode: "in", ready: true },
@@ -13,9 +15,9 @@ export const languages: Language[] = [
   { code: "fa", name: "Iranian Persian", flag: "🇮🇷", flagCode: "ir", ready: true },
   { code: "hi", name: "Hindi", flag: "🇮🇳", flagCode: "in", ready: true },
   { code: "vi", name: "Vietnamese", flag: "🇻🇳", flagCode: "vn", ready: true },
-  { code: "ru", name: "Russian", flag: "🇷🇺", flagCode: "ru", ready: false },
+  { code: "ru", name: "Russian", flag: "🇷🇺", flagCode: "ru", ready: true },
   { code: "ar", name: "Arabic", flag: "🇸🇦", flagCode: "sa", ready: true },
-  { code: "pt", name: "Portuguese (Portugal)", flag: "🇵🇹", flagCode: "pt", ready: false },
+  { code: "pt", name: "Portuguese (Portugal)", flag: "🇵🇹", flagCode: "pt", ready: true },
   { code: "ja", name: "Japanese", flag: "🇯🇵", flagCode: "jp", ready: false },
   { code: "it", name: "Italian", flag: "🇮🇹", flagCode: "it", ready: false },
   { code: "nl", name: "Dutch", flag: "🇳🇱", flagCode: "nl", ready: false },
@@ -42,3 +44,7 @@ export const languages: Language[] = [
   { code: "af", name: "Afrikaans", flag: "🇿🇦", flagCode: "za", ready: false },
   { code: "da", name: "Danish", flag: "🇩🇰", flagCode: "dk", ready: false }
 ];
+
+export function isRtlLanguage(code: string) {
+  return rtlLanguageCodes.has(code);
+}

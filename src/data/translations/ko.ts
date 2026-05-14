@@ -34,6 +34,7 @@ export const ko: Translation = {
     back_button: "뒤로",
     processing_button: "처리 중",
     analyzing_button: "분석 중",
+    question_progress: "질문 {current}/{total}",
     description_title: "설명",
     description_body:
       "다음 질문은 일반적인 근무일 동안 수행하는 작업 또는 오늘 평가하려는 특정 업무나 활동을 수행할 때의 작업에 관한 것입니다. 목적은 업무를 완료하기 위해 수행하는 동작을 MSI360에 알려주는 것입니다."

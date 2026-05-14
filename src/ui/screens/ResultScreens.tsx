@@ -1,7 +1,7 @@
 import { AppHeader, WrapHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
-import { getActionButtonLabels } from "../../data/translationText";
+import { getActionButtonLabels, getProgressLabel } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
 import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
 import type { ScoreResult, Translation } from "../../types";
@@ -12,7 +12,7 @@ export function ScoreScreen({ result, progressStep, totalSteps, translations, on
   const { backLabel } = getActionButtonLabels(translations);
   return (
     <>
-      <AppHeader tone="blue" progressStep={progressStep} totalSteps={totalSteps} />
+      <AppHeader tone="blue" progressStep={progressStep} totalSteps={totalSteps} progressLabel={getProgressLabel(translations, progressStep, totalSteps)} />
       <section className="page score-page">
         <h2>Your MSI risk summary</h2>
         <div className="overall-score-card">
@@ -78,6 +78,7 @@ export function ReportReadyScreen({
   taskSummary,
   progressStep,
   totalSteps,
+  translations,
   onDownload,
   onEmail,
   onDone
@@ -87,6 +88,7 @@ export function ReportReadyScreen({
   taskSummary: string;
   progressStep: number;
   totalSteps: number;
+  translations: Translation;
   onDownload: () => void;
   onEmail: () => void;
   onDone: () => void;
@@ -99,7 +101,7 @@ export function ReportReadyScreen({
 
   return (
     <>
-      <AppHeader tone="blue" progressStep={progressStep} totalSteps={totalSteps} />
+      <AppHeader tone="blue" progressStep={progressStep} totalSteps={totalSteps} progressLabel={getProgressLabel(translations, progressStep, totalSteps)} />
       <section className="page report-page">
         <h2>Your Report Is Ready</h2>
         <div className="report-card">
@@ -143,7 +145,7 @@ export function ReportReadyScreen({
   );
 }
 
-export function SubmitScreen({ value, translations, onChange, onBack, onSubmit }: { value: string; translations: Translation; onChange: (value: string) => void; onBack: () => void; onSubmit: () => void }) {
+export function SubmitScreen({ value, translations, isRtl = false, onChange, onBack, onSubmit }: { value: string; translations: Translation; isRtl?: boolean; onChange: (value: string) => void; onBack: () => void; onSubmit: () => void }) {
   const { backLabel } = getActionButtonLabels(translations);
   const options = [
     ["reuse", "Yes, and I'd like to complete another report using the same information I provided initially allowing me to edit as needed."],
@@ -159,7 +161,7 @@ export function SubmitScreen({ value, translations, onChange, onBack, onSubmit }
           <h2>Would you like to complete another ErgoCheck assessment?</h2>
           <div className="answer-list">
             {options.map(([id, label]) => (
-              <RadioRow key={id} name="next-assessment" checked={value === id} label={label} onChange={() => onChange(toggleSingleOption(value, id))} />
+              <RadioRow key={id} name="next-assessment" checked={value === id} label={label} isRtl={isRtl} onChange={() => onChange(toggleSingleOption(value, id))} />
             ))}
           </div>
           <p className="question-copy submit-copy">Thank you, please press the button below to finish the survey.</p>

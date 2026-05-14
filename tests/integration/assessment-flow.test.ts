@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
-import { languages } from "../../src/data/languages";
+import { isRtlLanguage, languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
-import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../src/data/translationText";
+import { getActionButtonLabels, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -202,6 +202,15 @@ test("every language has a flag icon code for dropdown rendering", () => {
   }
 });
 
+test("right-to-left languages are identified for answer control layout", () => {
+  assert.equal(isRtlLanguage("ar"), true);
+  assert.equal(isRtlLanguage("fa"), true);
+  assert.equal(isRtlLanguage("ur"), true);
+  assert.equal(isRtlLanguage("prs"), true);
+  assert.equal(isRtlLanguage("en"), false);
+  assert.equal(isRtlLanguage("pa"), false);
+});
+
 test("question text uses selected translations with English field fallback", () => {
   const text = getQuestionText(
     {
@@ -289,6 +298,16 @@ test("Vietnamese translation has display text for every configured question opti
   assertTranslationCoverage("Vietnamese", translations.vi.questions);
 });
 
+test("Russian translation has display text for every configured question option", () => {
+  assert.equal(translations.ru.app.description_title, "Описание");
+  assertTranslationCoverage("Russian", translations.ru.questions);
+});
+
+test("Portuguese (Portugal) translation has display text for every configured question option", () => {
+  assert.equal(translations.pt.app.description_title, "Descrição");
+  assertTranslationCoverage("Portuguese (Portugal)", translations.pt.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -301,7 +320,28 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.fa).continueLabel, "ادامه");
   assert.equal(getActionButtonLabels(translations.hi).continueLabel, "जारी रखें");
   assert.equal(getActionButtonLabels(translations.vi).continueLabel, "Tiếp tục");
+  assert.equal(getActionButtonLabels(translations.ru).continueLabel, "Продолжить");
+  assert.equal(getActionButtonLabels(translations.pt).continueLabel, "Continuar");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
+});
+
+test("ready translations provide localized question progress labels", () => {
+  for (const language of languages.filter((item) => item.ready)) {
+    const template = translations[language.code].app.question_progress;
+    assert.ok(template, `Missing question progress label for ${language.code}`);
+    assert.ok(template.includes("{current}"), `Missing current placeholder for ${language.code}`);
+    assert.ok(template.includes("{total}"), `Missing total placeholder for ${language.code}`);
+
+    const label = getProgressLabel(translations[language.code], 2, 10);
+    assert.ok(label.includes("2"), `Missing current number in rendered label for ${language.code}`);
+    assert.ok(label.includes("10"), `Missing total number in rendered label for ${language.code}`);
+    assert.ok(!label.includes("{current}"), `Unresolved current placeholder for ${language.code}`);
+    assert.ok(!label.includes("{total}"), `Unresolved total placeholder for ${language.code}`);
+  }
+
+  assert.equal(getProgressLabel(translations.fr, 2, 10), "Question 2 sur 10");
+  assert.equal(getProgressLabel(translations.ar, 2, 10), "السؤال 2 من 10");
+  assert.equal(getProgressLabel(translations["zh-Hans"], 2, 10), "第 2 题，共 10 题");
 });
 
 function assertTranslationCoverage(languageName: string, translatedQuestions: typeof translations.en.questions) {

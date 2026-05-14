@@ -34,6 +34,7 @@ export const zhHans: Translation = {
     back_button: "返回",
     processing_button: "处理中",
     analyzing_button: "分析中",
+    question_progress: "第 {current} 题，共 {total} 题",
     description_title: "说明",
     description_body:
       "以下问题与你在典型工作日所做的工作有关，或与你今天想评估的特定任务或活动有关。目的是让你告诉 MSI360 你为完成工作所进行的动作。"

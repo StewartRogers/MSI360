@@ -34,6 +34,7 @@ export const es: Translation = {
     back_button: "Atrás",
     processing_button: "Procesando",
     analyzing_button: "Analizando",
+    question_progress: "Pregunta {current} de {total}",
     description_title: "Descripción",
     description_body:
       "Las siguientes preguntas tratan sobre el trabajo que realizas durante un día laboral típico o cuando completas la tarea o actividad específica que deseas evaluar hoy. La intención es que le cuentes a MSI360 las acciones que realizas para hacer tu trabajo."

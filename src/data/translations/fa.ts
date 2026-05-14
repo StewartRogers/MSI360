@@ -34,6 +34,7 @@ export const fa: Translation = {
     back_button: "بازگشت",
     processing_button: "در حال پردازش",
     analyzing_button: "در حال تحلیل",
+    question_progress: "پرسش {current} از {total}",
     description_title: "توضیح",
     description_body:
       "پرسش‌های زیر درباره کاری است که در یک روز کاری معمول انجام می‌دهید، یا درباره وظیفه یا فعالیت مشخصی است که امروز می‌خواهید ارزیابی کنید. هدف این است که به MSI360 بگویید برای انجام کار خود چه حرکات و اقداماتی انجام می‌دهید."

@@ -1,7 +1,8 @@
 import type { HeaderTone, WrapTab } from "../../app/types";
 
-export function AppHeader({ tone, progressStep, totalSteps, compact = false }: { tone: HeaderTone; progressStep?: number; totalSteps?: number; compact?: boolean }) {
+export function AppHeader({ tone, progressStep, totalSteps, progressLabel, compact = false }: { tone: HeaderTone; progressStep?: number; totalSteps?: number; progressLabel?: string; compact?: boolean }) {
   const percent = progressStep && totalSteps ? Math.max(3, Math.min(100, Math.round((progressStep / totalSteps) * 100))) : 0;
+  const label = progressLabel || (progressStep && totalSteps ? `Question ${progressStep} of ${totalSteps}` : "");
 
   return (
     <header className={`app-header ${tone} ${compact ? "compact" : ""}`}>
@@ -9,10 +10,10 @@ export function AppHeader({ tone, progressStep, totalSteps, compact = false }: {
       {progressStep && totalSteps && (
         <div className="progress-wrap">
           <div className="progress-meta">
-            <span>Question {progressStep} of {totalSteps}</span>
+            <span>{label}</span>
             <span>{percent}%</span>
           </div>
-          <div className="progress-track" aria-label={`Question ${progressStep} of ${totalSteps}`}>
+          <div className="progress-track" aria-label={label}>
             <span style={{ width: `${percent}%` }} />
           </div>
         </div>

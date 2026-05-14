@@ -34,6 +34,7 @@ export const fil: Translation = {
     back_button: "Bumalik",
     processing_button: "Pinoproseso",
     analyzing_button: "Sinusuri",
+    question_progress: "Tanong {current} sa {total}",
     description_title: "Paglalarawan",
     description_body:
       "Ang mga sumusunod na tanong ay tungkol sa trabahong ginagawa mo sa karaniwang araw ng trabaho, o habang ginagawa mo ang partikular na gawain o aktibidad na gusto mong tasahin ngayon. Layunin nitong sabihin mo sa MSI360 ang mga kilos na ginagawa mo para matapos ang iyong trabaho."
