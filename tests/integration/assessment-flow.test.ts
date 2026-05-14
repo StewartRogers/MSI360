@@ -328,6 +328,20 @@ test("Polish translation has display text for every configured question option",
   assertTranslationCoverage("Polish", translations.pl.questions);
 });
 
+test("Min Nan, Urdu, and Gujarati translations have display text for every configured question option", () => {
+  assert.equal(translations.nan.app.description_title, "說明");
+  assert.equal(translations.ur.app.description_title, "تفصیل");
+  assert.equal(translations.gu.app.description_title, "વર્ણન");
+  assertTranslationCoverage("Min Nan", translations.nan.questions);
+  assertTranslationCoverage("Urdu", translations.ur.questions);
+  assertTranslationCoverage("Gujarati", translations.gu.questions);
+});
+
+test("Romanian translation has display text for every configured question option", () => {
+  assert.equal(translations.ro.app.description_title, "Descriere");
+  assertTranslationCoverage("Romanian", translations.ro.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -346,6 +360,10 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.it).continueLabel, "Continua");
   assert.equal(getActionButtonLabels(translations.nl).continueLabel, "Doorgaan");
   assert.equal(getActionButtonLabels(translations.pl).continueLabel, "Kontynuuj");
+  assert.equal(getActionButtonLabels(translations.nan).continueLabel, "繼續");
+  assert.equal(getActionButtonLabels(translations.ur).continueLabel, "جاری رکھیں");
+  assert.equal(getActionButtonLabels(translations.gu).continueLabel, "ચાલુ રાખો");
+  assert.equal(getActionButtonLabels(translations.ro).continueLabel, "Continua");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
