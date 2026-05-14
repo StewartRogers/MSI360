@@ -48,9 +48,14 @@ export interface ReportCategorySummary {
 
 export interface ReportBodySymptoms {
   reported: boolean;
-  oneSide: string[];
-  bothSides: string[];
-  lastedTwoDays: string[];
+  oneSide: ReportBodySymptomArea[];
+  bothSides: ReportBodySymptomArea[];
+  lastedTwoDays: ReportBodySymptomArea[];
+}
+
+export interface ReportBodySymptomArea {
+  id: string;
+  label: string;
 }
 
 export interface ReportAnswerRecord {
@@ -237,10 +242,13 @@ function getBodySymptoms(answers: Answers): ReportBodySymptoms {
 
   Object.entries(answer.value).forEach(([groupId, value]) => {
     const selectedIds = Array.isArray(value) ? value : [value];
-    const label = cleanBodyPartLabel(getGroupLabel(questionIds.bodyDiscomfortAreas, groupId));
-    if (selectedIds.includes("one_side")) symptoms.oneSide.push(label);
-    if (selectedIds.includes("both_sides")) symptoms.bothSides.push(label);
-    if (selectedIds.includes("lasted_two_days")) symptoms.lastedTwoDays.push(label);
+    const bodyPart = {
+      id: groupId,
+      label: cleanBodyPartLabel(getGroupLabel(questionIds.bodyDiscomfortAreas, groupId))
+    };
+    if (selectedIds.includes("one_side")) symptoms.oneSide.push(bodyPart);
+    if (selectedIds.includes("both_sides")) symptoms.bothSides.push(bodyPart);
+    if (selectedIds.includes("lasted_two_days")) symptoms.lastedTwoDays.push(bodyPart);
   });
 
   return symptoms;

@@ -44,9 +44,9 @@ test("report data maps task, worker height, symptoms, and job-specific notes", (
   assert.equal(report.taskSummary, "Office work");
   assert.equal(report.workerHeight, "5'10\" - 6'2\" (1.76 m - 1.88 m)");
   assert.equal(report.symptoms.reported, true);
-  assert.deepEqual(report.symptoms.oneSide, ["Neck"]);
-  assert.deepEqual(report.symptoms.bothSides, ["Lower back"]);
-  assert.deepEqual(report.symptoms.lastedTwoDays, ["Lower back"]);
+  assert.deepEqual(report.symptoms.oneSide, [{ id: "neck", label: "Neck" }]);
+  assert.deepEqual(report.symptoms.bothSides, [{ id: "lower_back", label: "Lower back" }]);
+  assert.deepEqual(report.symptoms.lastedTwoDays, [{ id: "lower_back", label: "Lower back" }]);
   assert.ok(report.jobSpecificNote.body.includes("office"));
 });
 

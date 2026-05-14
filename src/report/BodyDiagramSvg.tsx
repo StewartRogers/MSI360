@@ -1,22 +1,34 @@
 import { Ellipse, G, Path, Rect, Svg, Text, View } from "@react-pdf/renderer";
-import type { ReportBodySymptoms } from "./reportData";
+import type { ReportBodySymptomArea, ReportBodySymptoms } from "./reportData";
 
 interface BodyDiagramSvgProps {
   symptoms: ReportBodySymptoms;
 }
 
+const bodyPartIds = {
+  neck: "neck",
+  shouldersUpperArms: "shoulders_upper_arms",
+  elbowsForearms: "elbows_forearms",
+  wristsHandsFingers: "wrists_hands_fingers",
+  lowerBack: "lower_back",
+  hipsUpperLegs: "hips_upper_legs",
+  kneesLowerLegs: "knees_lower_legs",
+  anklesFeet: "ankles_feet"
+} as const;
+
 export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
-  const hasSymptom = (label: string) => {
-    return symptoms.oneSide.includes(label) || symptoms.bothSides.includes(label) || symptoms.lastedTwoDays.includes(label);
+  const hasSymptom = (bodyPartId: string) => {
+    const hasMatchingId = (area: ReportBodySymptomArea) => area.id === bodyPartId;
+    return symptoms.oneSide.some(hasMatchingId) || symptoms.bothSides.some(hasMatchingId) || symptoms.lastedTwoDays.some(hasMatchingId);
   };
 
-  const getFill = (label: string) => (hasSymptom(label) ? "#fecaca" : "none");
+  const getFill = (bodyPartId: string) => (hasSymptom(bodyPartId) ? "#fecaca" : "none");
 
   const FCX = 152;
   const BCX = 338;
 
-  const highlightProps = (label: string) => ({
-    fill: getFill(label),
+  const highlightProps = (bodyPartId: string) => ({
+    fill: getFill(bodyPartId)
   });
 
   const symptomCount = symptoms.oneSide.length + symptoms.bothSides.length + symptoms.lastedTwoDays.length;
@@ -27,53 +39,53 @@ export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
         <Rect width={500} height={500} fill="#ffffff" />
         <G>
           {/* Neck — snug around the throat/nape area */}
-          <Ellipse cx={FCX} cy={100} rx={12} ry={8} {...highlightProps("Neck")} />
-          <Ellipse cx={BCX} cy={100} rx={12} ry={8} {...highlightProps("Neck")} />
+          <Ellipse cx={FCX} cy={100} rx={12} ry={8} {...highlightProps(bodyPartIds.neck)} />
+          <Ellipse cx={BCX} cy={100} rx={12} ry={8} {...highlightProps(bodyPartIds.neck)} />
 
           {/* Shoulders — on the shoulder joint area */}
-          <Ellipse cx={FCX - 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={FCX + 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX - 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX + 30} cy={118} rx={15} ry={10} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={FCX - 30} cy={118} rx={15} ry={10} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
+          <Ellipse cx={FCX + 30} cy={118} rx={15} ry={10} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
+          <Ellipse cx={BCX - 30} cy={118} rx={15} ry={10} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
+          <Ellipse cx={BCX + 30} cy={118} rx={15} ry={10} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
 
           {/* Upper arms — along the bicep/tricep */}
-          <Ellipse cx={FCX - 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={FCX + 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX - 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
-          <Ellipse cx={BCX + 40} cy={150} rx={10} ry={22} {...highlightProps("Shoulder(s) or upper arm(s)")} />
+          <Ellipse cx={FCX - 40} cy={150} rx={10} ry={22} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
+          <Ellipse cx={FCX + 40} cy={150} rx={10} ry={22} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
+          <Ellipse cx={BCX - 40} cy={150} rx={10} ry={22} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
+          <Ellipse cx={BCX + 40} cy={150} rx={10} ry={22} {...highlightProps(bodyPartIds.shouldersUpperArms)} />
 
           {/* Elbows/forearms — mid-arm, closer to body than wrists */}
-          <Ellipse cx={FCX - 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={FCX + 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={BCX - 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
-          <Ellipse cx={BCX + 48} cy={195} rx={8} ry={22} {...highlightProps("Elbow(s) or forearm(s)")} />
+          <Ellipse cx={FCX - 48} cy={195} rx={8} ry={22} {...highlightProps(bodyPartIds.elbowsForearms)} />
+          <Ellipse cx={FCX + 48} cy={195} rx={8} ry={22} {...highlightProps(bodyPartIds.elbowsForearms)} />
+          <Ellipse cx={BCX - 48} cy={195} rx={8} ry={22} {...highlightProps(bodyPartIds.elbowsForearms)} />
+          <Ellipse cx={BCX + 48} cy={195} rx={8} ry={22} {...highlightProps(bodyPartIds.elbowsForearms)} />
 
           {/* Wrists/hands/fingers — at the hand level */}
-          <Ellipse cx={FCX - 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={FCX + 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={BCX - 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
-          <Ellipse cx={BCX + 56} cy={242} rx={8} ry={14} {...highlightProps("Wrist(s), hand(s), or fingers")} />
+          <Ellipse cx={FCX - 56} cy={242} rx={8} ry={14} {...highlightProps(bodyPartIds.wristsHandsFingers)} />
+          <Ellipse cx={FCX + 56} cy={242} rx={8} ry={14} {...highlightProps(bodyPartIds.wristsHandsFingers)} />
+          <Ellipse cx={BCX - 56} cy={242} rx={8} ry={14} {...highlightProps(bodyPartIds.wristsHandsFingers)} />
+          <Ellipse cx={BCX + 56} cy={242} rx={8} ry={14} {...highlightProps(bodyPartIds.wristsHandsFingers)} />
 
           {/* Lower back — lumbar area, only on back figure */}
-          <Ellipse cx={BCX} cy={195} rx={22} ry={22} {...highlightProps("Lower back")} />
+          <Ellipse cx={BCX} cy={195} rx={22} ry={22} {...highlightProps(bodyPartIds.lowerBack)} />
 
           {/* Hips/thighs — upper leg area */}
-          <Ellipse cx={FCX - 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={FCX + 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={BCX - 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
-          <Ellipse cx={BCX + 15} cy={285} rx={13} ry={35} {...highlightProps("Hip(s) or upper leg(s) (thigh)")} />
+          <Ellipse cx={FCX - 15} cy={285} rx={13} ry={35} {...highlightProps(bodyPartIds.hipsUpperLegs)} />
+          <Ellipse cx={FCX + 15} cy={285} rx={13} ry={35} {...highlightProps(bodyPartIds.hipsUpperLegs)} />
+          <Ellipse cx={BCX - 15} cy={285} rx={13} ry={35} {...highlightProps(bodyPartIds.hipsUpperLegs)} />
+          <Ellipse cx={BCX + 15} cy={285} rx={13} ry={35} {...highlightProps(bodyPartIds.hipsUpperLegs)} />
 
           {/* Knees/calves — lower leg, centered on shin/calf */}
-          <Ellipse cx={FCX - 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={FCX + 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={BCX - 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
-          <Ellipse cx={BCX + 13} cy={365} rx={10} ry={35} {...highlightProps("Knee(s) or lower leg(s) (calf)")} />
+          <Ellipse cx={FCX - 13} cy={365} rx={10} ry={35} {...highlightProps(bodyPartIds.kneesLowerLegs)} />
+          <Ellipse cx={FCX + 13} cy={365} rx={10} ry={35} {...highlightProps(bodyPartIds.kneesLowerLegs)} />
+          <Ellipse cx={BCX - 13} cy={365} rx={10} ry={35} {...highlightProps(bodyPartIds.kneesLowerLegs)} />
+          <Ellipse cx={BCX + 13} cy={365} rx={10} ry={35} {...highlightProps(bodyPartIds.kneesLowerLegs)} />
 
           {/* Ankles/feet — at the foot level */}
-          <Ellipse cx={FCX - 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
-          <Ellipse cx={FCX + 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
-          <Ellipse cx={BCX - 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
-          <Ellipse cx={BCX + 12} cy={445} rx={14} ry={12} {...highlightProps("Ankle(s) or foot/feet")} />
+          <Ellipse cx={FCX - 12} cy={445} rx={14} ry={12} {...highlightProps(bodyPartIds.anklesFeet)} />
+          <Ellipse cx={FCX + 12} cy={445} rx={14} ry={12} {...highlightProps(bodyPartIds.anklesFeet)} />
+          <Ellipse cx={BCX - 12} cy={445} rx={14} ry={12} {...highlightProps(bodyPartIds.anklesFeet)} />
+          <Ellipse cx={BCX + 12} cy={445} rx={14} ry={12} {...highlightProps(bodyPartIds.anklesFeet)} />
         </G>
         <G>
 
@@ -264,7 +276,7 @@ export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
       <Path fill="#3d3d3d" d="M381.98,152.11c-.16,1.32-1.11,2.47-2.26,3.14-1.16.66-2.62.91-3.85.39,1.27-.29,2.34-.67,3.35-1.26,1.01-.58,1.88-1.32,2.76-2.28Z" />
       <Path fill="#3d3d3d" d="M341.43,184.18c.11,2.53.16,5.05.22,7.58l.18,7.57.16,7.57c.05,2.52.11,5.05.12,7.58-.32-2.51-.53-5.03-.7-7.56-.17-2.52-.25-5.05-.34-7.58-.03-2.53-.06-5.06,0-7.59.05-2.53.15-5.06.35-7.58Z" />
     </G>
-  
+
       </G>
       </Svg>
       <Text style={{ width: "100%", color: "#737373", fontSize: 9, textAlign: "center", marginTop: 8 }}>
@@ -276,9 +288,9 @@ export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
 
 function formatBodyCallouts(symptoms: ReportBodySymptoms) {
   const callouts = [
-    ...symptoms.bothSides.map((label) => `${label} on both sides`),
-    ...symptoms.oneSide.map((label) => `${label} on one side`),
-    ...symptoms.lastedTwoDays.map((label) => `${label} for 2+ days`)
+    ...symptoms.bothSides.map((area) => `${area.label} on both sides`),
+    ...symptoms.oneSide.map((area) => `${area.label} on one side`),
+    ...symptoms.lastedTwoDays.map((area) => `${area.label} for 2+ days`)
   ];
   const visible = callouts.slice(0, 3);
   const remaining = callouts.length - visible.length;

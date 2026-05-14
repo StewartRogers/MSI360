@@ -1,6 +1,6 @@
 import { Document, Image, Line, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
 import { reportAssets } from "./reportAssets";
-import type { ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import type { ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
 import { BodyDiagramSvg } from "./BodyDiagramSvg";
 
 const colors = {
@@ -255,7 +255,7 @@ function ResponseRecordContent({ report }: { report: ReportData }) {
       <Text style={styles.pageIntro}>This appendix lists the English question text and recorded answers used to generate the report.</Text>
 
       {report.answerRecords.map((record) => (
-        <View key={record.questionId} style={styles.answerRecord} wrap={false}>
+        <View key={record.questionId} style={styles.answerRecord}>
           <Text style={styles.answerQuestion}>{record.question}</Text>
           {record.answers.map((answer) => (
             <Text key={answer} style={styles.answerText}>
@@ -325,14 +325,14 @@ function SymptomsAlert({ symptoms }: { symptoms: ReportBodySymptoms }) {
   );
 }
 
-function SymptomList({ title, items }: { title: string; items: string[] }) {
+function SymptomList({ title, items }: { title: string; items: ReportBodySymptomArea[] }) {
   if (!items.length) return null;
   return (
     <View style={styles.symptomList}>
       <Text style={styles.symptomListTitle}>{title}</Text>
       {items.map((item) => (
-        <Text key={item} style={styles.symptomBullet}>
-          • {item}
+        <Text key={item.id} style={styles.symptomBullet}>
+          • {item.label}
         </Text>
       ))}
     </View>
