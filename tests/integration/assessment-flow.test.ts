@@ -284,6 +284,11 @@ test("German, Persian, and Hindi translations have display text for every config
   assertTranslationCoverage("Hindi", translations.hi.questions);
 });
 
+test("Vietnamese translation has display text for every configured question option", () => {
+  assert.equal(translations.vi.app.description_title, "Mô tả");
+  assertTranslationCoverage("Vietnamese", translations.vi.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -295,6 +300,7 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.de).continueLabel, "Weiter");
   assert.equal(getActionButtonLabels(translations.fa).continueLabel, "ادامه");
   assert.equal(getActionButtonLabels(translations.hi).continueLabel, "जारी रखें");
+  assert.equal(getActionButtonLabels(translations.vi).continueLabel, "Tiếp tục");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
