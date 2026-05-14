@@ -35,12 +35,12 @@ export function ReportDocument({ report }: { report: ReportData }) {
 function IntroContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
-      <Text style={styles.introTitle}>MSI360 Risk Score Report</Text>
+      <Text style={styles.introTitle}>MSI 360 Risk Score Report</Text>
 
       <View style={styles.metaStrip} wrap={false}>
         <View style={{ width: "20%" }}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
         <View style={styles.metaDivider} />
-        <View style={{ width: "48%" }}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task assessed" value={report.taskSummary} /></View>
+        <View style={{ width: "48%" }}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task performed" value={report.taskSummary} /></View>
         <View style={styles.metaDivider} />
         <View style={{ width: "30%" }}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
       </View>
@@ -49,13 +49,13 @@ function IntroContent({ report }: { report: ReportData }) {
         <Image src={reportAssets.icons.shield} style={styles.noticeIcon} />
         <View style={styles.noticeDivider} />
         <Text style={styles.noticeText}>
-          Musculoskeletal injuries (MSIs) like sprains and strains account for one-third of all workplace injuries in B.C. Taking action on this report can help you prevent them.
+          Musculoskeletal injuries (MSIs) account for one-third of all workplace injuries in B.C. Taking action on this report can help you prevent them.
         </Text>
       </View>
 
       <NumberedSection number="1" title="About this report">
         <Text style={styles.paragraph}>
-          This report summarizes possible musculoskeletal injury risk factors for the selected job or task. It is based on the worker's responses and is intended to support a practical conversation between the worker and employer. The goal is to identify where MSI risks may exist, understand which areas need attention, and help guide safer work design.
+          For the selected job or task this report summarizes the risk factors that could be associated with an increased risk of a musculoskeletal injury. It is based on the worker's responses and is intended to support a practical conversation between the worker and employer. The goal is to identify where MSI risks may exist, understand which areas need attention, and help guide safer work design.
         </Text>
         <Text style={styles.paragraph}>This report is not a full workplace assessment. It is a starting point for discussion and action.</Text>
       </NumberedSection>
@@ -118,7 +118,7 @@ function OverviewContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
       <View style={{ marginTop: 32 }} />
-      <Text style={styles.pageHeading}>Overview of results</Text>
+      <Text style={styles.pageHeading}>Overview of Results</Text>
       <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}Detailed category score pages and the full response record appear later in the report.</Text>
 
       <Text style={styles.sectionHeading}>Current symptoms</Text>
@@ -177,8 +177,8 @@ function CategoriesFlowContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
       <View style={{ marginTop: 32 }} />
-      <Text style={styles.pageHeading}>Category score summary</Text>
-      <Text style={styles.pageIntro}>The following table summarizes the MSI score for each assessed risk category.{"\n"}Each score is based on the worker's responses and is intended to help identify which areas may need review first.</Text>
+      <Text style={styles.pageHeading}>MSI Risk Score Summary by Category</Text>
+      <Text style={styles.pageIntro}>The following table summarizes the MSI Risk Score for each assessed risk category.{"\n"}Each score is based on the worker's responses and is intended to help identify which areas may need review first.</Text>
 
       <Text style={styles.noteTextBold}>NOTE:</Text>
       <Text style={styles.noteText}>
