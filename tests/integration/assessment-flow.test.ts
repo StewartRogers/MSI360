@@ -323,6 +323,11 @@ test("Dutch translation has display text for every configured question option", 
   assertTranslationCoverage("Dutch", translations.nl.questions);
 });
 
+test("Polish translation has display text for every configured question option", () => {
+  assert.equal(translations.pl.app.description_title, "Opis");
+  assertTranslationCoverage("Polish", translations.pl.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -340,6 +345,7 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.ja).continueLabel, "続行");
   assert.equal(getActionButtonLabels(translations.it).continueLabel, "Continua");
   assert.equal(getActionButtonLabels(translations.nl).continueLabel, "Doorgaan");
+  assert.equal(getActionButtonLabels(translations.pl).continueLabel, "Kontynuuj");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
