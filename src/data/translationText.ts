@@ -32,7 +32,7 @@ export function getProgressLabel(t: Translation, current: number, total: number)
   return getAppText(t, "question_progress", "Question {current} of {total}").replaceAll("{current}", String(current)).replaceAll("{total}", String(total));
 }
 
-function getAppText(t: Translation, key: string, fallback: string) {
+export function getAppText(t: Translation, key: string, fallback: string) {
   return t.app[key] || translations.en.app[key] || fallback;
 }
 

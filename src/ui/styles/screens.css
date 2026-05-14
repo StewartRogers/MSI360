@@ -570,6 +570,38 @@
   margin-top: 32px;
 }
 
+.rtl-result-content {
+  direction: rtl;
+}
+
+.rtl-result-content .content-block,
+.rtl-result-content .question-copy,
+.rtl-result-content .field-label,
+.rtl-result-content .report-card,
+.rtl-result-content .next-steps {
+  text-align: right;
+}
+
+.rtl-result-content .single-input {
+  direction: rtl;
+  text-align: right;
+}
+
+.rtl-result-content .report-card dd {
+  text-align: left;
+}
+
+.rtl-result-content .report-psychosocial-note {
+  text-align: right;
+}
+
+.rtl-result-content .report-card ul,
+.rtl-result-content .next-steps ul {
+  margin-right: 17px;
+  margin-left: 0;
+  padding-right: 0;
+}
+
 .submit-page .answer-list {
   gap: 27px;
   margin-top: 30px;

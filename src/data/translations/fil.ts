@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Pananakit o hindi komportable sa isang bahagi ng katawan, halimbawa kaliwa o kanan",
@@ -35,7 +35,58 @@ export const fil: Translation = {
     processing_button: "Pinoproseso",
     analyzing_button: "Sinusuri",
     question_progress: "Tanong {current} sa {total}",
-    description_title: "Paglalarawan",
+    score_summary_title: "Buod ng iyong panganib sa MSI",
+    score_overall_risk: "Kabuuang Panganib sa MSI",
+    score_download_report: "I-download ang Ulat",
+    score_not_available: "Hindi naaangkop",
+    score_out_of_4: "{score} sa 4",
+    score_risk_not_enough: "Hindi sapat ang datos",
+    score_risk_low: "Mababang panganib",
+    score_risk_possible: "Posibleng panganib",
+    score_risk_likely: "Malamang na panganib",
+    score_risk_known: "Kilalang panganib",
+    score_factor_not_enough: "Hindi sapat ang datos upang bigyang-kahulugan ang {factor}.",
+    score_factor_low: "Kasalukuyang mababa ang panganib na nauugnay sa {factor}.",
+    score_factor_possible: "Posibleng panganib ng pananakit o hindi komportable mula sa {factor}.",
+    score_factor_likely: "Malamang na panganib ng pananakit o hindi komportable mula sa {factor}.",
+    score_factor_known: "Kilalang panganib ng pananakit at/o pinsala.",
+    score_psychosocial_note: "Negatibong nakaapekto ang mga psychosocial factor sa kabuuang MSI risk score ({multiplier}).",
+    score_subject_contact_stress: "contact stress",
+    score_subject_force: "puwersa",
+    score_subject_awkward_postures: "hindi komportableng postura",
+    score_subject_repetition: "paulit-ulit na galaw",
+    score_subject_environmental: "mga salik sa kapaligiran",
+    wrap_email_copy: "Kopya sa email",
+    wrap_review_results: "Suriin ang mga resulta",
+    wrap_submit_report: "Isumite ang ulat",
+    email_title: "Kunin ang Iyong Ulat sa Email",
+    email_body: "Ilagay ang iyong email address kung gusto mong makatanggap ng kopya ng ulat na ito. Maaari itong tumagal nang hanggang 15 minuto. Pakitingnan ang junk o spam folder kung hindi mo makita ang email sa iyong inbox.",
+    email_next_body: "Makikita mo ang huling ulat sa susunod na screen.",
+    email_address_label: "Email address",
+    report_ready_title: "Handa na ang Iyong Ulat",
+    report_card_title: "Ulat sa Panganib ng MSI",
+    report_date_label: "Petsa",
+    report_task_label: "Trabaho/gawaing sinuri:",
+    report_overall_score_label: "Kabuuang score:",
+    report_highest_risk: "Mga kategoryang may pinakamataas na panganib:",
+    report_no_scored_categories: "Wala pang kategorya ng panganib na na-score",
+    report_email_copy_requested: "Hiniling ang kopya sa email para sa {email}.",
+    report_download_pdf: "I-download ang PDF",
+    report_email_report: "I-email ang Ulat",
+    report_done: "Tapos",
+    submit_title: "Gusto mo bang kumumpleto ng isa pang ErgoCheck assessment?",
+    submit_option_reuse: "Oo, at gusto kong kumumpleto ng isa pang ulat gamit ang parehong impormasyong una kong ibinigay, na maaari kong i-edit kung kinakailangan.",
+    submit_option_restart: "Oo, at gusto kong magsimula muli gamit ang bagong impormasyon",
+    submit_option_no: "Hindi, hindi sa ngayon",
+    submit_copy: "Salamat, pindutin ang button sa ibaba upang tapusin ang survey.",
+    submit_button: "Isumite",
+    complete_title: "Salamat sa Pagkumpleto ng MSI 360 Survey",
+    complete_body: "Nakakatulong ang iyong mga sagot na tukuyin ang mga panganib na nauugnay sa MSI sa iyong lugar ng trabaho at makapag-ambag sa mas ligtas na kapaligiran para sa lahat.",
+    complete_next_steps_title: "Mga Susunod na Hakbang:",
+    complete_next_step_review: "Suriin ang iyong ulat at mga rekomendasyon",
+    complete_next_step_share: "Ibahagi ang mga natuklasan sa iyong supervisor kung naaangkop",
+    complete_next_step_visit: "Bisitahin ang worksafebc.com para sa karagdagang resources",
+    complete_start_new: "Magsimula ng Bagong Assessment",    description_title: "Paglalarawan",
     description_body:
       "Ang mga sumusunod na tanong ay tungkol sa trabahong ginagawa mo sa karaniwang araw ng trabaho, o habang ginagawa mo ang partikular na gawain o aktibidad na gusto mong tasahin ngayon. Layunin nitong sabihin mo sa MSI360 ang mga kilos na ginagawa mo para matapos ang iyong trabaho."
   },
@@ -392,3 +443,5 @@ export const fil: Translation = {
     }
   }
 };
+
+

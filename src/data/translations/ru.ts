@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Боль или дискомфорт с одной стороны тела, например слева или справа",
@@ -35,7 +35,58 @@ export const ru: Translation = {
     processing_button: "Обработка",
     analyzing_button: "Анализ",
     question_progress: "Вопрос {current} из {total}",
-    description_title: "Описание",
+    score_summary_title: "Сводка вашего риска MSI",
+    score_overall_risk: "Общий риск MSI",
+    score_download_report: "Скачать отчет",
+    score_not_available: "Н/Д",
+    score_out_of_4: "{score} из 4",
+    score_risk_not_enough: "Недостаточно данных",
+    score_risk_low: "Низкий риск",
+    score_risk_possible: "Возможный риск",
+    score_risk_likely: "Вероятный риск",
+    score_risk_known: "Известный риск",
+    score_factor_not_enough: "Недостаточно данных для интерпретации {factor}.",
+    score_factor_low: "В настоящее время риск, связанный с {factor}, низкий.",
+    score_factor_possible: "Возможный риск дискомфорта из-за {factor}.",
+    score_factor_likely: "Вероятный риск дискомфорта из-за {factor}.",
+    score_factor_known: "Известный риск боли и/или травмы.",
+    score_psychosocial_note: "Психосоциальные факторы отрицательно повлияли на общий показатель риска MSI ({multiplier}).",
+    score_subject_contact_stress: "контактным давлением",
+    score_subject_force: "усилием",
+    score_subject_awkward_postures: "неудобными позами",
+    score_subject_repetition: "повторяемостью",
+    score_subject_environmental: "факторами окружающей среды",
+    wrap_email_copy: "Копия по эл. почте",
+    wrap_review_results: "Просмотр результатов",
+    wrap_submit_report: "Отправить отчет",
+    email_title: "Получить отчет по электронной почте",
+    email_body: "Введите адрес электронной почты, если хотите получить копию этого отчета. Это может занять до 15 минут. Проверьте папку нежелательной почты или спама, если письмо не появилось во входящих.",
+    email_next_body: "Окончательный отчет появится на следующем экране.",
+    email_address_label: "Адрес электронной почты",
+    report_ready_title: "Ваш отчет готов",
+    report_card_title: "Отчет о риске MSI",
+    report_date_label: "Дата",
+    report_task_label: "Проанализированная работа/задача:",
+    report_overall_score_label: "Общий балл:",
+    report_highest_risk: "Категории с наибольшим риском:",
+    report_no_scored_categories: "Оцененных категорий риска пока нет",
+    report_email_copy_requested: "Запрошена копия по электронной почте для {email}.",
+    report_download_pdf: "Скачать PDF",
+    report_email_report: "Отправить отчет по эл. почте",
+    report_done: "Готово",
+    submit_title: "Хотите пройти еще одну оценку ErgoCheck?",
+    submit_option_reuse: "Да, я хочу создать еще один отчет, используя ту же информацию, которую предоставил(а) сначала, с возможностью редактирования при необходимости.",
+    submit_option_restart: "Да, я хочу начать заново с новой информацией",
+    submit_option_no: "Нет, не сейчас",
+    submit_copy: "Спасибо, нажмите кнопку ниже, чтобы завершить опрос.",
+    submit_button: "Отправить",
+    complete_title: "Спасибо за прохождение опроса MSI 360",
+    complete_body: "Ваши ответы помогают выявлять опасности, связанные с MSI, на вашем рабочем месте и способствуют более безопасной рабочей среде для всех.",
+    complete_next_steps_title: "Следующие шаги:",
+    complete_next_step_review: "Просмотрите свой отчет и рекомендации",
+    complete_next_step_share: "При необходимости поделитесь выводами со своим руководителем",
+    complete_next_step_visit: "Посетите worksafebc.com для дополнительных ресурсов",
+    complete_start_new: "Начать новую оценку",    description_title: "Описание",
     description_body:
       "Следующие вопросы касаются работы, которую вы выполняете в течение обычного рабочего дня, или конкретной задачи или деятельности, которую вы хотите оценить сегодня. Цель состоит в том, чтобы вы рассказали MSI360 о действиях, которые выполняете для выполнения своей работы."
   },
@@ -392,3 +443,5 @@ export const ru: Translation = {
     }
   }
 };
+
+

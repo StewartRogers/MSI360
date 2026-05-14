@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "शरीर के एक तरफ दर्द या असुविधा, जैसे बाईं या दाईं तरफ",
@@ -35,7 +35,58 @@ export const hi: Translation = {
     processing_button: "प्रोसेस हो रहा है",
     analyzing_button: "विश्लेषण हो रहा है",
     question_progress: "{total} में से प्रश्न {current}",
-    description_title: "विवरण",
+    score_summary_title: "आपका MSI जोखिम सारांश",
+    score_overall_risk: "कुल MSI जोखिम",
+    score_download_report: "रिपोर्ट डाउनलोड करें",
+    score_not_available: "लागू नहीं",
+    score_out_of_4: "{score} / 4",
+    score_risk_not_enough: "पर्याप्त डेटा नहीं",
+    score_risk_low: "कम जोखिम",
+    score_risk_possible: "संभावित जोखिम",
+    score_risk_likely: "अधिक संभावित जोखिम",
+    score_risk_known: "ज्ञात जोखिम",
+    score_factor_not_enough: "{factor} की व्याख्या करने के लिए पर्याप्त डेटा नहीं है।",
+    score_factor_low: "वर्तमान में {factor} से जुड़ा जोखिम कम है।",
+    score_factor_possible: "{factor} से असुविधा का संभावित जोखिम है।",
+    score_factor_likely: "{factor} से असुविधा का अधिक संभावित जोखिम है।",
+    score_factor_known: "दर्द और/या चोट का ज्ञात जोखिम है।",
+    score_psychosocial_note: "मनोसामाजिक कारकों ने कुल MSI जोखिम स्कोर को नकारात्मक रूप से प्रभावित किया ({multiplier})।",
+    score_subject_contact_stress: "संपर्क दबाव",
+    score_subject_force: "बल",
+    score_subject_awkward_postures: "असहज मुद्राएं",
+    score_subject_repetition: "दोहराव",
+    score_subject_environmental: "पर्यावरणीय कारक",
+    wrap_email_copy: "ईमेल कॉपी",
+    wrap_review_results: "परिणाम देखें",
+    wrap_submit_report: "रिपोर्ट सबमिट करें",
+    email_title: "अपनी रिपोर्ट ईमेल से प्राप्त करें",
+    email_body: "यदि आप इस रिपोर्ट की एक प्रति प्राप्त करना चाहते हैं, तो अपना ईमेल पता दर्ज करें। इसमें 15 मिनट तक लग सकते हैं। यदि ईमेल इनबॉक्स में न दिखे, तो जंक या स्पैम फ़ोल्डर देखें।",
+    email_next_body: "आप अगली स्क्रीन पर अंतिम रिपोर्ट देखेंगे।",
+    email_address_label: "ईमेल पता",
+    report_ready_title: "आपकी रिपोर्ट तैयार है",
+    report_card_title: "MSI जोखिम रिपोर्ट",
+    report_date_label: "तारीख",
+    report_task_label: "विश्लेषित कार्य/काम:",
+    report_overall_score_label: "कुल स्कोर:",
+    report_highest_risk: "सबसे अधिक जोखिम वाली श्रेणियां:",
+    report_no_scored_categories: "अभी कोई स्कोर की गई जोखिम श्रेणी नहीं है",
+    report_email_copy_requested: "{email} के लिए ईमेल कॉपी अनुरोधित की गई।",
+    report_download_pdf: "PDF डाउनलोड करें",
+    report_email_report: "रिपोर्ट ईमेल करें",
+    report_done: "पूर्ण",
+    submit_title: "क्या आप एक और ErgoCheck मूल्यांकन पूरा करना चाहेंगे?",
+    submit_option_reuse: "हाँ, और मैं शुरू में दी गई उसी जानकारी का उपयोग करके एक और रिपोर्ट पूरी करना चाहूंगा, जिसे जरूरत के अनुसार संपादित किया जा सके।",
+    submit_option_restart: "हाँ, और मैं नई जानकारी के साथ फिर से शुरू करना चाहूंगा",
+    submit_option_no: "नहीं, अभी नहीं",
+    submit_copy: "धन्यवाद, सर्वे समाप्त करने के लिए नीचे दिया गया बटन दबाएं।",
+    submit_button: "सबमिट करें",
+    complete_title: "MSI 360 सर्वे पूरा करने के लिए धन्यवाद",
+    complete_body: "आपके उत्तर आपके कार्यस्थल में MSI-संबंधित खतरों की पहचान करने में मदद करते हैं और सभी के लिए सुरक्षित कार्य वातावरण में योगदान देते हैं।",
+    complete_next_steps_title: "अगले चरण:",
+    complete_next_step_review: "अपनी रिपोर्ट और सिफारिशें देखें",
+    complete_next_step_share: "यदि उचित हो, तो निष्कर्ष अपने पर्यवेक्षक के साथ साझा करें",
+    complete_next_step_visit: "अतिरिक्त संसाधनों के लिए worksafebc.com पर जाएं",
+    complete_start_new: "नया मूल्यांकन शुरू करें",    description_title: "विवरण",
     description_body:
       "निम्नलिखित प्रश्न उस काम के बारे में हैं जो आप सामान्य कार्यदिवस में करते हैं, या उस विशेष कार्य या गतिविधि के बारे में हैं जिसका आप आज आकलन करना चाहते हैं। उद्देश्य यह है कि आप MSI360 को बताएं कि अपना काम पूरा करने के लिए आप कौन-कौन सी क्रियाएं करते हैं।"
   },
@@ -389,3 +440,5 @@ export const hi: Translation = {
     }
   }
 };
+
+

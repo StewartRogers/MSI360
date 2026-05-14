@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { translations } from "../../src/data/translations";
 import { scoreAssessment } from "../../src/logic/scoring";
 import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../src/logic/scorePresentation";
 
@@ -29,6 +30,17 @@ test("risk descriptions match score thresholds", () => {
   assert.equal(describeRisk(2.4), "Likely risk");
   assert.equal(describeRisk(3.4), "Likely risk");
   assert.equal(describeRisk(3.5), "Known risk");
+});
+
+test("score presentation helpers use selected translations", () => {
+  const result = scoreAssessment({
+    "question-17": { type: "multi_choice", value: "more_than_18_lb" }
+  });
+
+  assert.equal(formatOverallScore(3.7, translations.fr), "3.7 sur 4");
+  assert.equal(describeRisk(3.5, translations.es), "Riesgo conocido");
+  assert.equal(describeFactorRisk(1.5, "la répétition", translations.fr), "Risque possible d'inconfort lié à la répétition.");
+  assert.equal(getFactorSummaries(result, translations.ja)[1].label, "力の使用");
 });
 
 test("factor risk interpretations match score thresholds", () => {

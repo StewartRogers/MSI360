@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 export const pa: Translation = {
   app: {
@@ -9,7 +9,58 @@ export const pa: Translation = {
     processing_button: "ਕਾਰਵਾਈ ਹੋ ਰਹੀ ਹੈ",
     analyzing_button: "ਵਿਸ਼ਲੇਸ਼ਣ ਹੋ ਰਿਹਾ ਹੈ",
     question_progress: "{total} ਵਿੱਚੋਂ ਸਵਾਲ {current}",
-    description_title: "ਵੇਰਵਾ",
+    score_summary_title: "ਤੁਹਾਡਾ MSI ਜੋਖਮ ਸਾਰ",
+    score_overall_risk: "ਕੁੱਲ MSI ਜੋਖਮ",
+    score_download_report: "ਰਿਪੋਰਟ ਡਾਊਨਲੋਡ ਕਰੋ",
+    score_not_available: "ਲਾਗੂ ਨਹੀਂ",
+    score_out_of_4: "{score} / 4",
+    score_risk_not_enough: "ਪਰਯਾਪਤ ਡਾਟਾ ਨਹੀਂ",
+    score_risk_low: "ਘੱਟ ਜੋਖਮ",
+    score_risk_possible: "ਸੰਭਾਵਿਤ ਜੋਖਮ",
+    score_risk_likely: "ਵੱਧ ਸੰਭਾਵਿਤ ਜੋਖਮ",
+    score_risk_known: "ਜਾਣਿਆ ਹੋਇਆ ਜੋਖਮ",
+    score_factor_not_enough: "{factor} ਦੀ ਵਿਆਖਿਆ ਕਰਨ ਲਈ ਪਰਯਾਪਤ ਡਾਟਾ ਨਹੀਂ ਹੈ।",
+    score_factor_low: "ਇਸ ਵੇਲੇ {factor} ਨਾਲ ਸੰਬੰਧਿਤ ਜੋਖਮ ਘੱਟ ਹੈ।",
+    score_factor_possible: "{factor} ਕਾਰਨ ਬੇਆਰਾਮੀ ਦਾ ਸੰਭਾਵਿਤ ਜੋਖਮ ਹੈ।",
+    score_factor_likely: "{factor} ਕਾਰਨ ਬੇਆਰਾਮੀ ਦਾ ਵੱਧ ਸੰਭਾਵਿਤ ਜੋਖਮ ਹੈ।",
+    score_factor_known: "ਦਰਦ ਅਤੇ/ਜਾਂ ਚੋਟ ਦਾ ਜਾਣਿਆ ਹੋਇਆ ਜੋਖਮ ਹੈ।",
+    score_psychosocial_note: "ਮਨੋਸਮਾਜਿਕ ਕਾਰਕਾਂ ਨੇ ਕੁੱਲ MSI ਜੋਖਮ ਸਕੋਰ ਨੂੰ ਨਕਾਰਾਤਮਕ ਤੌਰ 'ਤੇ ਪ੍ਰਭਾਵਿਤ ਕੀਤਾ ({multiplier})।",
+    score_subject_contact_stress: "ਸੰਪਰਕ ਦਬਾਅ",
+    score_subject_force: "ਜ਼ੋਰ",
+    score_subject_awkward_postures: "ਅਸਹਜ ਮੌਕਫ਼",
+    score_subject_repetition: "ਦੁਹਰਾਵਟ",
+    score_subject_environmental: "ਵਾਤਾਵਰਣਕ ਕਾਰਕ",
+    wrap_email_copy: "ਈਮੇਲ ਕਾਪੀ",
+    wrap_review_results: "ਨਤੀਜੇ ਵੇਖੋ",
+    wrap_submit_report: "ਰਿਪੋਰਟ ਜਮ੍ਹਾਂ ਕਰੋ",
+    email_title: "ਆਪਣੀ ਰਿਪੋਰਟ ਈਮੇਲ ਰਾਹੀਂ ਪ੍ਰਾਪਤ ਕਰੋ",
+    email_body: "ਜੇ ਤੁਸੀਂ ਇਸ ਰਿਪੋਰਟ ਦੀ ਕਾਪੀ ਲੈਣਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਆਪਣਾ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ। ਇਸ ਵਿੱਚ 15 ਮਿੰਟ ਤੱਕ ਲੱਗ ਸਕਦੇ ਹਨ। ਜੇ ਈਮੇਲ ਇਨਬਾਕਸ ਵਿੱਚ ਨਾ ਵੇਖੋ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਜੰਕ ਜਾਂ ਸਪੈਮ ਫੋਲਡਰ ਜਾਂਚੋ।",
+    email_next_body: "ਤੁਸੀਂ ਅਗਲੀ ਸਕ੍ਰੀਨ 'ਤੇ ਅੰਤਿਮ ਰਿਪੋਰਟ ਵੇਖੋਗੇ।",
+    email_address_label: "ਈਮੇਲ ਪਤਾ",
+    report_ready_title: "ਤੁਹਾਡੀ ਰਿਪੋਰਟ ਤਿਆਰ ਹੈ",
+    report_card_title: "MSI ਜੋਖਮ ਰਿਪੋਰਟ",
+    report_date_label: "ਤਾਰੀਖ",
+    report_task_label: "ਵਿਸ਼ਲੇਸ਼ਿਤ ਕੰਮ/ਟਾਸਕ:",
+    report_overall_score_label: "ਕੁੱਲ ਸਕੋਰ:",
+    report_highest_risk: "ਸਭ ਤੋਂ ਵੱਧ ਜੋਖਮ ਵਾਲੀਆਂ ਸ਼੍ਰੇਣੀਆਂ:",
+    report_no_scored_categories: "ਹਾਲੇ ਕੋਈ ਸਕੋਰ ਕੀਤੀ ਜੋਖਮ ਸ਼੍ਰੇਣੀ ਨਹੀਂ",
+    report_email_copy_requested: "{email} ਲਈ ਈਮੇਲ ਕਾਪੀ ਦੀ ਬੇਨਤੀ ਕੀਤੀ ਗਈ।",
+    report_download_pdf: "PDF ਡਾਊਨਲੋਡ ਕਰੋ",
+    report_email_report: "ਰਿਪੋਰਟ ਈਮੇਲ ਕਰੋ",
+    report_done: "ਮੁਕੰਮਲ",
+    submit_title: "ਕੀ ਤੁਸੀਂ ਹੋਰ ErgoCheck ਮੁਲਾਂਕਣ ਪੂਰਾ ਕਰਨਾ ਚਾਹੋਗੇ?",
+    submit_option_reuse: "ਹਾਂ, ਅਤੇ ਮੈਂ ਸ਼ੁਰੂ ਵਿੱਚ ਦਿੱਤੀ ਉਹੀ ਜਾਣਕਾਰੀ ਵਰਤ ਕੇ ਹੋਰ ਰਿਪੋਰਟ ਪੂਰੀ ਕਰਨੀ ਚਾਹੁੰਦਾ/ਚਾਹੁੰਦੀ ਹਾਂ, ਜਿਸਨੂੰ ਲੋੜ ਮੁਤਾਬਕ ਸੋਧਿਆ ਜਾ ਸਕੇ।",
+    submit_option_restart: "ਹਾਂ, ਅਤੇ ਮੈਂ ਨਵੀਂ ਜਾਣਕਾਰੀ ਨਾਲ ਦੁਬਾਰਾ ਸ਼ੁਰੂ ਕਰਨਾ ਚਾਹੁੰਦਾ/ਚਾਹੁੰਦੀ ਹਾਂ",
+    submit_option_no: "ਨਹੀਂ, ਇਸ ਵੇਲੇ ਨਹੀਂ",
+    submit_copy: "ਧੰਨਵਾਦ, ਸਰਵੇਖਣ ਖਤਮ ਕਰਨ ਲਈ ਹੇਠਾਂ ਦਿੱਤਾ ਬਟਨ ਦਬਾਓ।",
+    submit_button: "ਜਮ੍ਹਾਂ ਕਰੋ",
+    complete_title: "MSI 360 ਸਰਵੇਖਣ ਪੂਰਾ ਕਰਨ ਲਈ ਧੰਨਵਾਦ",
+    complete_body: "ਤੁਹਾਡੇ ਜਵਾਬ ਤੁਹਾਡੇ ਕੰਮਕਾਜ ਵਾਲੀ ਥਾਂ ਵਿੱਚ MSI-ਸੰਬੰਧਿਤ ਖਤਰਿਆਂ ਦੀ ਪਛਾਣ ਕਰਨ ਵਿੱਚ ਮਦਦ ਕਰਦੇ ਹਨ ਅਤੇ ਹਰ ਕਿਸੇ ਲਈ ਸੁਰੱਖਿਅਤ ਕੰਮਕਾਜੀ ਮਾਹੌਲ ਬਣਾਉਣ ਵਿੱਚ ਯੋਗਦਾਨ ਪਾਉਂਦੇ ਹਨ।",
+    complete_next_steps_title: "ਅਗਲੇ ਕਦਮ:",
+    complete_next_step_review: "ਆਪਣੀ ਰਿਪੋਰਟ ਅਤੇ ਸਿਫਾਰਸ਼ਾਂ ਦੀ ਸਮੀਖਿਆ ਕਰੋ",
+    complete_next_step_share: "ਜੇ ਉਚਿਤ ਹੋਵੇ ਤਾਂ ਨਤੀਜੇ ਆਪਣੇ ਸੁਪਰਵਾਈਜ਼ਰ ਨਾਲ ਸਾਂਝੇ ਕਰੋ",
+    complete_next_step_visit: "ਹੋਰ ਸਰੋਤਾਂ ਲਈ worksafebc.com ਵੇਖੋ",
+    complete_start_new: "ਨਵਾਂ ਮੁਲਾਂਕਣ ਸ਼ੁਰੂ ਕਰੋ",    description_title: "ਵੇਰਵਾ",
     description_body:
       "ਹੇਠਾਂ ਦਿੱਤੇ ਸਵਾਲ ਉਹਨਾਂ ਕੰਮਾਂ ਬਾਰੇ ਹਨ ਜੋ ਤੁਸੀਂ ਇੱਕ ਆਮ ਕੰਮ ਦੇ ਦਿਨ ਦੌਰਾਨ ਕਰਦੇ ਹੋ ਜਾਂ ਜਦੋਂ ਤੁਸੀਂ ਉਹ ਖਾਸ ਕੰਮ ਜਾਂ ਗਤੀਵਿਧੀ ਕਰ ਰਹੇ ਹੁੰਦੇ ਹੋ ਜਿਸਦਾ ਤੁਸੀਂ ਅੱਜ ਮੁਲਾਂਕਣ ਕਰਨਾ ਚਾਹੁੰਦੇ ਹੋ। ਮਕਸਦ ਇਹ ਹੈ ਕਿ ਤੁਸੀਂ MSI360 ਨੂੰ ਉਹ ਕਾਰਵਾਈਆਂ ਦੱਸੋ ਜੋ ਤੁਸੀਂ ਆਪਣਾ ਕੰਮ ਪੂਰਾ ਕਰਨ ਲਈ ਕਰਦੇ ਹੋ।"
   },
@@ -485,3 +536,5 @@ export const pa: Translation = {
     }
   }
 };
+
+

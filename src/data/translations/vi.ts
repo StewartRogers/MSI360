@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Đau hoặc khó chịu ở một bên cơ thể, ví dụ bên trái hoặc bên phải",
@@ -35,7 +35,58 @@ export const vi: Translation = {
     processing_button: "Đang xử lý",
     analyzing_button: "Đang phân tích",
     question_progress: "Câu hỏi {current} trên {total}",
-    description_title: "Mô tả",
+    score_summary_title: "Tóm tắt nguy cơ MSI của bạn",
+    score_overall_risk: "Nguy cơ MSI tổng thể",
+    score_download_report: "Tải báo cáo",
+    score_not_available: "Không áp dụng",
+    score_out_of_4: "{score} trên 4",
+    score_risk_not_enough: "Không đủ dữ liệu",
+    score_risk_low: "Nguy cơ thấp",
+    score_risk_possible: "Nguy cơ có thể xảy ra",
+    score_risk_likely: "Nguy cơ có khả năng xảy ra",
+    score_risk_known: "Nguy cơ đã biết",
+    score_factor_not_enough: "Không đủ dữ liệu để diễn giải {factor}.",
+    score_factor_low: "Hiện có nguy cơ thấp liên quan đến {factor}.",
+    score_factor_possible: "Có thể có nguy cơ khó chịu do {factor}.",
+    score_factor_likely: "Có khả năng có nguy cơ khó chịu do {factor}.",
+    score_factor_known: "Nguy cơ đã biết về đau và/hoặc chấn thương.",
+    score_psychosocial_note: "Các yếu tố tâm lý xã hội đã ảnh hưởng tiêu cực đến điểm nguy cơ MSI tổng thể ({multiplier}).",
+    score_subject_contact_stress: "áp lực tiếp xúc",
+    score_subject_force: "lá»±c",
+    score_subject_awkward_postures: "tư thế bất lợi",
+    score_subject_repetition: "sự lặp lại",
+    score_subject_environmental: "các yếu tố môi trường",
+    wrap_email_copy: "Bản sao qua email",
+    wrap_review_results: "Xem lại kết quả",
+    wrap_submit_report: "Gửi báo cáo",
+    email_title: "Nhận báo cáo qua email",
+    email_body: "Nhập địa chỉ email nếu bạn muốn nhận một bản sao của báo cáo này. Việc này có thể mất tối đa 15 phút. Vui lòng kiểm tra thư rác hoặc spam nếu bạn không thấy email trong hộp thư đến.",
+    email_next_body: "Bạn sẽ thấy báo cáo cuối cùng ở màn hình tiếp theo.",
+    email_address_label: "Địa chỉ email",
+    report_ready_title: "Báo cáo của bạn đã sẵn sàng",
+    report_card_title: "Báo cáo nguy cơ MSI",
+    report_date_label: "Ngày",
+    report_task_label: "Công việc/nhiệm vụ đã phân tích:",
+    report_overall_score_label: "Điểm tổng thể:",
+    report_highest_risk: "Các nhóm nguy cơ cao nhất:",
+    report_no_scored_categories: "Chưa có nhóm nguy cơ nào được chấm điểm",
+    report_email_copy_requested: "Đã yêu cầu bản sao qua email cho {email}.",
+    report_download_pdf: "Tải PDF",
+    report_email_report: "Gửi báo cáo qua email",
+    report_done: "Xong",
+    submit_title: "Bạn có muốn hoàn thành một đánh giá ErgoCheck khác không?",
+    submit_option_reuse: "Có, và tôi muốn hoàn thành một báo cáo khác bằng cùng thông tin đã cung cấp ban đầu, cho phép tôi chỉnh sửa khi cần.",
+    submit_option_restart: "Có, và tôi muốn bắt đầu lại với thông tin mới",
+    submit_option_no: "Không, không phải lúc này",
+    submit_copy: "Cảm ơn bạn, vui lòng nhấn nút bên dưới để kết thúc khảo sát.",
+    submit_button: "Gửi",
+    complete_title: "Cảm ơn bạn đã hoàn thành khảo sát MSI 360",
+    complete_body: "Câu trả lời của bạn giúp xác định các mối nguy liên quan đến MSI tại nơi làm việc và góp phần tạo môi trường làm việc an toàn hơn cho mọi người.",
+    complete_next_steps_title: "Các bước tiếp theo:",
+    complete_next_step_review: "Xem lại báo cáo và khuyến nghị của bạn",
+    complete_next_step_share: "Chia sẻ phát hiện với người giám sát nếu phù hợp",
+    complete_next_step_visit: "Truy cập worksafebc.com để có thêm tài nguyên",
+    complete_start_new: "Bắt đầu đánh giá mới",    description_title: "Mô tả",
     description_body:
       "Các câu hỏi sau đây nói về công việc bạn làm trong một ngày làm việc điển hình, hoặc khi bạn đang thực hiện nhiệm vụ hoặc hoạt động cụ thể mà bạn muốn đánh giá hôm nay. Mục đích là để bạn cho MSI360 biết các hành động bạn thực hiện để hoàn thành công việc."
   },
@@ -43,7 +94,7 @@ export const vi: Translation = {
     intro: "Về công việc",
     symptoms: "Triệu chứng hiện tại",
     contact_stress: "Áp lực tiếp xúc",
-    force: "Lực",
+    force: "Lá»±c",
     awkward_postures: "Tư thế bất lợi",
     repetition: "Lặp lại",
     environmental: "Yếu tố môi trường",
@@ -118,7 +169,7 @@ export const vi: Translation = {
       label:
         "Sử dụng bảng bên dưới, vui lòng cho biết các bộ phận cơ thể cụ thể nơi bạn bị đau hoặc khó chịu liên quan đến công việc trong hoặc sau khi thực hiện công việc hoặc nhiệm vụ đang được đánh giá.\n\nCho biết a) một bên hay cả hai bên cơ thể bị ảnh hưởng, và b) cơn đau có kéo dài từ 2 ngày trở lên hay không.",
       groups: {
-        neck: { label: "1. Cổ", options: bodySideOptions },
+        neck: { label: "1. Cá»•", options: bodySideOptions },
         shoulders_upper_arms: { label: "2. Vai hoặc cánh tay trên", options: bodySideOptions },
         elbows_forearms: { label: "3. Khuỷu tay hoặc cẳng tay", options: bodySideOptions },
         wrists_hands_fingers: { label: "4. Cổ tay, bàn tay hoặc ngón tay", options: bodySideOptions },
@@ -392,3 +443,5 @@ export const vi: Translation = {
     }
   }
 };
+
+

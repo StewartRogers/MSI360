@@ -326,7 +326,7 @@ export default function App() {
 
       {step === "score" && <ScoreScreen result={result} progressStep={totalQuestionSteps} totalSteps={totalQuestionSteps} translations={t} onBack={goBack} onContinue={() => setStep("email")} />}
 
-      {step === "email" && <EmailScreen value={email} translations={t} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
+      {step === "email" && <EmailScreen value={email} translations={t} isRtl={isRtl} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
 
       {step === "report" && (
         <ReportReadyScreen
@@ -336,6 +336,7 @@ export default function App() {
           progressStep={totalQuestionSteps}
           totalSteps={totalQuestionSteps}
           translations={t}
+          isRtl={isRtl}
           onDownload={() => void handleDownloadReport()}
           onEmail={() => setStep("email")}
           onDone={() => setStep("submit")}
@@ -346,7 +347,7 @@ export default function App() {
         <SubmitScreen value={nextAssessmentChoice} translations={t} isRtl={isRtl} onChange={setNextAssessmentChoice} onBack={goBack} onSubmit={() => setStep("complete")} />
       )}
 
-      {step === "complete" && <CompleteScreen onStartNew={startNewAssessment} />}
+      {step === "complete" && <CompleteScreen translations={t} isRtl={isRtl} onStartNew={startNewAssessment} />}
 
       <AiFallbackToast toast={activeToast} onDismiss={() => setActiveToast(null)} />
     </main>

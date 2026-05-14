@@ -308,6 +308,21 @@ test("Portuguese (Portugal) translation has display text for every configured qu
   assertTranslationCoverage("Portuguese (Portugal)", translations.pt.questions);
 });
 
+test("Japanese translation has display text for every configured question option", () => {
+  assert.equal(translations.ja.app.description_title, "説明");
+  assertTranslationCoverage("Japanese", translations.ja.questions);
+});
+
+test("Italian translation has display text for every configured question option", () => {
+  assert.equal(translations.it.app.description_title, "Descrizione");
+  assertTranslationCoverage("Italian", translations.it.questions);
+});
+
+test("Dutch translation has display text for every configured question option", () => {
+  assert.equal(translations.nl.app.description_title, "Beschrijving");
+  assertTranslationCoverage("Dutch", translations.nl.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -322,6 +337,9 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.vi).continueLabel, "Tiếp tục");
   assert.equal(getActionButtonLabels(translations.ru).continueLabel, "Продолжить");
   assert.equal(getActionButtonLabels(translations.pt).continueLabel, "Continuar");
+  assert.equal(getActionButtonLabels(translations.ja).continueLabel, "続行");
+  assert.equal(getActionButtonLabels(translations.it).continueLabel, "Continua");
+  assert.equal(getActionButtonLabels(translations.nl).continueLabel, "Doorgaan");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
@@ -342,6 +360,80 @@ test("ready translations provide localized question progress labels", () => {
   assert.equal(getProgressLabel(translations.fr, 2, 10), "Question 2 sur 10");
   assert.equal(getProgressLabel(translations.ar, 2, 10), "السؤال 2 من 10");
   assert.equal(getProgressLabel(translations["zh-Hans"], 2, 10), "第 2 题，共 10 题");
+});
+
+test("ready translations provide localized score summary labels", () => {
+  const requiredKeys = [
+    "score_summary_title",
+    "score_overall_risk",
+    "score_download_report",
+    "score_not_available",
+    "score_out_of_4",
+    "score_risk_not_enough",
+    "score_risk_low",
+    "score_risk_possible",
+    "score_risk_likely",
+    "score_risk_known",
+    "score_factor_not_enough",
+    "score_factor_low",
+    "score_factor_possible",
+    "score_factor_likely",
+    "score_factor_known",
+    "score_psychosocial_note",
+    "score_subject_contact_stress",
+    "score_subject_force",
+    "score_subject_awkward_postures",
+    "score_subject_repetition",
+    "score_subject_environmental"
+  ];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
+});
+
+test("ready translations provide localized report wrap-up labels", () => {
+  const requiredKeys = [
+    "wrap_email_copy",
+    "wrap_review_results",
+    "wrap_submit_report",
+    "email_title",
+    "email_body",
+    "email_next_body",
+    "email_address_label",
+    "report_ready_title",
+    "report_card_title",
+    "report_date_label",
+    "report_task_label",
+    "report_overall_score_label",
+    "report_highest_risk",
+    "report_no_scored_categories",
+    "report_email_copy_requested",
+    "report_download_pdf",
+    "report_email_report",
+    "report_done",
+    "submit_title",
+    "submit_option_reuse",
+    "submit_option_restart",
+    "submit_option_no",
+    "submit_copy",
+    "submit_button",
+    "complete_title",
+    "complete_body",
+    "complete_next_steps_title",
+    "complete_next_step_review",
+    "complete_next_step_share",
+    "complete_next_step_visit",
+    "complete_start_new"
+  ];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
 });
 
 function assertTranslationCoverage(languageName: string, translatedQuestions: typeof translations.en.questions) {

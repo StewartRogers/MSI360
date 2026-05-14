@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Dor ou desconforto num lado do corpo, por exemplo, no lado esquerdo ou direito",
@@ -35,7 +35,58 @@ export const pt: Translation = {
     processing_button: "A processar",
     analyzing_button: "A analisar",
     question_progress: "Pergunta {current} de {total}",
-    description_title: "Descrição",
+    score_summary_title: "Resumo do seu risco de LMERT",
+    score_overall_risk: "Risco global de LMERT",
+    score_download_report: "Descarregar relatório",
+    score_not_available: "N/D",
+    score_out_of_4: "{score} em 4",
+    score_risk_not_enough: "Dados insuficientes",
+    score_risk_low: "Risco baixo",
+    score_risk_possible: "Risco possível",
+    score_risk_likely: "Risco provável",
+    score_risk_known: "Risco conhecido",
+    score_factor_not_enough: "Não há dados suficientes para interpretar {factor}.",
+    score_factor_low: "Atualmente há baixo risco associado a {factor}.",
+    score_factor_possible: "Possível risco de desconforto devido a {factor}.",
+    score_factor_likely: "Risco provável de desconforto devido a {factor}.",
+    score_factor_known: "Risco conhecido de dor e/ou lesão.",
+    score_psychosocial_note: "Os fatores psicossociais influenciaram negativamente a pontuação global de risco de LMERT ({multiplier}).",
+    score_subject_contact_stress: "pressão de contacto",
+    score_subject_force: "força",
+    score_subject_awkward_postures: "posturas inadequadas",
+    score_subject_repetition: "repetição",
+    score_subject_environmental: "fatores ambientais",
+    wrap_email_copy: "Cópia por email",
+    wrap_review_results: "Rever resultados",
+    wrap_submit_report: "Submeter relatório",
+    email_title: "Receber o relatório por email",
+    email_body: "Introduza o seu endereço de email se quiser receber uma cópia deste relatório. Isto pode demorar até 15 minutos. Verifique a pasta de lixo eletrónico ou spam se não vir o email na caixa de entrada.",
+    email_next_body: "Verá o relatório final no ecrã seguinte.",
+    email_address_label: "Endereço de email",
+    report_ready_title: "O seu relatório está pronto",
+    report_card_title: "Relatório de risco MSI",
+    report_date_label: "Data",
+    report_task_label: "Trabalho/tarefa analisado:",
+    report_overall_score_label: "Pontuação global:",
+    report_highest_risk: "Categorias de maior risco:",
+    report_no_scored_categories: "Ainda não existem categorias de risco pontuadas",
+    report_email_copy_requested: "Cópia por email solicitada para {email}.",
+    report_download_pdf: "Descarregar PDF",
+    report_email_report: "Enviar relatório por email",
+    report_done: "Concluído",
+    submit_title: "Gostaria de completar outra avaliação ErgoCheck?",
+    submit_option_reuse: "Sim, e gostaria de completar outro relatório usando as mesmas informações fornecidas inicialmente, podendo editá-las conforme necessário.",
+    submit_option_restart: "Sim, e gostaria de recomeçar com novas informações",
+    submit_option_no: "Não, agora não",
+    submit_copy: "Obrigado, prima o botão abaixo para terminar o inquérito.",
+    submit_button: "Submeter",
+    complete_title: "Obrigado por completar o inquérito MSI 360",
+    complete_body: "As suas respostas ajudam a identificar perigos relacionados com MSI no seu local de trabalho e contribuem para um ambiente mais seguro para todos.",
+    complete_next_steps_title: "Próximos passos:",
+    complete_next_step_review: "Reveja o seu relatório e recomendações",
+    complete_next_step_share: "Partilhe as conclusões com o seu supervisor, se adequado",
+    complete_next_step_visit: "Visite worksafebc.com para obter recursos adicionais",
+    complete_start_new: "Iniciar nova avaliação",    description_title: "Descrição",
     description_body:
       "As perguntas seguintes são sobre o trabalho que realiza durante um dia de trabalho típico ou quando está a concluir a tarefa ou atividade específica que gostaria de avaliar hoje. A intenção é que informe o MSI360 sobre as ações que executa para realizar o seu trabalho."
   },
@@ -392,3 +443,5 @@ export const pt: Translation = {
     }
   }
 };
+
+

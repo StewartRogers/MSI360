@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Schmerzen oder Beschwerden auf einer Körperseite, z. B. links oder rechts",
@@ -35,7 +35,58 @@ export const de: Translation = {
     processing_button: "Wird verarbeitet",
     analyzing_button: "Wird analysiert",
     question_progress: "Frage {current} von {total}",
-    description_title: "Beschreibung",
+    score_summary_title: "Ihre MSI-Risikoübersicht",
+    score_overall_risk: "Gesamtes MSI-Risiko",
+    score_download_report: "Bericht herunterladen",
+    score_not_available: "k. A.",
+    score_out_of_4: "{score} von 4",
+    score_risk_not_enough: "Nicht genügend Daten",
+    score_risk_low: "Geringes Risiko",
+    score_risk_possible: "Mögliches Risiko",
+    score_risk_likely: "Wahrscheinliches Risiko",
+    score_risk_known: "Bekanntes Risiko",
+    score_factor_not_enough: "Nicht genügend Daten, um {factor} zu bewerten.",
+    score_factor_low: "Derzeit geringes Risiko im Zusammenhang mit {factor}.",
+    score_factor_possible: "Mögliches Beschwerderisiko durch {factor}.",
+    score_factor_likely: "Wahrscheinliches Beschwerderisiko durch {factor}.",
+    score_factor_known: "Bekanntes Risiko für Schmerzen und/oder Verletzungen.",
+    score_psychosocial_note: "Psychosoziale Faktoren haben den gesamten MSI-Risikowert negativ beeinflusst ({multiplier}).",
+    score_subject_contact_stress: "Kontaktdruck",
+    score_subject_force: "Kraftaufwand",
+    score_subject_awkward_postures: "ungünstige Körperhaltungen",
+    score_subject_repetition: "Wiederholung",
+    score_subject_environmental: "Umweltfaktoren",
+    wrap_email_copy: "E-Mail-Kopie",
+    wrap_review_results: "Ergebnisse prüfen",
+    wrap_submit_report: "Bericht senden",
+    email_title: "Bericht per E-Mail erhalten",
+    email_body: "Geben Sie Ihre E-Mail-Adresse ein, wenn Sie eine Kopie dieses Berichts erhalten möchten. Dies kann bis zu 15 Minuten dauern. Prüfen Sie Ihren Junk- oder Spam-Ordner, wenn Sie die E-Mail nicht im Posteingang sehen.",
+    email_next_body: "Den endgültigen Bericht sehen Sie auf dem nächsten Bildschirm.",
+    email_address_label: "E-Mail-Adresse",
+    report_ready_title: "Ihr Bericht ist bereit",
+    report_card_title: "MSI-Risikobericht",
+    report_date_label: "Datum",
+    report_task_label: "Analysierte Tätigkeit/Aufgabe:",
+    report_overall_score_label: "Gesamtwert:",
+    report_highest_risk: "Kategorien mit höchstem Risiko:",
+    report_no_scored_categories: "Noch keine bewerteten Risikokategorien",
+    report_email_copy_requested: "E-Mail-Kopie angefordert für {email}.",
+    report_download_pdf: "PDF herunterladen",
+    report_email_report: "Bericht per E-Mail senden",
+    report_done: "Fertig",
+    submit_title: "Möchten Sie eine weitere ErgoCheck-Bewertung ausfüllen?",
+    submit_option_reuse: "Ja, ich möchte einen weiteren Bericht mit denselben ursprünglich angegebenen Informationen ausfüllen und sie bei Bedarf bearbeiten.",
+    submit_option_restart: "Ja, ich möchte mit neuen Informationen neu beginnen",
+    submit_option_no: "Nein, im Moment nicht",
+    submit_copy: "Vielen Dank. Bitte drücken Sie die Schaltfläche unten, um die Umfrage abzuschließen.",
+    submit_button: "Absenden",
+    complete_title: "Vielen Dank für das Ausfüllen der MSI 360-Umfrage",
+    complete_body: "Ihre Antworten helfen, MSI-bezogene Gefahren an Ihrem Arbeitsplatz zu erkennen und zu einer sichereren Arbeitsumgebung für alle beizutragen.",
+    complete_next_steps_title: "Nächste Schritte:",
+    complete_next_step_review: "Prüfen Sie Ihren Bericht und die Empfehlungen",
+    complete_next_step_share: "Teilen Sie die Ergebnisse gegebenenfalls mit Ihrer Aufsichtsperson",
+    complete_next_step_visit: "Besuchen Sie worksafebc.com für weitere Ressourcen",
+    complete_start_new: "Neue Bewertung starten",    description_title: "Beschreibung",
     description_body:
       "Die folgenden Fragen beziehen sich auf die Arbeit, die Sie an einem typischen Arbeitstag ausführen, oder auf die konkrete Aufgabe oder Tätigkeit, die Sie heute bewerten möchten. Ziel ist, dass Sie MSI360 mitteilen, welche Handlungen Sie ausführen, um Ihre Arbeit zu erledigen."
   },
@@ -392,3 +443,5 @@ export const de: Translation = {
     }
   }
 };
+
+

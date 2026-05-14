@@ -1,4 +1,6 @@
 import type { HeaderTone, WrapTab } from "../../app/types";
+import { getAppText } from "../../data/translationText";
+import type { Translation } from "../../types";
 
 export function AppHeader({ tone, progressStep, totalSteps, progressLabel, compact = false }: { tone: HeaderTone; progressStep?: number; totalSteps?: number; progressLabel?: string; compact?: boolean }) {
   const percent = progressStep && totalSteps ? Math.max(3, Math.min(100, Math.round((progressStep / totalSteps) * 100))) : 0;
@@ -22,15 +24,15 @@ export function AppHeader({ tone, progressStep, totalSteps, progressLabel, compa
   );
 }
 
-export function WrapHeader({ active }: { active: WrapTab }) {
+export function WrapHeader({ active, translations, isRtl = false }: { active: WrapTab; translations?: Translation; isRtl?: boolean }) {
   const tabs: { id: WrapTab; label: string }[] = [
-    { id: "email", label: "Email Copy" },
-    { id: "review", label: "Review Results" },
-    { id: "submit", label: "Submit Report" }
+    { id: "email", label: translations ? getAppText(translations, "wrap_email_copy", "Email Copy") : "Email Copy" },
+    { id: "review", label: translations ? getAppText(translations, "wrap_review_results", "Review Results") : "Review Results" },
+    { id: "submit", label: translations ? getAppText(translations, "wrap_submit_report", "Submit Report") : "Submit Report" }
   ];
 
   return (
-    <header className="wrap-header">
+    <header className={`wrap-header ${isRtl ? "rtl-result-content" : ""}`}>
       <img className="logo" src="/worksafebc-logo.png" alt="WorkSafeBC" />
       <div className="tab-bar">
         {tabs.map((tab) => (

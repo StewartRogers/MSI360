@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 export const ar: Translation = {
   app: {
@@ -9,7 +9,58 @@ export const ar: Translation = {
     processing_button: "جار المعالجة",
     analyzing_button: "جار التحليل",
     question_progress: "السؤال {current} من {total}",
-    description_title: "الوصف",
+    score_summary_title: "ملخص خطر MSI لديك",
+    score_overall_risk: "خطر MSI الإجمالي",
+    score_download_report: "تنزيل التقرير",
+    score_not_available: "غير متاح",
+    score_out_of_4: "{score} من 4",
+    score_risk_not_enough: "لا توجد بيانات كافية",
+    score_risk_low: "خطر منخفض",
+    score_risk_possible: "خطر محتمل",
+    score_risk_likely: "خطر مرجح",
+    score_risk_known: "خطر معروف",
+    score_factor_not_enough: "لا توجد بيانات كافية لتفسير {factor}.",
+    score_factor_low: "الخطر المرتبط بـ {factor} منخفض حاليا.",
+    score_factor_possible: "هناك خطر محتمل لحدوث انزعاج بسبب {factor}.",
+    score_factor_likely: "هناك خطر مرجح لحدوث انزعاج بسبب {factor}.",
+    score_factor_known: "هناك خطر معروف لحدوث ألم و/أو إصابة.",
+    score_psychosocial_note: "أثرت العوامل النفسية والاجتماعية سلبا في درجة خطر MSI الإجمالية ({multiplier}).",
+    score_subject_contact_stress: "ضغط التلامس",
+    score_subject_force: "القوة",
+    score_subject_awkward_postures: "الوضعيات غير المريحة",
+    score_subject_repetition: "التكرار",
+    score_subject_environmental: "العوامل البيئية",
+    wrap_email_copy: "نسخة بالبريد الإلكتروني",
+    wrap_review_results: "مراجعة النتائج",
+    wrap_submit_report: "إرسال التقرير",
+    email_title: "احصل على تقريرك بالبريد الإلكتروني",
+    email_body: "أدخل عنوان بريدك الإلكتروني إذا كنت ترغب في تلقي نسخة من هذا التقرير. قد يستغرق ذلك حتى 15 دقيقة. يرجى التحقق من مجلد البريد غير الهام أو العشوائي إذا لم تجد الرسالة في صندوق الوارد.",
+    email_next_body: "سترى التقرير النهائي في الشاشة التالية.",
+    email_address_label: "عنوان البريد الإلكتروني",
+    report_ready_title: "تقريرك جاهز",
+    report_card_title: "تقرير خطر MSI",
+    report_date_label: "التاريخ",
+    report_task_label: "العمل/المهمة التي تم تحليلها:",
+    report_overall_score_label: "الدرجة الإجمالية:",
+    report_highest_risk: "فئات الخطر الأعلى:",
+    report_no_scored_categories: "لا توجد فئات خطر مسجلة بعد",
+    report_email_copy_requested: "تم طلب نسخة بالبريد الإلكتروني إلى {email}.",
+    report_download_pdf: "تنزيل PDF",
+    report_email_report: "إرسال التقرير بالبريد الإلكتروني",
+    report_done: "تم",
+    submit_title: "هل ترغب في إكمال تقييم ErgoCheck آخر؟",
+    submit_option_reuse: "نعم، وأرغب في إكمال تقرير آخر باستخدام المعلومات نفسها التي قدمتها في البداية مع إمكانية تعديلها عند الحاجة.",
+    submit_option_restart: "نعم، وأرغب في البدء من جديد بمعلومات جديدة",
+    submit_option_no: "لا، ليس الآن",
+    submit_copy: "شكرا لك، يرجى الضغط على الزر أدناه لإنهاء الاستبيان.",
+    submit_button: "إرسال",
+    complete_title: "شكرا لك على إكمال استبيان MSI 360",
+    complete_body: "تساعد إجاباتك في تحديد المخاطر المرتبطة بـ MSI في مكان عملك وتساهم في بيئة عمل أكثر أمانا للجميع.",
+    complete_next_steps_title: "الخطوات التالية:",
+    complete_next_step_review: "راجع تقريرك والتوصيات",
+    complete_next_step_share: "شارك النتائج مع مشرفك إذا كان ذلك مناسبا",
+    complete_next_step_visit: "زر worksafebc.com للحصول على موارد إضافية",
+    complete_start_new: "بدء تقييم جديد",    description_title: "الوصف",
     description_body:
       "تتعلق الأسئلة التالية بالعمل الذي تقوم به خلال يوم عمل عادي أو عندما تنجز المهمة أو النشاط المحدد الذي ترغب في تقييمه اليوم. والهدف هو أن تخبر MSI360 بالإجراءات التي تقوم بها لإنجاز عملك."
   },
@@ -485,3 +536,5 @@ export const ar: Translation = {
     }
   }
 };
+
+

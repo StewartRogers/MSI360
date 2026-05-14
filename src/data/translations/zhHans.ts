@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "身体一侧疼痛或不适，例如左侧或右侧",
@@ -35,7 +35,58 @@ export const zhHans: Translation = {
     processing_button: "处理中",
     analyzing_button: "分析中",
     question_progress: "第 {current} 题，共 {total} 题",
-    description_title: "说明",
+    score_summary_title: "你的 MSI 风险摘要",
+    score_overall_risk: "总体 MSI 风险",
+    score_download_report: "下载报告",
+    score_not_available: "不适用",
+    score_out_of_4: "{score} / 4",
+    score_risk_not_enough: "数据不足",
+    score_risk_low: "低风险",
+    score_risk_possible: "可能存在风险",
+    score_risk_likely: "很可能存在风险",
+    score_risk_known: "已知风险",
+    score_factor_not_enough: "没有足够数据来解读{factor}。",
+    score_factor_low: "目前与{factor}相关的风险较低。",
+    score_factor_possible: "可能存在由{factor}引起不适的风险。",
+    score_factor_likely: "很可能存在由{factor}引起不适的风险。",
+    score_factor_known: "已知存在疼痛和/或受伤风险。",
+    score_psychosocial_note: "心理社会因素对总体 MSI 风险评分产生了负面影响（{multiplier}）。",
+    score_subject_contact_stress: "接触压力",
+    score_subject_force: "用力",
+    score_subject_awkward_postures: "不良姿势",
+    score_subject_repetition: "重复动作",
+    score_subject_environmental: "环境因素",
+    wrap_email_copy: "电子邮件副本",
+    wrap_review_results: "查看结果",
+    wrap_submit_report: "提交报告",
+    email_title: "通过电子邮件获取报告",
+    email_body: "如果你想收到此报告的副本，请输入电子邮件地址。这可能需要最多15分钟。如果收件箱中没有看到邮件，请检查垃圾邮件或垃圾箱文件夹。",
+    email_next_body: "你将在下一个屏幕看到最终报告。",
+    email_address_label: "电子邮件地址",
+    report_ready_title: "你的报告已准备好",
+    report_card_title: "MSI 风险报告",
+    report_date_label: "日期",
+    report_task_label: "已分析的工作/任务:",
+    report_overall_score_label: "总体分数:",
+    report_highest_risk: "最高风险类别:",
+    report_no_scored_categories: "尚无已评分的风险类别",
+    report_email_copy_requested: "已请求发送电子邮件副本至 {email}。",
+    report_download_pdf: "下载 PDF",
+    report_email_report: "通过电子邮件发送报告",
+    report_done: "完成",
+    submit_title: "你是否想完成另一份 ErgoCheck 评估？",
+    submit_option_reuse: "是，我想使用最初提供的相同信息完成另一份报告，并可按需要进行编辑。",
+    submit_option_restart: "是，我想使用新信息重新开始",
+    submit_option_no: "不，现在不需要",
+    submit_copy: "谢谢，请按下面的按钮完成调查。",
+    submit_button: "提交",
+    complete_title: "感谢你完成 MSI 360 调查",
+    complete_body: "你的回答有助于识别工作场所中与 MSI 相关的危害，并为所有人创造更安全的工作环境。",
+    complete_next_steps_title: "后续步骤:",
+    complete_next_step_review: "查看你的报告和建议",
+    complete_next_step_share: "如适当，与主管分享结果",
+    complete_next_step_visit: "访问 worksafebc.com 获取更多资源",
+    complete_start_new: "开始新评估",    description_title: "说明",
     description_body:
       "以下问题与你在典型工作日所做的工作有关，或与你今天想评估的特定任务或活动有关。目的是让你告诉 MSI360 你为完成工作所进行的动作。"
   },
@@ -55,7 +106,7 @@ export const zhHans: Translation = {
       options: {
         worker: "员工",
         supervisor: "主管",
-        manager: "经理",
+        manager: "ç»ç†",
         employer: "雇主",
         health_safety_committee: "健康与安全委员会成员"
       }
@@ -118,7 +169,7 @@ export const zhHans: Translation = {
       label:
         "请使用下表说明，在执行正在评估的工作或任务期间或之后，你在哪些具体身体部位经历过与工作有关的疼痛或不适。\n\n请说明 a) 身体一侧或两侧是否受影响，以及 b) 疼痛是否持续2天或更久。",
       groups: {
-        neck: { label: "1. 颈部", options: bodySideOptions },
+        neck: { label: "1. é¢ˆéƒ¨", options: bodySideOptions },
         shoulders_upper_arms: { label: "2. 肩部或上臂", options: bodySideOptions },
         elbows_forearms: { label: "3. 肘部或前臂", options: bodySideOptions },
         wrists_hands_fingers: { label: "4. 手腕、手或手指", options: bodySideOptions },
@@ -394,3 +445,5 @@ export const zhHans: Translation = {
     }
   }
 };
+
+

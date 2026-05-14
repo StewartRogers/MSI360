@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "درد یا ناراحتی در یک سمت بدن، برای مثال سمت چپ یا راست",
@@ -35,7 +35,58 @@ export const fa: Translation = {
     processing_button: "در حال پردازش",
     analyzing_button: "در حال تحلیل",
     question_progress: "پرسش {current} از {total}",
-    description_title: "توضیح",
+    score_summary_title: "خلاصه خطر MSI شما",
+    score_overall_risk: "خطر کلی MSI",
+    score_download_report: "دانلود گزارش",
+    score_not_available: "ناموجود",
+    score_out_of_4: "{score} از 4",
+    score_risk_not_enough: "داده کافی وجود ندارد",
+    score_risk_low: "خطر کم",
+    score_risk_possible: "خطر احتمالی",
+    score_risk_likely: "خطر محتمل",
+    score_risk_known: "خطر شناخته‌شده",
+    score_factor_not_enough: "داده کافی برای تفسیر {factor} وجود ندارد.",
+    score_factor_low: "در حال حاضر خطر مرتبط با {factor} کم است.",
+    score_factor_possible: "خطر احتمالی ناراحتی ناشی از {factor} وجود دارد.",
+    score_factor_likely: "خطر محتمل ناراحتی ناشی از {factor} وجود دارد.",
+    score_factor_known: "خطر شناخته‌شده درد و/یا آسیب وجود دارد.",
+    score_psychosocial_note: "عوامل روانی-اجتماعی بر امتیاز کلی خطر MSI تأثیر منفی گذاشتند ({multiplier}).",
+    score_subject_contact_stress: "فشار تماسی",
+    score_subject_force: "نیرو",
+    score_subject_awkward_postures: "وضعیت‌های نامناسب بدن",
+    score_subject_repetition: "تکرار",
+    score_subject_environmental: "عوامل محیطی",
+    wrap_email_copy: "نسخه ایمیلی",
+    wrap_review_results: "بازبینی نتایج",
+    wrap_submit_report: "ارسال گزارش",
+    email_title: "دریافت گزارش از طریق ایمیل",
+    email_body: "اگر می‌خواهید نسخه‌ای از این گزارش را دریافت کنید، نشانی ایمیل خود را وارد کنید. این کار ممکن است تا ۱۵ دقیقه طول بکشد. اگر ایمیل را در صندوق ورودی نمی‌بینید، پوشه هرزنامه یا اسپم را بررسی کنید.",
+    email_next_body: "گزارش نهایی را در صفحه بعد خواهید دید.",
+    email_address_label: "نشانی ایمیل",
+    report_ready_title: "گزارش شما آماده است",
+    report_card_title: "گزارش خطر MSI",
+    report_date_label: "تاریخ",
+    report_task_label: "کار/وظیفه تحلیل‌شده:",
+    report_overall_score_label: "امتیاز کلی:",
+    report_highest_risk: "دسته‌های دارای بیشترین خطر:",
+    report_no_scored_categories: "هنوز هیچ دسته خطر امتیازدهی‌شده‌ای وجود ندارد",
+    report_email_copy_requested: "نسخه ایمیلی برای {email} درخواست شد.",
+    report_download_pdf: "دانلود PDF",
+    report_email_report: "ارسال گزارش با ایمیل",
+    report_done: "تمام",
+    submit_title: "آیا می‌خواهید یک ارزیابی ErgoCheck دیگر تکمیل کنید؟",
+    submit_option_reuse: "بله، می‌خواهم گزارش دیگری را با همان اطلاعات اولیه تکمیل کنم و در صورت نیاز آن را ویرایش کنم.",
+    submit_option_restart: "بله، می‌خواهم با اطلاعات جدید از ابتدا شروع کنم",
+    submit_option_no: "نه، فعلا نه",
+    submit_copy: "سپاسگزاریم، برای پایان دادن به نظرسنجی دکمه زیر را فشار دهید.",
+    submit_button: "ارسال",
+    complete_title: "از تکمیل نظرسنجی MSI 360 سپاسگزاریم",
+    complete_body: "پاسخ‌های شما به شناسایی خطرات مرتبط با MSI در محل کارتان کمک می‌کند و به ایجاد محیط کاری ایمن‌تر برای همه کمک می‌کند.",
+    complete_next_steps_title: "گام‌های بعدی:",
+    complete_next_step_review: "گزارش و توصیه‌های خود را مرور کنید",
+    complete_next_step_share: "در صورت مناسب بودن، یافته‌ها را با سرپرست خود به اشتراک بگذارید",
+    complete_next_step_visit: "برای منابع بیشتر به worksafebc.com مراجعه کنید",
+    complete_start_new: "شروع ارزیابی جدید",    description_title: "توضیح",
     description_body:
       "پرسش‌های زیر درباره کاری است که در یک روز کاری معمول انجام می‌دهید، یا درباره وظیفه یا فعالیت مشخصی است که امروز می‌خواهید ارزیابی کنید. هدف این است که به MSI360 بگویید برای انجام کار خود چه حرکات و اقداماتی انجام می‌دهید."
   },
@@ -392,3 +443,5 @@ export const fa: Translation = {
     }
   }
 };
+
+

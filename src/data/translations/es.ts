@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Dolor o molestia en un lado, por ejemplo el lado izquierdo o derecho del cuerpo",
@@ -35,7 +35,58 @@ export const es: Translation = {
     processing_button: "Procesando",
     analyzing_button: "Analizando",
     question_progress: "Pregunta {current} de {total}",
-    description_title: "Descripción",
+    score_summary_title: "Resumen de tu riesgo de MSI",
+    score_overall_risk: "Riesgo general de MSI",
+    score_download_report: "Descargar informe",
+    score_not_available: "N/D",
+    score_out_of_4: "{score} de 4",
+    score_risk_not_enough: "Datos insuficientes",
+    score_risk_low: "Riesgo bajo",
+    score_risk_possible: "Riesgo posible",
+    score_risk_likely: "Riesgo probable",
+    score_risk_known: "Riesgo conocido",
+    score_factor_not_enough: "No hay datos suficientes para interpretar {factor}.",
+    score_factor_low: "Actualmente hay bajo riesgo asociado con {factor}.",
+    score_factor_possible: "Posible riesgo de molestia por {factor}.",
+    score_factor_likely: "Riesgo probable de molestia por {factor}.",
+    score_factor_known: "Riesgo conocido de dolor y/o lesión.",
+    score_psychosocial_note: "Los factores psicosociales influyeron negativamente en la puntuación general de riesgo de MSI ({multiplier}).",
+    score_subject_contact_stress: "la presión de contacto",
+    score_subject_force: "la fuerza",
+    score_subject_awkward_postures: "las posturas incómodas",
+    score_subject_repetition: "la repetición",
+    score_subject_environmental: "los factores ambientales",
+    wrap_email_copy: "Copia por correo",
+    wrap_review_results: "Revisar resultados",
+    wrap_submit_report: "Enviar informe",
+    email_title: "Recibe tu informe por correo electrónico",
+    email_body: "Ingresa tu dirección de correo electrónico si deseas recibir una copia de este informe. Esto puede tardar hasta 15 minutos. Revisa tu carpeta de correo no deseado o spam si no ves el correo en tu bandeja de entrada.",
+    email_next_body: "Verás el informe final en la siguiente pantalla.",
+    email_address_label: "Dirección de correo electrónico",
+    report_ready_title: "Tu informe está listo",
+    report_card_title: "Informe de riesgo de MSI",
+    report_date_label: "Fecha",
+    report_task_label: "Trabajo/tarea analizada:",
+    report_overall_score_label: "Puntuación general:",
+    report_highest_risk: "Categorías de mayor riesgo:",
+    report_no_scored_categories: "Aún no hay categorías de riesgo puntuadas",
+    report_email_copy_requested: "Copia por correo solicitada para {email}.",
+    report_download_pdf: "Descargar PDF",
+    report_email_report: "Enviar informe por correo",
+    report_done: "Listo",
+    submit_title: "¿Te gustaría completar otra evaluación ErgoCheck?",
+    submit_option_reuse: "Sí, y me gustaría completar otro informe usando la misma información que proporcioné inicialmente, pudiendo editarla según sea necesario.",
+    submit_option_restart: "Sí, y me gustaría empezar de nuevo con información nueva",
+    submit_option_no: "No, ahora no",
+    submit_copy: "Gracias, presiona el botón de abajo para finalizar la encuesta.",
+    submit_button: "Enviar",
+    complete_title: "Gracias por completar la encuesta MSI 360",
+    complete_body: "Tus respuestas ayudan a identificar peligros relacionados con MSI en tu lugar de trabajo y contribuyen a un entorno más seguro para todos.",
+    complete_next_steps_title: "Próximos pasos:",
+    complete_next_step_review: "Revisa tu informe y recomendaciones",
+    complete_next_step_share: "Comparte los hallazgos con tu supervisor si corresponde",
+    complete_next_step_visit: "Visita worksafebc.com para obtener recursos adicionales",
+    complete_start_new: "Iniciar nueva evaluación",    description_title: "Descripción",
     description_body:
       "Las siguientes preguntas tratan sobre el trabajo que realizas durante un día laboral típico o cuando completas la tarea o actividad específica que deseas evaluar hoy. La intención es que le cuentes a MSI360 las acciones que realizas para hacer tu trabajo."
   },
@@ -395,3 +446,5 @@ export const es: Translation = {
     }
   }
 };
+
+

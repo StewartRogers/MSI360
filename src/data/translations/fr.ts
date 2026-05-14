@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "Douleur ou inconfort d'un seul côté, par exemple le côté gauche ou droit du corps",
@@ -35,7 +35,58 @@ export const fr: Translation = {
     processing_button: "Traitement en cours",
     analyzing_button: "Analyse en cours",
     question_progress: "Question {current} sur {total}",
-    description_title: "Description",
+    score_summary_title: "Votre résumé du risque de TMS",
+    score_overall_risk: "Risque global de TMS",
+    score_download_report: "Télécharger le rapport",
+    score_not_available: "S. O.",
+    score_out_of_4: "{score} sur 4",
+    score_risk_not_enough: "Données insuffisantes",
+    score_risk_low: "Risque faible",
+    score_risk_possible: "Risque possible",
+    score_risk_likely: "Risque probable",
+    score_risk_known: "Risque connu",
+    score_factor_not_enough: "Données insuffisantes pour interpréter {factor}.",
+    score_factor_low: "Risque actuellement faible associé à {factor}.",
+    score_factor_possible: "Risque possible d'inconfort lié à {factor}.",
+    score_factor_likely: "Risque probable d'inconfort lié à {factor}.",
+    score_factor_known: "Risque connu de douleur et/ou de blessure.",
+    score_psychosocial_note: "Les facteurs psychosociaux ont influencé négativement le score global de risque de TMS ({multiplier}).",
+    score_subject_contact_stress: "la pression de contact",
+    score_subject_force: "l'effort",
+    score_subject_awkward_postures: "les postures contraignantes",
+    score_subject_repetition: "la répétition",
+    score_subject_environmental: "les facteurs environnementaux",
+    wrap_email_copy: "Copie par courriel",
+    wrap_review_results: "Revoir les résultats",
+    wrap_submit_report: "Soumettre le rapport",
+    email_title: "Recevoir votre rapport par courriel",
+    email_body: "Entrez votre adresse courriel si vous souhaitez recevoir une copie de ce rapport. Cela peut prendre jusqu'à 15 minutes. Vérifiez votre dossier de courrier indésirable si vous ne voyez pas le courriel dans votre boîte de réception.",
+    email_next_body: "Vous verrez le rapport final à l'écran suivant.",
+    email_address_label: "Adresse courriel",
+    report_ready_title: "Votre rapport est prêt",
+    report_card_title: "Rapport de risque MSI",
+    report_date_label: "Date",
+    report_task_label: "Emploi/tâche analysé :",
+    report_overall_score_label: "Score global :",
+    report_highest_risk: "Catégories de risque les plus élevées :",
+    report_no_scored_categories: "Aucune catégorie de risque cotée pour l'instant",
+    report_email_copy_requested: "Copie par courriel demandée pour {email}.",
+    report_download_pdf: "Télécharger le PDF",
+    report_email_report: "Envoyer le rapport par courriel",
+    report_done: "Terminé",
+    submit_title: "Souhaitez-vous compléter une autre évaluation ErgoCheck ?",
+    submit_option_reuse: "Oui, et je souhaite compléter un autre rapport avec les mêmes renseignements fournis au départ, en les modifiant au besoin.",
+    submit_option_restart: "Oui, et je souhaite recommencer avec de nouveaux renseignements",
+    submit_option_no: "Non, pas maintenant",
+    submit_copy: "Merci, appuyez sur le bouton ci-dessous pour terminer le sondage.",
+    submit_button: "Soumettre",
+    complete_title: "Merci d'avoir complété le sondage MSI 360",
+    complete_body: "Vos réponses aident à repérer les dangers liés aux MSI dans votre milieu de travail et contribuent à un environnement plus sûr pour tous.",
+    complete_next_steps_title: "Prochaines étapes :",
+    complete_next_step_review: "Passez en revue votre rapport et vos recommandations",
+    complete_next_step_share: "Partagez les résultats avec votre superviseur si approprié",
+    complete_next_step_visit: "Visitez worksafebc.com pour obtenir des ressources supplémentaires",
+    complete_start_new: "Commencer une nouvelle évaluation",    description_title: "Description",
     description_body:
       "Les questions suivantes portent sur le travail que vous effectuez pendant une journée de travail typique ou lorsque vous réalisez la tâche ou l'activité précise que vous souhaitez évaluer aujourd'hui. L'objectif est que vous indiquiez à MSI360 les gestes que vous effectuez pour accomplir votre travail."
   },
@@ -395,3 +446,5 @@ export const fr: Translation = {
     }
   }
 };
+
+

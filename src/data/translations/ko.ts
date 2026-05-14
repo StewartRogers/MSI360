@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "한쪽, 예를 들어 몸의 왼쪽 또는 오른쪽에 통증이나 불편함이 있음",
@@ -35,7 +35,58 @@ export const ko: Translation = {
     processing_button: "처리 중",
     analyzing_button: "분석 중",
     question_progress: "질문 {current}/{total}",
-    description_title: "설명",
+    score_summary_title: "MSI 위험 요약",
+    score_overall_risk: "전체 MSI 위험",
+    score_download_report: "보고서 다운로드",
+    score_not_available: "해당 없음",
+    score_out_of_4: "4점 만점에 {score}",
+    score_risk_not_enough: "데이터가 충분하지 않음",
+    score_risk_low: "낮은 위험",
+    score_risk_possible: "가능성 있는 위험",
+    score_risk_likely: "높은 가능성의 위험",
+    score_risk_known: "확인된 위험",
+    score_factor_not_enough: "{factor}을(를) 해석할 데이터가 충분하지 않습니다.",
+    score_factor_low: "현재 {factor}와(과) 관련된 위험은 낮습니다.",
+    score_factor_possible: "{factor}로 인한 불편 위험 가능성이 있습니다.",
+    score_factor_likely: "{factor}로 인한 불편 위험이 있을 가능성이 높습니다.",
+    score_factor_known: "통증 및/또는 부상의 확인된 위험이 있습니다.",
+    score_psychosocial_note: "심리사회적 요인이 전체 MSI 위험 점수에 부정적인 영향을 주었습니다({multiplier}).",
+    score_subject_contact_stress: "접촉 스트레스",
+    score_subject_force: "힘 사용",
+    score_subject_awkward_postures: "불편한 자세",
+    score_subject_repetition: "반복 동작",
+    score_subject_environmental: "환경 요인",
+    wrap_email_copy: "이메일 사본",
+    wrap_review_results: "결과 검토",
+    wrap_submit_report: "보고서 제출",
+    email_title: "이메일로 보고서 받기",
+    email_body: "이 보고서 사본을 받고 싶다면 이메일 주소를 입력하세요. 최대 15분이 걸릴 수 있습니다. 받은 편지함에 이메일이 보이지 않으면 정크 또는 스팸 폴더를 확인하세요.",
+    email_next_body: "다음 화면에서 최종 보고서를 볼 수 있습니다.",
+    email_address_label: "이메일 주소",
+    report_ready_title: "보고서가 준비되었습니다",
+    report_card_title: "MSI 위험 보고서",
+    report_date_label: "날짜",
+    report_task_label: "분석한 직무/작업:",
+    report_overall_score_label: "전체 점수:",
+    report_highest_risk: "가장 높은 위험 범주:",
+    report_no_scored_categories: "아직 점수화된 위험 범주가 없습니다",
+    report_email_copy_requested: "{email}로 이메일 사본을 요청했습니다.",
+    report_download_pdf: "PDF 다운로드",
+    report_email_report: "보고서 이메일 보내기",
+    report_done: "완료",
+    submit_title: "다른 ErgoCheck 평가를 완료하시겠습니까?",
+    submit_option_reuse: "예. 처음 제공한 동일한 정보를 사용하고 필요에 따라 수정하여 다른 보고서를 작성하고 싶습니다.",
+    submit_option_restart: "예. 새로운 정보로 처음부터 다시 시작하고 싶습니다",
+    submit_option_no: "아니요, 지금은 아닙니다",
+    submit_copy: "감사합니다. 설문을 마치려면 아래 버튼을 누르세요.",
+    submit_button: "제출",
+    complete_title: "MSI 360 설문을 완료해 주셔서 감사합니다",
+    complete_body: "귀하의 응답은 작업장의 MSI 관련 위험을 파악하고 모두에게 더 안전한 작업 환경을 만드는 데 도움이 됩니다.",
+    complete_next_steps_title: "다음 단계:",
+    complete_next_step_review: "보고서와 권장 사항을 검토하세요",
+    complete_next_step_share: "적절한 경우 결과를 감독자와 공유하세요",
+    complete_next_step_visit: "추가 자료는 worksafebc.com을 방문하세요",
+    complete_start_new: "새 평가 시작",    description_title: "설명",
     description_body:
       "다음 질문은 일반적인 근무일 동안 수행하는 작업 또는 오늘 평가하려는 특정 업무나 활동을 수행할 때의 작업에 관한 것입니다. 목적은 업무를 완료하기 위해 수행하는 동작을 MSI360에 알려주는 것입니다."
   },
@@ -395,3 +446,5 @@ export const ko: Translation = {
     }
   }
 };
+
+

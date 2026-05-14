@@ -1,4 +1,4 @@
-import type { Translation } from "../../types";
+﻿import type { Translation } from "../../types";
 
 const bodySideOptions = {
   one_side: "身體一邊疼痛或唔舒服，例如左邊或右邊",
@@ -35,7 +35,58 @@ export const yue: Translation = {
     processing_button: "處理中",
     analyzing_button: "分析中",
     question_progress: "第 {current} 題，共 {total} 題",
-    description_title: "說明",
+    score_summary_title: "你嘅 MSI 風險摘要",
+    score_overall_risk: "整體 MSI 風險",
+    score_download_report: "下載報告",
+    score_not_available: "不適用",
+    score_out_of_4: "{score} / 4",
+    score_risk_not_enough: "資料不足",
+    score_risk_low: "低風險",
+    score_risk_possible: "可能有風險",
+    score_risk_likely: "好可能有風險",
+    score_risk_known: "已知風險",
+    score_factor_not_enough: "冇足夠資料解讀{factor}。",
+    score_factor_low: "目前同{factor}相關嘅風險較低。",
+    score_factor_possible: "可能有由{factor}引起不適嘅風險。",
+    score_factor_likely: "好可能有由{factor}引起不適嘅風險。",
+    score_factor_known: "已知有疼痛及/或受傷風險。",
+    score_psychosocial_note: "心理社會因素對整體 MSI 風險分數有負面影響（{multiplier}）。",
+    score_subject_contact_stress: "接觸壓力",
+    score_subject_force: "用力",
+    score_subject_awkward_postures: "不良姿勢",
+    score_subject_repetition: "重複動作",
+    score_subject_environmental: "環境因素",
+    wrap_email_copy: "電郵副本",
+    wrap_review_results: "查看結果",
+    wrap_submit_report: "提交報告",
+    email_title: "透過電郵收取報告",
+    email_body: "如果你想收到呢份報告嘅副本，請輸入電郵地址。可能需要最多15分鐘。如果收件箱見唔到電郵，請查看垃圾郵件資料夾。",
+    email_next_body: "你會喺下一個畫面睇到最終報告。",
+    email_address_label: "電郵地址",
+    report_ready_title: "你嘅報告已準備好",
+    report_card_title: "MSI 風險報告",
+    report_date_label: "日期",
+    report_task_label: "已分析嘅工作/任務:",
+    report_overall_score_label: "整體分數:",
+    report_highest_risk: "最高風險類別:",
+    report_no_scored_categories: "暫時未有已評分嘅風險類別",
+    report_email_copy_requested: "已要求發送電郵副本至 {email}。",
+    report_download_pdf: "下載 PDF",
+    report_email_report: "用電郵發送報告",
+    report_done: "完成",
+    submit_title: "你想唔想完成另一份 ErgoCheck 評估？",
+    submit_option_reuse: "係，我想用最初提供嘅同一啲資料完成另一份報告，並按需要修改。",
+    submit_option_restart: "係，我想用新資料重新開始",
+    submit_option_no: "唔，依家唔需要",
+    submit_copy: "多謝，請按下面按鈕完成問卷。",
+    submit_button: "提交",
+    complete_title: "多謝你完成 MSI 360 問卷",
+    complete_body: "你嘅回答有助識別工作場所同 MSI 相關嘅危害，並為大家建立更安全嘅工作環境。",
+    complete_next_steps_title: "下一步:",
+    complete_next_step_review: "查看你嘅報告同建議",
+    complete_next_step_share: "如合適，將結果同主管分享",
+    complete_next_step_visit: "瀏覽 worksafebc.com 取得更多資源",
+    complete_start_new: "開始新評估",    description_title: "說明",
     description_body:
       "以下問題係關於你喺一般工作日所做嘅工作，或者你今日想評估嘅特定任務或活動。目的係俾你話俾 MSI360 知，你為咗完成工作會做啲咩動作。"
   },
@@ -55,7 +106,7 @@ export const yue: Translation = {
       options: {
         worker: "員工",
         supervisor: "主管",
-        manager: "經理",
+        manager: "ç¶“ç†",
         employer: "僱主",
         health_safety_committee: "健康及安全委員會成員"
       }
@@ -118,7 +169,7 @@ export const yue: Translation = {
       label:
         "請用下面表格指出，喺做緊或做完今次評估嘅工作或任務期間，你邊啲身體部位有同工作有關嘅疼痛或不適。\n\n請指出 a) 身體一邊或兩邊有冇受影響，以及 b) 疼痛有冇持續2日或以上。",
       groups: {
-        neck: { label: "1. 頸", options: bodySideOptions },
+        neck: { label: "1. é ¸", options: bodySideOptions },
         shoulders_upper_arms: { label: "2. 肩膀或上臂", options: bodySideOptions },
         elbows_forearms: { label: "3. 手肘或前臂", options: bodySideOptions },
         wrists_hands_fingers: { label: "4. 手腕、手或手指", options: bodySideOptions },
@@ -392,3 +443,5 @@ export const yue: Translation = {
     }
   }
 };
+
+
