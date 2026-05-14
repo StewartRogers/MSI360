@@ -18,5 +18,5 @@ test("React PDF report document can be bundled for browser rendering", async () 
     logLevel: "silent"
   });
 
-  assert.ok(result.outputFiles?.[0]?.text.includes("MSI 360 Risk Tool Report"));
+  assert.ok(result.outputFiles?.[0]?.text.includes("MSI 360 Risk Score Report"));
 });

@@ -1,43 +1,48 @@
 import { Document, Image, Line, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
 import { reportAssets } from "./reportAssets";
-import type { ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import type { ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import { BodyDiagramSvg } from "./BodyDiagramSvg";
 
 const colors = {
   black: "#111111",
   text: "#222222",
   muted: "#737373",
-  border: "#d7d7d7",
-  paleBlue: "#dceaf1",
-  paleOrange: "#ffebbf",
-  orange: "#f45b0b",
-  amber: "#f8bc3e",
-  red: "#ff3f45",
-  green: "#dff0d8",
-  page: "#ffffff"
+  border: "#e5e7eb",
+  paleBlue: "#e2eff7",
+  paleOrange: "#fbebc4",
+  orange: "#f97316",
+  amber: "#f59e0b",
+  red: "#ef4444",
+  green: "#22c55e",
+  page: "#ffffff",
+  bgGray: "#f9fafb"
 };
 
 export function ReportDocument({ report }: { report: ReportData }) {
   return (
-    <Document title="MSI 360 Risk Tool Report" author="MSI360">
-      <IntroPage report={report} />
-      <OverviewPage report={report} />
-      <CategorySummaryPage report={report} />
-      {report.categories.map((category) => (
-        <CategoryDetailPage key={category.key} report={report} category={category} />
-      ))}
-      <ResponseRecordPage report={report} />
+    <Document title="MSI 360 Risk Score Report" author="MSI360">
+      <Page size={[612, 792]} style={styles.page} wrap>
+        <IntroContent report={report} />
+        <OverviewContent report={report} />
+        <CategoriesFlowContent report={report} />
+        <ResponseRecordContent report={report} />
+        <PageNumber />
+      </Page>
     </Document>
   );
 }
 
-function IntroPage({ report }: { report: ReportData }) {
+function IntroContent({ report }: { report: ReportData }) {
   return (
-    <Page size={[612, 792]} style={styles.introPage}>
-      <Text style={styles.introTitle}>MSI 360 Risk Tool Report</Text>
+    <View style={styles.pageContent}>
+      <Text style={styles.introTitle}>MSI360 Risk Score Report</Text>
+
       <View style={styles.metaStrip} wrap={false}>
-        <MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} />
-        <MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task assessed" value={report.taskSummary} />
-        <MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} />
+        <View style={{ width: "20%" }}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
+        <View style={styles.metaDivider} />
+        <View style={{ width: "48%" }}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task assessed" value={report.taskSummary} /></View>
+        <View style={styles.metaDivider} />
+        <View style={{ width: "30%" }}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
       </View>
 
       <View style={styles.noticeBand} wrap={false}>
@@ -48,25 +53,25 @@ function IntroPage({ report }: { report: ReportData }) {
         </Text>
       </View>
 
-      <NumberedSection numberIcon={reportAssets.icons.circleOne} title="About this report">
+      <NumberedSection number="1" title="About this report">
         <Text style={styles.paragraph}>
-          This report summarizes possible musculoskeletal injury risk factors for the selected job or task. It is based on the worker's responses and is intended to support a practical conversation between the worker and employer.
+          This report summarizes possible musculoskeletal injury risk factors for the selected job or task. It is based on the worker's responses and is intended to support a practical conversation between the worker and employer. The goal is to identify where MSI risks may exist, understand which areas need attention, and help guide safer work design.
         </Text>
         <Text style={styles.paragraph}>This report is not a full workplace assessment. It is a starting point for discussion and action.</Text>
       </NumberedSection>
 
-      <NumberedSection numberIcon={reportAssets.icons.circleTwo} title="Privacy note">
+      <NumberedSection number="2" title="Privacy note">
         <Text style={styles.paragraph}>Information entered into MSI 360 is not stored, shared, or made available to WorkSafeBC unless the worker chooses to share the report.</Text>
       </NumberedSection>
 
-      <NumberedSection numberIcon={reportAssets.icons.circleThree} title="Who should use this report?">
+      <NumberedSection number="3" title="Who should use this report?">
         <View style={styles.twoColumnRow} wrap={false}>
           <AudienceCard icon={reportAssets.icons.workerHelmet} title="For workers" text="Use this report to understand which parts of your work may increase MSI risk. You can share it with your supervisor or employer and discuss possible improvements." />
           <AudienceCard icon={reportAssets.icons.people} title="For employers or supervisors" text="Use this report to identify where the worker may need support. The results can help guide conversations, prioritize changes, and reduce MSI risk." />
         </View>
       </NumberedSection>
 
-      <NumberedSection numberIcon={reportAssets.icons.circleFour} title="Risk categories assessed">
+      <NumberedSection number="4" title="Risk categories assessed">
         <View style={styles.categoryIntroGrid} wrap={false}>
           {report.categories.map((category) => (
             <View key={category.key} style={styles.categoryIntroCard}>
@@ -77,7 +82,7 @@ function IntroPage({ report }: { report: ReportData }) {
         </View>
       </NumberedSection>
 
-      <NumberedSection numberIcon={reportAssets.icons.circleFive} title="How to read the report">
+      <NumberedSection number="5" title="How to read the report">
         <View style={styles.readingBox} wrap={false}>
           <View style={styles.readingRows}>
             <DefinitionRow label="Score" text="A risk value based on the worker's answers." />
@@ -86,37 +91,44 @@ function IntroPage({ report }: { report: ReportData }) {
             <DefinitionRow label="Suggested actions" text="Practical steps that may help reduce the risk." />
           </View>
           <View style={styles.infoCallout}>
-            <Image src={reportAssets.icons.info} style={styles.infoIcon} />
-            <Text style={styles.infoText}>Higher-risk areas should be reviewed first.</Text>
+            <View style={styles.infoIconCircle}>
+              <Text style={styles.infoIconChar}>i</Text>
+            </View>
+            <Text style={styles.infoText}>Higher-risk areas{"\n"}should be reviewed first.</Text>
           </View>
         </View>
       </NumberedSection>
 
-      <NumberedSection numberIcon={reportAssets.icons.circleSix} title="Using this report">
+      <NumberedSection number="6" title="Using this report">
         <View style={styles.usingBox} wrap={false}>
           <BulletList
             items={[
               "Start by reviewing the highest-priority risks.",
-              "Discuss the findings with the worker and consider whether the task, tools, workstation, schedule, or work process can be improved.",
+              "Then discuss the findings with the worker and consider whether the task, tools, workstation, schedule, or work process can be improved.",
               "Risk reduction should focus on practical changes to the work itself whenever possible."
             ]}
           />
         </View>
       </NumberedSection>
-      <PageNumber />
-    </Page>
+    </View>
   );
 }
 
-function OverviewPage({ report }: { report: ReportData }) {
+function OverviewContent({ report }: { report: ReportData }) {
   return (
-    <ReportPage report={report} heading="Overview of results" intro="This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk. Detailed category score pages and the full response record appear later in the report.">
+    <View style={styles.pageContent}>
+      <View style={{ marginTop: 32 }} />
+      <Text style={styles.pageHeading}>Overview of results</Text>
+      <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}Detailed category score pages and the full response record appear later in the report.</Text>
+
       <Text style={styles.sectionHeading}>Current symptoms</Text>
       <SymptomsAlert symptoms={report.symptoms} />
       <View style={styles.symptomDiagramRow} wrap={false}>
-        <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
-        <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
-        <BodyDiagram symptoms={report.symptoms} />
+        <View style={{ flex: 1, paddingTop: 10 }}>
+          <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
+          <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
+        </View>
+        <BodyDiagramSvg symptoms={report.symptoms} />
       </View>
 
       <View style={styles.noteBlock} wrap={false}>
@@ -128,15 +140,24 @@ function OverviewPage({ report }: { report: ReportData }) {
       <Text style={styles.sectionHeading}>Overall MSI risk summary</Text>
       <View style={styles.overallSummary} wrap={false}>
         <View style={styles.bigMetric}>
-          <Image src={reportAssets.icons.shield} style={styles.bigShieldIcon} />
+          <View style={styles.shieldIconWrapper}>
+            <Image src={reportAssets.icons.shield} style={styles.bigShieldIcon} />
+          </View>
           <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
           <Text style={styles.metricValue}>{report.totalHazards}</Text>
-          <Text style={styles.metricHelp}>{report.totalHazards ? "Review category pages for details." : "No scored hazards were identified in this report overview."}</Text>
+          <Text style={styles.metricHelp}>{report.totalHazards ? "Review category pages for details." : "No scored hazards were identified in\nthis report overview."}</Text>
         </View>
         <PriorityBreakdown counts={report.priorityTotals} />
       </View>
+
       {report.overallScore.psychosocialMessage && <Text style={styles.psychosocialNote}>{report.overallScore.psychosocialMessage}</Text>}
-      <Text style={styles.infoLine}>Higher-priority risks should be reviewed first. This report remains a starting point for discussion and action.</Text>
+
+      <View style={styles.infoLineContainer} wrap={false}>
+        <View style={styles.infoIconCircleSmall}>
+          <Text style={styles.infoIconCharSmall}>i</Text>
+        </View>
+        <Text style={styles.infoLine}>Higher-priority risks should be reviewed first. This report remains a starting point for discussion and action.</Text>
+      </View>
 
       <View style={styles.controlsRow} wrap={false}>
         <View style={styles.controlsText}>
@@ -144,20 +165,26 @@ function OverviewPage({ report }: { report: ReportData }) {
           <Text style={styles.paragraph}>
             Risk reduction should begin with the most effective controls first. Where possible, remove or reduce the hazard at the source before relying on personal protective equipment.
           </Text>
-          <Text style={styles.paragraph}>The following pages present category-specific MSI scores, plain-language explanations, and suggested actions.</Text>
+          <Text style={styles.paragraph}>The following pages present category-specific MSI scores, plain-language explanations, and suggested actions. The full list of questions and answers is provided at the end of the report as a response record.</Text>
         </View>
         <Image src={reportAssets.images.hierarchyOfControls} style={styles.hierarchyImage} />
       </View>
-    </ReportPage>
+    </View>
   );
 }
 
-function CategorySummaryPage({ report }: { report: ReportData }) {
+function CategoriesFlowContent({ report }: { report: ReportData }) {
   return (
-    <ReportPage report={report} heading="Category score summary" intro="The following table summarizes the MSI score for each assessed risk category. Each score is based on the worker's responses and is intended to help identify which areas may need review first.">
+    <View style={styles.pageContent}>
+      <View style={{ marginTop: 32 }} />
+      <Text style={styles.pageHeading}>Category score summary</Text>
+      <Text style={styles.pageIntro}>The following table summarizes the MSI score for each assessed risk category.{"\n"}Each score is based on the worker's responses and is intended to help identify which areas may need review first.</Text>
+
+      <Text style={styles.noteTextBold}>NOTE:</Text>
       <Text style={styles.noteText}>
-        NOTE: Even when no scored hazard is identified, reported discomfort should still be reviewed alongside the worker's task, workstation layout, tools or objects handled, and work-organization factors such as pace, recovery, and task variability.
+        Even when no scored hazard is identified, reported discomfort should still be reviewed alongside the worker's task, workstation layout, tools or objects handled, and work-organization factors such as pace, recovery, and task variability.
       </Text>
+
       <View style={styles.categoryTable} wrap={false}>
         <View style={[styles.tableRow, styles.tableHeader]}>
           <Text style={[styles.tableCell, styles.categoryNameCell]}>Risk category</Text>
@@ -174,62 +201,59 @@ function CategorySummaryPage({ report }: { report: ReportData }) {
             <Text style={[styles.tableCell, styles.scoreCell, styles.tableScore]}>{category.scoreDisplay}</Text>
             <Text style={[styles.tableCell, styles.statusCell, styles.tableStatus]}>{category.currentStatus}</Text>
             <View style={[styles.tableCell, styles.priorityCell]}>
-              <Text style={[styles.priorityPill, priorityPillStyle(category.reviewPriority)]}>{category.priorityLabel}</Text>
+              <View style={[styles.priorityPill, priorityPillStyle(category.reviewPriority)]}>
+                <Text style={[styles.priorityPillText, priorityPillTextStyle(category.reviewPriority)]}>{category.priorityLabel}</Text>
+              </View>
             </View>
           </View>
         ))}
       </View>
       <Text style={styles.tableFootnote}>A score of 0 means that no scored MSI hazard was identified for that category based on the worker's recorded answers.</Text>
-    </ReportPage>
+
+      <View style={styles.thickDivider} />
+
+      {report.categories.map((category, index) => (
+        <View key={category.key} style={styles.categoryDetailSection}>
+          <Text style={styles.detailHeading}>{category.label} MSI score</Text>
+
+          <View style={styles.categoryDetailGrid} wrap={false}>
+            <View style={styles.categoryMetricPanel}>
+              <Text style={styles.metricLabel}>Total MSI hazards identified</Text>
+              <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.hazardCount}</Text>
+              <Text style={styles.metricScoreLabel}>Score: {category.scoreDisplay}</Text>
+              <Text style={styles.metricSeverity}>{category.severity === "No scored hazard identified" ? "No scored hazards identified." : category.severity}</Text>
+            </View>
+            <PriorityBreakdown counts={category.priorityCounts} />
+            <View style={styles.tipsPanel}>
+              <Text style={styles.detailLabel}>Tips :</Text>
+              {(category.tips.length ? category.tips : ["Review the selected responses with the worker and look for practical changes to the work."]).map((tip) => (
+                <Text key={tip} style={styles.tipText}>
+                  {tip}
+                </Text>
+              ))}
+            </View>
+          </View>
+
+          <Text style={styles.detailLabel}>Explanation:</Text>
+          <Text style={styles.paragraph}>{category.explanation}</Text>
+
+          <Text style={styles.detailLabel}>Suggested actions</Text>
+          <BulletList items={category.suggestedActions} />
+          {index < report.categories.length - 1 && <View style={styles.thickDivider} />}
+        </View>
+      ))}
+
+    </View>
   );
 }
 
-function CategoryDetailPage({ report, category }: { report: ReportData; category: ReportCategorySummary }) {
+function ResponseRecordContent({ report }: { report: ReportData }) {
   return (
-    <ReportPage report={report} heading={`${category.label} MSI score`}>
-      <View style={styles.categoryDetailGrid} wrap={false}>
-        <View style={styles.categoryMetricPanel}>
-          <Text style={styles.metricLabel}>MSI score</Text>
-          <Text style={[styles.metricValue, styles.categoryScoreValue]}>{category.scoreDisplay}</Text>
-          <Text style={styles.metricHelp}>{category.severity}</Text>
-          <Text style={styles.metricHelp}>{category.applicableQuestions} applicable questions reviewed.</Text>
-          <Text style={styles.metricHelp}>{category.currentStatus}</Text>
-        </View>
-        <PriorityBreakdown counts={category.priorityCounts} />
-        <View style={styles.tipsPanel}>
-          <Text style={styles.detailLabel}>Tips:</Text>
-          {(category.tips.length ? category.tips : ["Review the selected responses with the worker and look for practical changes to the work."]).map((tip) => (
-            <Text key={tip} style={styles.tipText}>
-              {tip}
-            </Text>
-          ))}
-        </View>
-      </View>
+    <View style={styles.pageContent}>
+      <View style={{ marginTop: 32 }} />
+      <Text style={styles.pageHeading}>Response record</Text>
+      <Text style={styles.pageIntro}>This appendix lists the English question text and recorded answers used to generate the report.</Text>
 
-      <Text style={styles.detailLabel}>Explanation:</Text>
-      <Text style={styles.paragraph}>{category.explanation}</Text>
-
-      {category.drivers.length > 0 && (
-        <View style={styles.driverBox}>
-          <Text style={styles.detailLabel}>Responses contributing to this category:</Text>
-          {category.drivers.slice(0, 8).map((driver) => (
-            <Text key={`${driver.questionId}-${driver.groupLabel || "main"}-${driver.optionId}-${driver.factor}`} style={styles.driverText}>
-              {driver.groupLabel ? `${driver.groupLabel}: ` : ""}
-              {driver.optionLabel} ({driver.score}/4)
-            </Text>
-          ))}
-        </View>
-      )}
-
-      <Text style={styles.detailLabel}>Suggested actions</Text>
-      <BulletList items={category.suggestedActions} />
-    </ReportPage>
-  );
-}
-
-function ResponseRecordPage({ report }: { report: ReportData }) {
-  return (
-    <ReportPage report={report} heading="Response record" intro="This appendix lists the English question text and recorded answers used to generate the report.">
       {report.answerRecords.map((record) => (
         <View key={record.questionId} style={styles.answerRecord}>
           <Text style={styles.answerQuestion}>{record.question}</Text>
@@ -240,39 +264,7 @@ function ResponseRecordPage({ report }: { report: ReportData }) {
           ))}
         </View>
       ))}
-    </ReportPage>
-  );
-}
-
-function ReportPage({ report, heading, intro, children }: { report: ReportData; heading: string; intro?: string; children: React.ReactNode }) {
-  return (
-    <Page size={[612, 792]} style={styles.page}>
-      <View fixed style={styles.fixedHeader}>
-        <View>
-          <Text style={styles.headerTitle}>MSI 360 Risk Tool Report</Text>
-          <Text style={styles.pageHeading}>{heading}</Text>
-        </View>
-        <View style={styles.headerMeta}>
-          <Text style={styles.headerMetaText}>
-            <Text style={styles.bold}>Date: </Text>
-            {report.generatedDate}
-          </Text>
-          <Text style={styles.headerMetaText}>
-            <Text style={styles.bold}>Worker height: </Text>
-            {report.workerHeight}
-          </Text>
-          <Text style={styles.headerMetaText}>
-            <Text style={styles.bold}>Job / Task assessed: </Text>
-            {report.taskSummary}
-          </Text>
-        </View>
-      </View>
-      <View style={styles.pageContent}>
-        {intro && <Text style={styles.pageIntro}>{intro}</Text>}
-        {children}
-      </View>
-      <PageNumber />
-    </Page>
+    </View>
   );
 }
 
@@ -280,19 +272,20 @@ function MetaItem({ icon, label, value }: { icon: string; label: string; value: 
   return (
     <View style={styles.metaItem}>
       <Image src={icon} style={styles.metaIcon} />
-      <Text style={styles.metaText}>
-        <Text style={styles.bold}>{label}: </Text>
-        {value}
-      </Text>
+      <View style={styles.metaTextCol}>
+        <Text style={styles.metaLabel}>{label}: <Text style={styles.metaValue}>{value}</Text></Text>
+      </View>
     </View>
   );
 }
 
-function NumberedSection({ numberIcon, title, children }: { numberIcon: string; title: string; children: React.ReactNode }) {
+function NumberedSection({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
   return (
     <View style={styles.numberedSection} wrap={false}>
       <View style={styles.sectionTitleRow}>
-        <Image src={numberIcon} style={styles.numberIcon} />
+        <View style={styles.numberBadge}>
+          <Text style={styles.numberText}>{number}</Text>
+        </View>
         <Text style={styles.numberedTitle}>{title}</Text>
       </View>
       {children}
@@ -332,56 +325,20 @@ function SymptomsAlert({ symptoms }: { symptoms: ReportBodySymptoms }) {
   );
 }
 
-function SymptomList({ title, items }: { title: string; items: string[] }) {
+function SymptomList({ title, items }: { title: string; items: ReportBodySymptomArea[] }) {
+  if (!items.length) return null;
   return (
     <View style={styles.symptomList}>
       <Text style={styles.symptomListTitle}>{title}</Text>
-      {items.length ? (
-        items.map((item) => (
-          <Text key={item} style={styles.symptomBullet}>
-            - {item}
-          </Text>
-        ))
-      ) : (
-        <Text style={styles.mutedSmall}>No body areas recorded.</Text>
-      )}
+      {items.map((item) => (
+        <Text key={item.id} style={styles.symptomBullet}>
+          • {item.label}
+        </Text>
+      ))}
     </View>
   );
 }
 
-function BodyDiagram({ symptoms }: { symptoms: ReportBodySymptoms }) {
-  const symptomCount = symptoms.oneSide.length + symptoms.bothSides.length + symptoms.lastedTwoDays.length;
-  return (
-    <View style={styles.bodyDiagram}>
-      <Text style={styles.bodyDiagramTitle}>Body diagram</Text>
-      <Svg width={150} height={190} viewBox="0 0 150 190">
-        <Rect x={20} y={8} width={110} height={174} rx={10} fill="#ffffff" stroke={colors.border} />
-        <Path d="M76 42 C91 42 100 54 98 70 C96 85 88 94 76 94 C64 94 56 85 54 70 C52 54 61 42 76 42 Z" fill="#f7f7f7" stroke="#333333" strokeWidth={1.2} />
-        <Path d="M76 94 C73 116 70 133 67 151" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M76 100 C57 108 45 103 35 88" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M77 100 C96 107 109 101 118 87" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M68 151 C56 164 49 173 43 182" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Path d="M67 151 C79 164 86 174 91 184" stroke="#333333" strokeWidth={1.2} fill="none" />
-        <Line x1={23} y1={116} x2={126} y2={116} stroke={colors.border} strokeWidth={1} />
-        <Line x1={23} y1={154} x2={126} y2={154} stroke={colors.border} strokeWidth={1} />
-      </Svg>
-      <Text style={styles.bodyDiagramCaption}>
-        {symptomCount ? `Callouts: ${formatBodyCallouts(symptoms)}` : "No symptom callouts recorded."}
-      </Text>
-    </View>
-  );
-}
-
-function formatBodyCallouts(symptoms: ReportBodySymptoms) {
-  const callouts = [
-    ...symptoms.bothSides.map((label) => `${label} on both sides`),
-    ...symptoms.oneSide.map((label) => `${label} on one side`),
-    ...symptoms.lastedTwoDays.map((label) => `${label} for 2+ days`)
-  ];
-  const visible = callouts.slice(0, 3);
-  const remaining = callouts.length - visible.length;
-  return `${visible.join("; ")}${remaining > 0 ? `; +${remaining} more` : ""}`;
-}
 
 function PriorityBreakdown({ counts }: { counts: { high: number; medium: number; review: number } }) {
   return (
@@ -401,7 +358,9 @@ function PriorityRow({ icon, label, sublabel, count, tone }: { icon: string; lab
         <Text style={styles.priorityLabel}>{label}</Text>
         <Text style={styles.prioritySubLabel}>{sublabel}</Text>
       </View>
-      <Text style={[styles.priorityCount, priorityCountStyle(tone)]}>{count}</Text>
+      <View style={[styles.priorityCountBox, priorityCountBoxStyle(tone)]}>
+        <Text style={[styles.priorityCountText, priorityCountTextStyle(tone)]}>{count}</Text>
+      </View>
     </View>
   );
 }
@@ -411,7 +370,7 @@ function BulletList({ items }: { items: string[] }) {
     <View>
       {items.map((item) => (
         <Text key={item} style={styles.bullet}>
-          - {item}
+          • {item}
         </Text>
       ))}
     </View>
@@ -429,10 +388,23 @@ function priorityPillStyle(priority: ReviewPriority) {
   return styles.lowPill;
 }
 
-function priorityCountStyle(priority: Exclude<ReviewPriority, "low">) {
-  if (priority === "high") return styles.highCount;
-  if (priority === "medium") return styles.mediumCount;
-  return styles.reviewCount;
+function priorityPillTextStyle(priority: ReviewPriority) {
+  if (priority === "high") return styles.highPillText;
+  if (priority === "medium") return styles.mediumPillText;
+  if (priority === "review") return styles.reviewPillText;
+  return styles.lowPillText;
+}
+
+function priorityCountBoxStyle(priority: Exclude<ReviewPriority, "low">) {
+  if (priority === "high") return styles.highCountBox;
+  if (priority === "medium") return styles.mediumCountBox;
+  return styles.reviewCountBox;
+}
+
+function priorityCountTextStyle(priority: Exclude<ReviewPriority, "low">) {
+  if (priority === "high") return styles.highCountText;
+  if (priority === "medium") return styles.mediumCountText;
+  return styles.reviewCountText;
 }
 
 const styles = StyleSheet.create({
@@ -441,90 +413,78 @@ const styles = StyleSheet.create({
     color: colors.text,
     fontFamily: "Helvetica",
     fontSize: 9,
-    padding: "112 42 42"
+    padding: "42 42 42"
   },
   introPage: {
     backgroundColor: colors.page,
     color: colors.text,
     fontFamily: "Helvetica",
     fontSize: 9,
-    padding: "52 42 42"
+    padding: "42 42 42"
   },
   pageContent: {
     width: "100%"
   },
-  fixedHeader: {
-    position: "absolute",
-    top: 36,
-    left: 42,
-    right: 42,
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: colors.black,
-    marginBottom: 16
-  },
   pageHeading: {
     fontSize: 18,
     fontWeight: "bold",
-    color: colors.black
-  },
-  headerMeta: {
-    width: 142,
-    paddingTop: 2
-  },
-  headerMetaText: {
-    fontSize: 8,
-    lineHeight: 1.25,
-    marginBottom: 8
+    color: colors.black,
+    marginBottom: 6
   },
   pageIntro: {
-    width: 410,
     fontSize: 9,
-    lineHeight: 1.2,
-    marginBottom: 22
+    lineHeight: 1.3,
+    marginBottom: 16
   },
   introTitle: {
     fontSize: 24,
     fontWeight: "bold",
     color: colors.black,
-    marginBottom: 12
+    marginBottom: 16
   },
   metaStrip: {
     border: `1 solid ${colors.border}`,
-    borderRadius: 3,
-    padding: "12 36",
+    borderRadius: 4,
+    backgroundColor: colors.bgGray,
+    padding: "12 16",
     flexDirection: "row",
+    alignItems: "center",
     justifyContent: "space-between",
-    marginBottom: 8
+    marginBottom: 12
   },
   metaItem: {
-    width: "31%",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    paddingHorizontal: 8
+  },
+  metaDivider: {
+    width: 1,
+    height: 24,
+    backgroundColor: colors.border
   },
   metaIcon: {
-    width: 16,
-    height: 16,
-    marginRight: 4
+    width: 20,
+    height: 20,
+    marginRight: 6
   },
-  metaText: {
+  metaTextCol: {
+    justifyContent: "center",
+    flex: 1
+  },
+  metaLabel: {
     fontSize: 8,
-    lineHeight: 1.15
-  },
-  bold: {
     fontWeight: "bold"
+  },
+  metaValue: {
+    fontWeight: "normal"
   },
   noticeBand: {
     backgroundColor: colors.paleBlue,
-    borderRadius: 3,
-    padding: "12 70",
+    borderRadius: 4,
+    padding: "12 24",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 10
+    marginBottom: 20
   },
   noticeIcon: {
     width: 24,
@@ -540,49 +500,57 @@ const styles = StyleSheet.create({
   noticeText: {
     flex: 1,
     fontSize: 9,
-    lineHeight: 1.25
+    lineHeight: 1.3
   },
   numberedSection: {
     borderBottom: `1 solid ${colors.border}`,
-    paddingBottom: 8,
-    marginBottom: 7
+    paddingBottom: 10,
+    marginBottom: 10
   },
   sectionTitleRow: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 6
+    marginBottom: 8
   },
-  numberIcon: {
+  numberBadge: {
     width: 16,
     height: 16,
-    marginRight: 4
+    backgroundColor: colors.orange,
+    borderRadius: 8,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 6
+  },
+  numberText: {
+    color: "#ffffff",
+    fontSize: 10,
+    fontWeight: "bold"
   },
   numberedTitle: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "bold",
     color: colors.black
   },
   paragraph: {
     fontSize: 9,
-    lineHeight: 1.25,
-    marginBottom: 7
+    lineHeight: 1.35,
+    marginBottom: 8
   },
   twoColumnRow: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    padding: "0 6"
+    justifyContent: "space-between"
   },
   audienceCard: {
     width: "48%",
     border: `1 solid ${colors.border}`,
     borderRadius: 4,
-    padding: 14,
+    padding: "14 12",
     flexDirection: "row",
     alignItems: "center"
   },
   audienceIcon: {
-    width: 36,
-    height: 36,
+    width: 40,
+    height: 40,
     marginRight: 12
   },
   audienceText: {
@@ -594,8 +562,8 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   smallText: {
-    fontSize: 6.5,
-    lineHeight: 1.2
+    fontSize: 7.5,
+    lineHeight: 1.3
   },
   categoryIntroGrid: {
     flexDirection: "row",
@@ -603,27 +571,27 @@ const styles = StyleSheet.create({
   },
   categoryIntroCard: {
     width: "19%",
-    minHeight: 56,
+    minHeight: 64,
     border: `1 solid ${colors.border}`,
     borderRadius: 4,
     padding: "10 6",
-    justifyContent: "center"
+    alignItems: "center"
   },
   categoryIntroTitle: {
-    fontSize: 10,
+    fontSize: 9,
     fontWeight: "bold",
     textAlign: "center",
-    marginBottom: 5
+    marginBottom: 6
   },
   categoryIntroText: {
-    fontSize: 5.8,
-    lineHeight: 1.15,
+    fontSize: 6.5,
+    lineHeight: 1.25,
     textAlign: "center"
   },
   readingBox: {
     border: `1 solid ${colors.border}`,
     borderRadius: 4,
-    padding: "12 34",
+    padding: "16 24",
     flexDirection: "row",
     alignItems: "center"
   },
@@ -635,57 +603,68 @@ const styles = StyleSheet.create({
     marginBottom: 8
   },
   definitionLabel: {
-    width: 120,
-    fontSize: 8,
+    width: 110,
+    fontSize: 8.5,
     fontWeight: "bold"
   },
   definitionText: {
     flex: 1,
-    fontSize: 8
+    fontSize: 8.5
   },
   infoCallout: {
-    width: 110,
-    alignItems: "center"
+    width: 140,
+    alignItems: "center",
+    justifyContent: "center"
   },
-  infoIcon: {
+  infoIconCircle: {
     width: 24,
     height: 24,
+    borderRadius: 12,
+    border: `2 solid ${colors.orange}`,
+    justifyContent: "center",
+    alignItems: "center",
     marginBottom: 6
   },
+  infoIconChar: {
+    color: colors.orange,
+    fontSize: 14,
+    fontWeight: "bold"
+  },
   infoText: {
-    fontSize: 8,
-    lineHeight: 1.1,
+    fontSize: 8.5,
+    lineHeight: 1.2,
     textAlign: "center"
   },
   usingBox: {
     border: `1 solid ${colors.border}`,
     borderRadius: 4,
-    padding: "14 34"
+    padding: "14 24"
   },
   bullet: {
     fontSize: 9,
-    lineHeight: 1.25,
+    lineHeight: 1.35,
     marginBottom: 6
   },
   sectionHeading: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: "bold",
     color: colors.black,
     marginBottom: 8
   },
   symptomAlert: {
-    border: `1 solid ${colors.border}`,
+    border: `1 solid ${colors.paleOrange}`,
     borderRadius: 4,
-    padding: "10 70",
+    padding: "10 20",
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 28
+    marginBottom: 20
   },
   symptomAlertWarn: {
     backgroundColor: colors.paleOrange
   },
   symptomAlertClear: {
-    backgroundColor: "#f2f7f0"
+    backgroundColor: "#f2f7f0",
+    border: "1 solid #e0e8dd"
   },
   alertIcon: {
     width: 18,
@@ -697,245 +676,268 @@ const styles = StyleSheet.create({
   },
   symptomDiagramRow: {
     flexDirection: "row",
-    minHeight: 170,
-    marginBottom: 14
+    minHeight: 180,
+    marginBottom: 20
   },
   symptomList: {
-    width: "30%",
-    paddingTop: 22
+    marginBottom: 12
   },
   symptomListTitle: {
-    fontSize: 8.5,
-    marginBottom: 4
+    fontSize: 9,
+    marginBottom: 6
   },
   symptomBullet: {
-    fontSize: 8,
-    lineHeight: 1.12
-  },
-  mutedSmall: {
-    color: colors.muted,
-    fontSize: 7,
-    lineHeight: 1.15
+    fontSize: 8.5,
+    lineHeight: 1.3,
+    paddingLeft: 8
   },
   bodyDiagram: {
-    flex: 1,
-    alignItems: "center"
-  },
-  bodyDiagramTitle: {
-    fontSize: 10,
-    fontWeight: "bold",
-    marginBottom: 4
+    width: 200,
+    alignItems: "center",
+    justifyContent: "center"
   },
   bodyDiagramCaption: {
     width: 160,
     color: colors.muted,
     fontSize: 7,
-    textAlign: "center"
+    textAlign: "center",
+    marginTop: 8
   },
   noteBlock: {
-    marginBottom: 18
+    marginBottom: 20
   },
   linkText: {
-    color: "#0088c2",
-    fontSize: 8,
+    color: "#0284c7",
+    fontSize: 9,
     fontWeight: "bold"
   },
   overallSummary: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
-    marginBottom: 12
+    marginBottom: 16
   },
   bigMetric: {
-    width: 210,
+    width: 240,
+    alignItems: "center"
+  },
+  shieldIconWrapper: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: "#fff6f0",
+    justifyContent: "center",
     alignItems: "center",
-    marginRight: 24
+    marginBottom: 8
   },
   bigShieldIcon: {
-    width: 52,
-    height: 52,
-    marginBottom: 6
+    width: 32,
+    height: 32
   },
   metricLabel: {
     color: colors.muted,
     fontSize: 9,
     fontWeight: "bold",
-    marginBottom: 8,
+    marginBottom: 4,
     textAlign: "center"
   },
   metricValue: {
     color: colors.orange,
-    fontSize: 28,
+    fontSize: 42,
     fontWeight: "bold",
     marginBottom: 4,
     textAlign: "center"
   },
   metricHelp: {
     color: colors.muted,
-    fontSize: 7,
-    lineHeight: 1.15,
+    fontSize: 7.5,
+    lineHeight: 1.25,
     textAlign: "center"
   },
+  metricScoreLabel: {
+    color: colors.muted,
+    fontSize: 10,
+    fontWeight: "bold",
+    textAlign: "center",
+    marginBottom: 4
+  },
+  metricSeverity: {
+    color: colors.muted,
+    fontSize: 7.5,
+    lineHeight: 1.25,
+    textAlign: "center",
+    fontStyle: "italic"
+  },
   priorityBreakdown: {
-    width: 210,
-    borderLeft: `1 solid ${colors.border}`
+    width: "35%"
   },
   priorityRow: {
     flexDirection: "row",
     alignItems: "center",
     borderBottom: `1 solid ${colors.border}`,
-    padding: "5 0 5 16"
+    padding: "8 0"
   },
   priorityIcon: {
-    width: 28,
-    height: 28,
-    marginRight: 10
+    width: 24,
+    height: 24,
+    marginRight: 12
   },
   priorityText: {
     flex: 1
   },
   priorityLabel: {
-    color: "#666666",
-    fontSize: 8,
+    color: colors.black,
+    fontSize: 9,
     fontWeight: "bold",
     marginBottom: 2
   },
   prioritySubLabel: {
-    color: "#999999",
-    fontSize: 6.5
+    color: colors.muted,
+    fontSize: 7.5
   },
-  priorityCount: {
-    width: 34,
-    textAlign: "center",
-    fontSize: 12,
-    fontWeight: "bold",
-    padding: "4 0",
-    borderRadius: 2
+  priorityCountBox: {
+    width: 48,
+    padding: "6 0",
+    borderRadius: 4,
+    alignItems: "center"
   },
-  highCount: {
-    backgroundColor: "#ffd2d2",
-    color: "#7a4c4c"
+  priorityCountText: {
+    fontSize: 10,
+    fontWeight: "bold"
   },
-  mediumCount: {
-    backgroundColor: "#ffe8c2",
-    color: "#76501e"
-  },
-  reviewCount: {
-    backgroundColor: "#fff2c9",
-    color: "#766226"
-  },
+  highCountBox: { backgroundColor: "#fee2e2" },
+  highCountText: { color: "#b91c1c" },
+  mediumCountBox: { backgroundColor: "#fef3c7" },
+  mediumCountText: { color: "#d97706" },
+  reviewCountBox: { backgroundColor: "#fef9c3" },
+  reviewCountText: { color: "#a16207" },
   psychosocialNote: {
     color: "#7a4090",
-    fontSize: 8,
-    marginBottom: 8
+    fontSize: 9,
+    marginBottom: 12
+  },
+  infoLineContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 24
+  },
+  infoIconCircleSmall: {
+    width: 16,
+    height: 16,
+    borderRadius: 8,
+    border: `1 solid ${colors.black}`,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 8
+  },
+  infoIconCharSmall: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: colors.black
   },
   infoLine: {
     fontSize: 9,
-    marginBottom: 28
+    color: colors.black
   },
   controlsRow: {
     flexDirection: "row",
-    alignItems: "center",
-    marginTop: 12
+    alignItems: "flex-start",
+    marginTop: 8
   },
   controlsText: {
-    width: "42%",
+    width: "48%",
     marginRight: 24
   },
   hierarchyImage: {
-    width: 310,
-    height: 205,
+    width: 250,
+    height: 180,
     objectFit: "contain"
+  },
+  noteTextBold: {
+    fontSize: 9,
+    fontWeight: "bold",
+    marginBottom: 2
   },
   noteText: {
     fontSize: 9,
-    lineHeight: 1.15,
-    marginBottom: 18
+    lineHeight: 1.3,
+    marginBottom: 20
   },
   categoryTable: {
-    width: 490,
-    alignSelf: "center",
+    width: "100%",
     border: `1 solid ${colors.border}`,
-    borderRadius: 5
+    borderRadius: 4
   },
   tableRow: {
     flexDirection: "row",
-    minHeight: 38,
+    minHeight: 42,
     borderBottom: `1 solid ${colors.border}`,
     alignItems: "center"
   },
   tableHeader: {
-    minHeight: 30,
-    backgroundColor: "#fbfbfb"
+    minHeight: 34,
+    backgroundColor: colors.bgGray
   },
   tableCell: {
-    padding: "7 8",
-    fontSize: 7.2,
+    padding: "8 12",
+    fontSize: 8.5,
     borderRight: `1 solid ${colors.border}`
   },
-  categoryNameCell: {
-    width: 170
-  },
-  scoreCell: {
-    width: 58,
-    textAlign: "center"
-  },
-  statusCell: {
-    width: 150,
-    textAlign: "center"
-  },
-  priorityCell: {
-    width: 112,
-    borderRightWidth: 0,
-    alignItems: "center"
-  },
+  categoryNameCell: { width: "35%" },
+  scoreCell: { width: "15%", textAlign: "center", fontWeight: "bold" },
+  statusCell: { width: "30%", textAlign: "center", color: colors.muted },
+  priorityCell: { width: "20%", borderRightWidth: 0, alignItems: "center" },
   tableCategoryName: {
     flexDirection: "row",
     alignItems: "center",
     fontWeight: "bold"
   },
   tableIcon: {
-    width: 22,
-    height: 22,
-    marginRight: 12
+    width: 24,
+    height: 24,
+    marginRight: 10
   },
   tableScore: {
     color: colors.orange,
-    fontSize: 16,
-    fontWeight: "bold"
+    fontSize: 16
   },
-  tableStatus: {
-    color: colors.muted
-  },
+  tableStatus: {},
   priorityPill: {
-    width: 62,
+    padding: "4 12",
     borderRadius: 2,
-    padding: "4 0",
-    textAlign: "center",
-    fontSize: 7,
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 1
+  },
+  priorityPillText: {
+    fontSize: 8,
     fontWeight: "bold"
   },
-  highPill: {
-    backgroundColor: "#ffd7d7",
-    color: "#8a3030"
-  },
-  mediumPill: {
-    backgroundColor: "#ffe3bd",
-    color: "#80501b"
-  },
-  reviewPill: {
-    backgroundColor: "#fff0bf",
-    color: "#735d19"
-  },
-  lowPill: {
-    backgroundColor: colors.green,
-    color: "#4c8849"
-  },
+  highPill: { backgroundColor: "#fef2f2", borderColor: "#fecaca" },
+  highPillText: { color: "#ef4444" },
+  mediumPill: { backgroundColor: "#fffbeb", borderColor: "#fde68a" },
+  mediumPillText: { color: "#f59e0b" },
+  reviewPill: { backgroundColor: "#fefce8", borderColor: "#fef08a" },
+  reviewPillText: { color: "#eab308" },
+  lowPill: { backgroundColor: "#f0fdf4", borderColor: "#bbf7d0" },
+  lowPillText: { color: "#22c55e" },
   tableFootnote: {
-    width: 490,
-    alignSelf: "center",
-    fontSize: 6.5,
-    marginTop: 6
+    fontSize: 7.5,
+    marginTop: 8,
+    marginBottom: 16
+  },
+  thickDivider: {
+    height: 1,
+    backgroundColor: "#cccccc",
+    margin: "16 0"
+  },
+  categoryDetailSection: {
+    marginBottom: 8
+  },
+  detailHeading: {
+    fontSize: 14,
+    fontWeight: "bold",
+    color: colors.black,
+    marginBottom: 16
   },
   categoryDetailGrid: {
     flexDirection: "row",
@@ -943,56 +945,45 @@ const styles = StyleSheet.create({
     marginBottom: 16
   },
   categoryMetricPanel: {
-    width: 170,
+    width: 140,
     alignItems: "center",
-    paddingTop: 10,
-    marginRight: 16
+    marginRight: 20
   },
   categoryScoreValue: {
     color: colors.amber,
-    fontSize: 34
+    fontSize: 42,
+    margin: "6 0"
   },
   tipsPanel: {
-    flex: 1,
-    paddingLeft: 18
+    width: "35%",
+    paddingLeft: 20,
+    borderLeft: `1 solid ${colors.border}`
   },
   detailLabel: {
-    fontSize: 9,
+    fontSize: 10,
     fontWeight: "bold",
-    marginBottom: 5
+    marginBottom: 6
   },
   tipText: {
     fontSize: 9,
-    lineHeight: 1.35,
-    marginBottom: 6
-  },
-  driverBox: {
-    borderTop: `1 solid ${colors.border}`,
-    borderBottom: `1 solid ${colors.border}`,
-    padding: "8 0",
-    margin: "8 0 14"
-  },
-  driverText: {
-    color: "#444444",
-    fontSize: 8,
-    lineHeight: 1.2,
-    marginBottom: 3
+    lineHeight: 1.4,
+    marginBottom: 8
   },
   answerRecord: {
     borderBottom: `1 solid ${colors.border}`,
-    paddingBottom: 7,
-    marginBottom: 7
+    paddingBottom: 8,
+    marginBottom: 8
   },
   answerQuestion: {
-    fontSize: 8.5,
+    fontSize: 9.5,
     fontWeight: "bold",
-    lineHeight: 1.2,
-    marginBottom: 3
+    lineHeight: 1.3,
+    marginBottom: 4
   },
   answerText: {
-    fontSize: 7.5,
-    lineHeight: 1.2,
-    color: "#333333",
+    fontSize: 8.5,
+    lineHeight: 1.3,
+    color: colors.text,
     marginBottom: 2
   },
   pageNumber: {
@@ -1000,6 +991,6 @@ const styles = StyleSheet.create({
     bottom: 22,
     right: 42,
     color: colors.muted,
-    fontSize: 7
+    fontSize: 8
   }
 });
