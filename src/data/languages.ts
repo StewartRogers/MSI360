@@ -26,7 +26,7 @@ export const languages: Language[] = [
   { code: "ur", name: "Urdu", flag: "🇵🇰", flagCode: "pk", ready: true },
   { code: "gu", name: "Gujarati", flag: "🇮🇳", flagCode: "in", ready: true },
   { code: "ro", name: "Romanian", flag: "🇷🇴", flagCode: "ro", ready: true },
-  { code: "uk", name: "Ukrainian", flag: "🇺🇦", flagCode: "ua", ready: false },
+  { code: "uk", name: "Ukrainian", flag: "🇺🇦", flagCode: "ua", ready: true },
   { code: "hu", name: "Hungarian", flag: "🇭🇺", flagCode: "hu", ready: false },
   { code: "sr", name: "Serbian", flag: "🇷🇸", flagCode: "rs", ready: false },
   { code: "ilo", name: "Ilocano", flag: "🇵🇭", flagCode: "ph", ready: false },

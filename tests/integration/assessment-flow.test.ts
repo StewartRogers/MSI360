@@ -342,6 +342,11 @@ test("Romanian translation has display text for every configured question option
   assertTranslationCoverage("Romanian", translations.ro.questions);
 });
 
+test("Ukrainian translation has display text for every configured question option", () => {
+  assert.equal(translations.uk.app.description_title, "Опис");
+  assertTranslationCoverage("Ukrainian", translations.uk.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -364,6 +369,7 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.ur).continueLabel, "جاری رکھیں");
   assert.equal(getActionButtonLabels(translations.gu).continueLabel, "ચાલુ રાખો");
   assert.equal(getActionButtonLabels(translations.ro).continueLabel, "Continua");
+  assert.equal(getActionButtonLabels(translations.uk).continueLabel, "Продовжити");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
