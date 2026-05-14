@@ -340,7 +340,7 @@
 .overall-score-card strong {
   display: block;
   color: #4b4541;
-  font-size: clamp(28px, 13vw, 72px);
+  font-size: clamp(16px, 13vw, 72px);
   line-height: 1.05;
 }
 
