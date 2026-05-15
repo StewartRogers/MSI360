@@ -162,6 +162,8 @@ src/
     reportAnalysis.ts
     reportAssets.ts
     reportData.ts
+    reportDocumentComponents.tsx
+    reportDocumentStyles.ts
     reportGuidance.ts
   ui/
     components/
