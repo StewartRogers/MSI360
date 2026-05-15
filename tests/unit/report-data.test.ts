@@ -11,11 +11,15 @@ test("report data always returns the five MSI categories in order with guidance 
   assert.deepEqual(reportCategoryOrder, expectedOrder);
   assert.deepEqual(report.categories.map((category) => category.key), expectedOrder);
   assert.equal(new Set(report.categories.map((category) => category.key)).size, 5);
+  assert.equal(report.responderContext, "Not provided");
+  assert.equal(report.responderContextNote, null);
   assert.deepEqual(getRiskBearingSelectionsMissingGuidance(), []);
 });
 
-test("report data maps task, worker height, symptoms, and job-specific notes", () => {
+test("report data maps responder context, task, worker height, symptoms, and job-specific notes", () => {
   const answers: Answers = {
+    "question-1": { type: "multi_choice", value: "supervisor" },
+    "question-2": { type: "multi_choice", value: "one_to_five" },
     "question-3": { type: "text", value: "Office work" },
     "question-4": { type: "multi_choice", value: "5_10_to_6_2" },
     "question-9": { type: "multi_choice", value: "yes" },
@@ -41,6 +45,8 @@ test("report data maps task, worker height, symptoms, and job-specific notes", (
   const report = buildReportData(answers, aiOutputs, scoreAssessment(answers), { now: new Date("2026-05-02T12:00:00Z") });
 
   assert.equal(report.generatedDate, "2 May 2026");
+  assert.equal(report.responderContext, "Supervisor, 1 to 5 years in role");
+  assert.equal(report.responderContextNote, "Responder role: Supervisor. Review the findings with a worker who performs the task to confirm how the work is actually done.");
   assert.equal(report.taskSummary, "Office work");
   assert.equal(report.workerHeight, "5'10\" - 6'2\" (1.76 m - 1.88 m)");
   assert.equal(report.symptoms.reported, true);

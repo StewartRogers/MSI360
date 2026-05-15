@@ -37,13 +37,19 @@ function IntroContent({ report }: { report: ReportData }) {
     <View style={styles.pageContent}>
       <Text style={styles.introTitle}>MSI 360 Risk Score Report</Text>
 
-      <View style={styles.metaStrip} wrap={false}>
-        <View style={{ width: "20%" }}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
-        <View style={styles.metaDivider} />
-        <View style={{ width: "48%" }}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task performed" value={report.taskSummary} /></View>
-        <View style={styles.metaDivider} />
-        <View style={{ width: "30%" }}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
+      <View style={styles.metaGrid} wrap={false}>
+        <View style={styles.metaGridRow}>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.people} label="Responder context" value={report.responderContext} /></View>
+        </View>
+        <View style={styles.metaGridDivider} />
+        <View style={styles.metaGridRow}>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task performed" value={report.taskSummary} /></View>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
+        </View>
       </View>
+
+      {report.responderContextNote && <Text style={styles.responderContextNote}>{report.responderContextNote}</Text>}
 
       <View style={styles.noticeBand} wrap={false}>
         <Image src={reportAssets.icons.shield} style={styles.noticeIcon} />
@@ -416,25 +422,31 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginBottom: 16
   },
-  metaStrip: {
+  metaGrid: {
     border: `1 solid ${colors.border}`,
     borderRadius: 4,
     backgroundColor: colors.bgGray,
-    padding: "12 16",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    padding: "8 12",
     marginBottom: 12
+  },
+  metaGridRow: {
+    flexDirection: "row",
+    alignItems: "stretch"
+  },
+  metaGridCell: {
+    width: "50%",
+    paddingVertical: 4,
+    paddingRight: 12
+  },
+  metaGridDivider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: 4
   },
   metaItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 8
-  },
-  metaDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: colors.border
+    minHeight: 24
   },
   metaIcon: {
     width: 20,
@@ -451,6 +463,16 @@ const styles = StyleSheet.create({
   },
   metaValue: {
     fontWeight: "normal"
+  },
+  responderContextNote: {
+    backgroundColor: "#fff7ed",
+    border: `1 solid ${colors.paleOrange}`,
+    borderRadius: 4,
+    color: colors.text,
+    fontSize: 8.5,
+    lineHeight: 1.25,
+    marginBottom: 12,
+    padding: "8 10"
   },
   noticeBand: {
     backgroundColor: colors.paleBlue,

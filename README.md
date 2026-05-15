@@ -321,6 +321,8 @@ src/report/
 
 The PDF is generated in the browser with `@react-pdf/renderer` and keeps the existing Download PDF button flow. It includes an intro/about page, overview page, category score summary, category-specific detail pages, and a full English response-record appendix. The five scored categories are always shown in this order: Contact stress, Force, Awkward posture, Repetition, and Environmental factors.
 
+The PDF intro page shows a 2-by-2 report context block with the generated date, responder context, job/task performed, and worker height. Responder context is derived from Q1 and Q2, for example `Supervisor, 1 to 5 years in role`; non-worker responder roles also receive a short note recommending review with a worker who performs the task.
+
 Report icons are centralized in `src/report/reportAssets.ts` and reference files under `public/icons/`; the hierarchy-of-controls image is loaded from `public/images/hierarchy-of-controls.png`. The current body diagram is a replaceable React PDF vector placeholder with symptom callouts, so a final body asset can be swapped in later without changing report data logic.
 
 Category explanations and suggested actions are derived from selected answers that contribute a category risk score of `2` or higher. Scores of `4` count as high priority, `3` as medium priority, and `2` as review priority. When no scored hazard is identified for a category, the PDF displays `0` for that category in the report presentation while leaving the underlying scoring result as `null`.

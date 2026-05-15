@@ -67,6 +67,8 @@ export interface ReportAnswerRecord {
 export interface ReportData {
   generatedAt: Date;
   generatedDate: string;
+  responderContext: string;
+  responderContextNote: string | null;
   taskSummary: string;
   workerHeight: string;
   activeTags: string[];
@@ -148,6 +150,8 @@ export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreRes
   return {
     generatedAt,
     generatedDate: formatReportDate(generatedAt),
+    responderContext: getResponderContext(answers),
+    responderContextNote: getResponderContextNote(answers),
     taskSummary: getTaskSummary(answers),
     workerHeight: getWorkerHeight(answers),
     activeTags,
@@ -307,6 +311,29 @@ function formatAnswer(question: Question, value: unknown, aiOutput = undefined a
 function getTaskSummary(answers: Answers) {
   const value = answers[questionIds.taskDescription]?.value;
   return typeof value === "string" && value.trim() ? value.trim() : "Work task";
+}
+
+function getResponderContext(answers: Answers) {
+  const role = getResponderRole(answers);
+  const timeInRole = getTimeInRole(answers);
+  return timeInRole ? `${role}, ${timeInRole} in role` : role;
+}
+
+function getResponderContextNote(answers: Answers) {
+  const value = answers[questionIds.role]?.value;
+  if (typeof value !== "string" || value === "worker") return null;
+
+  return `Responder role: ${getResponderRole(answers)}. Review the findings with a worker who performs the task to confirm how the work is actually done.`;
+}
+
+function getResponderRole(answers: Answers) {
+  const value = answers[questionIds.role]?.value;
+  return typeof value === "string" ? getOptionLabel(questionIds.role, value) : "Not provided";
+}
+
+function getTimeInRole(answers: Answers) {
+  const value = answers[questionIds.timeInRole]?.value;
+  return typeof value === "string" ? getOptionLabel(questionIds.timeInRole, value) : null;
 }
 
 function getWorkerHeight(answers: Answers) {
