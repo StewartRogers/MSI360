@@ -62,7 +62,11 @@ export const cs: Translation = {
     "complete_next_step_visit": "Navštivte worksafebc.com pro další zdroje",
     "complete_start_new": "Začít nové hodnocení",
     "description_title": "Popis",
-    "description_body": "Následující otázky se týkají práce, kterou vykonáváte během běžného pracovního dne, nebo konkrétního úkolu či činnosti, které chcete dnes posoudit. Cílem je sdělit MSI360, jaké činnosti provádíte, abyste svou práci dokončili."
+    "description_body": "Následující otázky se týkají práce, kterou vykonáváte během běžného pracovního dne, nebo konkrétního úkolu či činnosti, které chcete dnes posoudit. Cílem je sdělit MSI360, jaké činnosti provádíte, abyste svou práci dokončili.",
+    "ai_loading_task_description": "Analyzuje se popis vašeho úkolu...",
+    "ai_task_analysis_fallback_toast": "Odpověď AI analýzy úkolu vypršela. Místo toho se používá místní záloha.",
+    "ai_question_pruning_fallback_toast": "Odpověď AI filtrování otázek vypršela. Místo toho se používají záložní doplňující otázky.",
+    "ai_fallback_toast_dismiss": "Zavřít upozornění na zálohu AI"
   },
   "sections": {
     "intro": "O práci",

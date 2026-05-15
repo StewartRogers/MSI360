@@ -62,7 +62,11 @@ export const en: Translation = {
     "complete_next_step_visit": "Visit worksafebc.com for additional resources",
     "complete_start_new": "Start New Assessment",
     "description_title": "Description",
-    "description_body": "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done."
+    "description_body": "The following questions are about the work you do during a typical workday or when you're completing the specific task or activity you'd like to assess today. The intent is for you to tell MSI360 about the actions you perform to get your work done.",
+    "ai_loading_task_description": "Analyzing your task description...",
+    "ai_task_analysis_fallback_toast": "AI task analysis response timed out. Local fallback is being used instead.",
+    "ai_question_pruning_fallback_toast": "AI question pruning response timed out. Fallback follow-up questions are being used instead.",
+    "ai_fallback_toast_dismiss": "Dismiss AI fallback notice"
   },
   "sections": {
     "intro": "About the work",

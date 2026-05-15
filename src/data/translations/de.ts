@@ -62,7 +62,11 @@ export const de: Translation = {
     "complete_next_step_visit": "Besuchen Sie worksafebc.com für weitere Ressourcen",
     "complete_start_new": "Neue Bewertung starten",
     "description_title": "Beschreibung",
-    "description_body": "Die folgenden Fragen beziehen sich auf die Arbeit, die Sie an einem typischen Arbeitstag ausführen, oder auf die konkrete Aufgabe oder Tätigkeit, die Sie heute bewerten möchten. Ziel ist, dass Sie MSI360 mitteilen, welche Handlungen Sie ausführen, um Ihre Arbeit zu erledigen."
+    "description_body": "Die folgenden Fragen beziehen sich auf die Arbeit, die Sie an einem typischen Arbeitstag ausführen, oder auf die konkrete Aufgabe oder Tätigkeit, die Sie heute bewerten möchten. Ziel ist, dass Sie MSI360 mitteilen, welche Handlungen Sie ausführen, um Ihre Arbeit zu erledigen.",
+    "ai_loading_task_description": "Ihre Aufgabenbeschreibung wird analysiert...",
+    "ai_task_analysis_fallback_toast": "Die KI-Aufgabenanalyse hat nicht rechtzeitig geantwortet. Stattdessen wird die lokale Ausweichlösung verwendet.",
+    "ai_question_pruning_fallback_toast": "Die KI-Fragenauswahl hat nicht rechtzeitig geantwortet. Stattdessen werden Ausweich-Folgefragen verwendet.",
+    "ai_fallback_toast_dismiss": "KI-Ausweichhinweis schließen"
   },
   "sections": {
     "intro": "Über die Arbeit",

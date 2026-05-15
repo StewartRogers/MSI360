@@ -62,7 +62,11 @@ export const hr: Translation = {
     "complete_next_step_visit": "Posjetite worksafebc.com za dodatne resurse",
     "complete_start_new": "Započni novu procjenu",
     "description_title": "Opis",
-    "description_body": "Sljedeća pitanja odnose se na posao koji obavljate tijekom tipičnog radnog dana ili na konkretan zadatak ili aktivnost koju danas želite procijeniti. Namjera je da MSI360-u kažete koje radnje obavljate kako biste dovršili svoj posao."
+    "description_body": "Sljedeća pitanja odnose se na posao koji obavljate tijekom tipičnog radnog dana ili na konkretan zadatak ili aktivnost koju danas želite procijeniti. Namjera je da MSI360-u kažete koje radnje obavljate kako biste dovršili svoj posao.",
+    "ai_loading_task_description": "Analizira se opis vašeg zadatka...",
+    "ai_task_analysis_fallback_toast": "Odgovor AI analize zadatka je istekao. Umjesto toga koristi se lokalna zamjena.",
+    "ai_question_pruning_fallback_toast": "Odgovor AI filtriranja pitanja je istekao. Umjesto toga koriste se zamjenska dodatna pitanja.",
+    "ai_fallback_toast_dismiss": "Zatvori obavijest o AI zamjeni"
   },
   "sections": {
     "intro": "O poslu",

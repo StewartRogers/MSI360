@@ -62,7 +62,11 @@ export const ceb: Translation = {
     "complete_next_step_visit": "Bisitaha ang worksafebc.com para sa dugang resources",
     "complete_start_new": "Sugdi ang bag-ong assessment",
     "description_title": "Deskripsyon",
-    "description_body": "Ang mosunod nga mga pangutana mahitungod sa trabaho nga imong ginabuhat sa kasagarang adlaw sa trabaho o sa espesipikong buluhaton o aktibidad nga gusto nimo i-assess karon. Ang tuyo mao nga isulti nimo sa MSI360 ang mga aksyon nga imong ginabuhat aron mahuman ang imong trabaho."
+    "description_body": "Ang mosunod nga mga pangutana mahitungod sa trabaho nga imong ginabuhat sa kasagarang adlaw sa trabaho o sa espesipikong buluhaton o aktibidad nga gusto nimo i-assess karon. Ang tuyo mao nga isulti nimo sa MSI360 ang mga aksyon nga imong ginabuhat aron mahuman ang imong trabaho.",
+    "ai_loading_task_description": "Gianalisa ang imong paghulagway sa buluhaton...",
+    "ai_task_analysis_fallback_toast": "Ni-time out ang tubag sa AI task analysis. Gigamit ang lokal nga fallback.",
+    "ai_question_pruning_fallback_toast": "Ni-time out ang tubag sa AI question pruning. Gigamit ang fallback nga follow-up questions.",
+    "ai_fallback_toast_dismiss": "Isira ang AI fallback notice"
   },
   "sections": {
     "intro": "Mahitungod sa trabaho",

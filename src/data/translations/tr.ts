@@ -62,7 +62,11 @@ export const tr: Translation = {
     "complete_next_step_visit": "Ek kaynaklar için worksafebc.com adresini ziyaret edin",
     "complete_start_new": "Yeni değerlendirme başlat",
     "description_title": "Açıklama",
-    "description_body": "Aşağıdaki sorular, tipik bir iş gününde yaptığınız iş veya bugün değerlendirmek istediğiniz belirli görev ya da faaliyet hakkındadır. Amaç, işinizi tamamlamak için yaptığınız eylemleri MSI360'a anlatmanızdır."
+    "description_body": "Aşağıdaki sorular, tipik bir iş gününde yaptığınız iş veya bugün değerlendirmek istediğiniz belirli görev ya da faaliyet hakkındadır. Amaç, işinizi tamamlamak için yaptığınız eylemleri MSI360'a anlatmanızdır.",
+    "ai_loading_task_description": "Görev açıklamanız analiz ediliyor...",
+    "ai_task_analysis_fallback_toast": "AI görev analizi yanıtı zaman aşımına uğradı. Bunun yerine yerel yedek kullanılıyor.",
+    "ai_question_pruning_fallback_toast": "AI soru eleme yanıtı zaman aşımına uğradı. Bunun yerine yedek takip soruları kullanılıyor.",
+    "ai_fallback_toast_dismiss": "AI yedek bildirimini kapat"
   },
   "sections": {
     "intro": "İş hakkında",

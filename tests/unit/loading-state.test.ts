@@ -1,7 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import { translations } from "../../src/data/translations";
+import { getAiLoadingTaskDescriptionLabel } from "../../src/data/translationText";
 import { getActionButtonState } from "../../src/ui/components/ActionButtons";
-import { getAiFallbackToastKinds } from "../../src/logic/aiFallbackToast";
+import { getAiFallbackToastKinds, getAiFallbackToastMessage } from "../../src/logic/aiFallbackToast";
 
 test("busy action buttons block repeated submits and back navigation", () => {
   assert.deepEqual(getActionButtonState(true, true), {
@@ -56,4 +58,11 @@ test("AI fallback toast trigger ignores configured-off Gemini paths", () => {
     ),
     []
   );
+});
+
+test("AI loading and fallback toast messages use selected translations", () => {
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.en), "Analyzing your task description...");
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.es), "Analizando la descripción de su tarea...");
+  assert.equal(getAiFallbackToastMessage(translations.en, "task-analysis"), "AI task analysis response timed out. Local fallback is being used instead.");
+  assert.equal(getAiFallbackToastMessage(translations.es, "question-pruning"), "La respuesta de filtrado de preguntas con IA agotó el tiempo de espera. Se están usando preguntas de seguimiento de respaldo.");
 });

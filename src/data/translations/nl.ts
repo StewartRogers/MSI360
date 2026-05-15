@@ -62,7 +62,11 @@ export const nl: Translation = {
     "complete_next_step_visit": "Ga naar worksafebc.com voor aanvullende bronnen",
     "complete_start_new": "Nieuwe beoordeling starten",
     "description_title": "Beschrijving",
-    "description_body": "De volgende vragen gaan over het werk dat je doet tijdens een typische werkdag, of wanneer je de specifieke taak of activiteit uitvoert die je vandaag wilt beoordelen. Het doel is dat je MSI360 vertelt welke handelingen je uitvoert om je werk gedaan te krijgen."
+    "description_body": "De volgende vragen gaan over het werk dat je doet tijdens een typische werkdag, of wanneer je de specifieke taak of activiteit uitvoert die je vandaag wilt beoordelen. Het doel is dat je MSI360 vertelt welke handelingen je uitvoert om je werk gedaan te krijgen.",
+    "ai_loading_task_description": "Uw taakbeschrijving wordt geanalyseerd...",
+    "ai_task_analysis_fallback_toast": "De AI-taakanalyse reageerde niet op tijd. De lokale fallback wordt gebruikt.",
+    "ai_question_pruning_fallback_toast": "De AI-vraagselectie reageerde niet op tijd. Fallback-vervolgvragen worden gebruikt.",
+    "ai_fallback_toast_dismiss": "AI-fallbackmelding sluiten"
   },
   "sections": {
     "intro": "Over het werk",

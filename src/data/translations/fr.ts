@@ -62,7 +62,11 @@ export const fr: Translation = {
     "complete_next_step_visit": "Visitez worksafebc.com pour obtenir des ressources supplémentaires",
     "complete_start_new": "Commencer une nouvelle évaluation",
     "description_title": "Description",
-    "description_body": "Les questions suivantes portent sur le travail que vous effectuez pendant une journée de travail typique ou lorsque vous réalisez la tâche ou l'activité précise que vous souhaitez évaluer aujourd'hui. L'objectif est que vous indiquiez à MSI360 les gestes que vous effectuez pour accomplir votre travail."
+    "description_body": "Les questions suivantes portent sur le travail que vous effectuez pendant une journée de travail typique ou lorsque vous réalisez la tâche ou l'activité précise que vous souhaitez évaluer aujourd'hui. L'objectif est que vous indiquiez à MSI360 les gestes que vous effectuez pour accomplir votre travail.",
+    "ai_loading_task_description": "Analyse de la description de votre tâche...",
+    "ai_task_analysis_fallback_toast": "La réponse de l'analyse de tâche par IA a expiré. La solution locale de secours est utilisée.",
+    "ai_question_pruning_fallback_toast": "La réponse de sélection des questions par IA a expiré. Des questions de suivi de secours sont utilisées.",
+    "ai_fallback_toast_dismiss": "Fermer l'avis de secours IA"
   },
   "sections": {
     "intro": "À propos du travail",

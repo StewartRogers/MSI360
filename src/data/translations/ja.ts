@@ -62,7 +62,11 @@ export const ja: Translation = {
     "complete_next_step_visit": "追加リソースについてはworksafebc.comをご覧ください",
     "complete_start_new": "新しい評価を開始",
     "description_title": "説明",
-    "description_body": "以下の質問は、通常の勤務日、または今日評価したい特定の作業や活動を行うときの仕事内容について尋ねるものです。MSI360に、仕事を完了するために行っている動作を伝えることが目的です。"
+    "description_body": "以下の質問は、通常の勤務日、または今日評価したい特定の作業や活動を行うときの仕事内容について尋ねるものです。MSI360に、仕事を完了するために行っている動作を伝えることが目的です。",
+    "ai_loading_task_description": "作業内容を分析しています...",
+    "ai_task_analysis_fallback_toast": "AIによる作業分析の応答がタイムアウトしました。代わりにローカルの代替処理を使用しています。",
+    "ai_question_pruning_fallback_toast": "AIによる質問絞り込みの応答がタイムアウトしました。代替のフォローアップ質問を使用しています。",
+    "ai_fallback_toast_dismiss": "AI代替通知を閉じる"
   },
   "sections": {
     "intro": "作業について",

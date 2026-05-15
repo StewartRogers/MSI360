@@ -62,7 +62,11 @@ export const yue: Translation = {
     "complete_next_step_visit": "瀏覽 worksafebc.com 取得更多資源",
     "complete_start_new": "開始新評估",
     "description_title": "說明",
-    "description_body": "以下問題係關於你喺一般工作日所做嘅工作，或者你今日想評估嘅特定任務或活動。目的係俾你話俾 MSI360 知，你為咗完成工作會做啲咩動作。"
+    "description_body": "以下問題係關於你喺一般工作日所做嘅工作，或者你今日想評估嘅特定任務或活動。目的係俾你話俾 MSI360 知，你為咗完成工作會做啲咩動作。",
+    "ai_loading_task_description": "正在分析你嘅工作描述...",
+    "ai_task_analysis_fallback_toast": "AI 工作分析回應逾時。現正改用本機備援。",
+    "ai_question_pruning_fallback_toast": "AI 問題篩選回應逾時。現正改用備援跟進問題。",
+    "ai_fallback_toast_dismiss": "關閉 AI 備援通知"
   },
   "sections": {
     "intro": "關於工作",

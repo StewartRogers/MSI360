@@ -62,7 +62,11 @@ export const ro: Translation = {
     "complete_next_step_visit": "Viziteaza worksafebc.com pentru resurse suplimentare",
     "complete_start_new": "Incepe o evaluare noua",
     "description_title": "Descriere",
-    "description_body": "Urmatoarele intrebari sunt despre munca pe care o faci intr-o zi obisnuita de lucru sau atunci cand finalizezi sarcina ori activitatea specifica pe care doresti sa o evaluezi astazi. Scopul este sa ii spui MSI360 ce actiuni faci pentru a-ti realiza munca."
+    "description_body": "Urmatoarele intrebari sunt despre munca pe care o faci intr-o zi obisnuita de lucru sau atunci cand finalizezi sarcina ori activitatea specifica pe care doresti sa o evaluezi astazi. Scopul este sa ii spui MSI360 ce actiuni faci pentru a-ti realiza munca.",
+    "ai_loading_task_description": "Se analizează descrierea sarcinii dvs...",
+    "ai_task_analysis_fallback_toast": "Răspunsul analizei sarcinii cu AI a expirat. Se folosește alternativa locală.",
+    "ai_question_pruning_fallback_toast": "Răspunsul filtrării întrebărilor cu AI a expirat. Se folosesc întrebări de urmărire alternative.",
+    "ai_fallback_toast_dismiss": "Închide notificarea alternativei AI"
   },
   "sections": {
     "intro": "Despre munca",

@@ -62,7 +62,11 @@ export const es: Translation = {
     "complete_next_step_visit": "Visita worksafebc.com para obtener recursos adicionales",
     "complete_start_new": "Iniciar nueva evaluación",
     "description_title": "Descripción",
-    "description_body": "Las siguientes preguntas tratan sobre el trabajo que realizas durante un día laboral típico o cuando completas la tarea o actividad específica que deseas evaluar hoy. La intención es que le cuentes a MSI360 las acciones que realizas para hacer tu trabajo."
+    "description_body": "Las siguientes preguntas tratan sobre el trabajo que realizas durante un día laboral típico o cuando completas la tarea o actividad específica que deseas evaluar hoy. La intención es que le cuentes a MSI360 las acciones que realizas para hacer tu trabajo.",
+    "ai_loading_task_description": "Analizando la descripción de su tarea...",
+    "ai_task_analysis_fallback_toast": "La respuesta del análisis de tareas con IA agotó el tiempo de espera. Se está usando el respaldo local.",
+    "ai_question_pruning_fallback_toast": "La respuesta de filtrado de preguntas con IA agotó el tiempo de espera. Se están usando preguntas de seguimiento de respaldo.",
+    "ai_fallback_toast_dismiss": "Cerrar aviso de respaldo de IA"
   },
   "sections": {
     "intro": "Sobre el trabajo",

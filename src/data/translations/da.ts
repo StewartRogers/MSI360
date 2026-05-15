@@ -62,7 +62,11 @@ export const da: Translation = {
     "complete_next_step_visit": "Besøg worksafebc.com for yderligere ressourcer",
     "complete_start_new": "Start ny vurdering",
     "description_title": "Beskrivelse",
-    "description_body": "De følgende spørgsmål handler om det arbejde, du udfører på en typisk arbejdsdag, eller den specifikke opgave eller aktivitet, du gerne vil vurdere i dag. Formålet er, at du fortæller MSI360 om de handlinger, du udfører for at få dit arbejde gjort."
+    "description_body": "De følgende spørgsmål handler om det arbejde, du udfører på en typisk arbejdsdag, eller den specifikke opgave eller aktivitet, du gerne vil vurdere i dag. Formålet er, at du fortæller MSI360 om de handlinger, du udfører for at få dit arbejde gjort.",
+    "ai_loading_task_description": "Analyserer din opgavebeskrivelse...",
+    "ai_task_analysis_fallback_toast": "AI-opgaveanalysen fik timeout. Lokal fallback bruges i stedet.",
+    "ai_question_pruning_fallback_toast": "AI-spørgsmålsfiltreringen fik timeout. Fallback-opfølgende spørgsmål bruges i stedet.",
+    "ai_fallback_toast_dismiss": "Luk AI-fallbackbesked"
   },
   "sections": {
     "intro": "Om arbejdet",

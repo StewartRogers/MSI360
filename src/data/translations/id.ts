@@ -62,7 +62,11 @@ export const id: Translation = {
     "complete_next_step_visit": "Kunjungi worksafebc.com untuk sumber daya tambahan",
     "complete_start_new": "Mulai penilaian baru",
     "description_title": "Deskripsi",
-    "description_body": "Pertanyaan berikut adalah tentang pekerjaan yang Anda lakukan pada hari kerja biasa atau saat menyelesaikan tugas atau aktivitas tertentu yang ingin Anda nilai hari ini. Tujuannya adalah agar Anda memberi tahu MSI360 tindakan apa yang Anda lakukan untuk menyelesaikan pekerjaan."
+    "description_body": "Pertanyaan berikut adalah tentang pekerjaan yang Anda lakukan pada hari kerja biasa atau saat menyelesaikan tugas atau aktivitas tertentu yang ingin Anda nilai hari ini. Tujuannya adalah agar Anda memberi tahu MSI360 tindakan apa yang Anda lakukan untuk menyelesaikan pekerjaan.",
+    "ai_loading_task_description": "Menganalisis deskripsi tugas Anda...",
+    "ai_task_analysis_fallback_toast": "Respons analisis tugas AI kehabisan waktu. Fallback lokal sedang digunakan.",
+    "ai_question_pruning_fallback_toast": "Respons penyaringan pertanyaan AI kehabisan waktu. Pertanyaan lanjutan fallback sedang digunakan.",
+    "ai_fallback_toast_dismiss": "Tutup pemberitahuan fallback AI"
   },
   "sections": {
     "intro": "Tentang pekerjaan",

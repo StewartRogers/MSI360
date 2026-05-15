@@ -28,6 +28,10 @@ export function getAnalyzingButtonLabel(t: Translation) {
   return getAppText(t, "analyzing_button", "Analyzing");
 }
 
+export function getAiLoadingTaskDescriptionLabel(t: Translation) {
+  return getAppText(t, "ai_loading_task_description", "Analyzing your task description...");
+}
+
 export function getProgressLabel(t: Translation, current: number, total: number) {
   return getAppText(t, "question_progress", "Question {current} of {total}").replaceAll("{current}", String(current)).replaceAll("{total}", String(total));
 }

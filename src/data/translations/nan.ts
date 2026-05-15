@@ -62,7 +62,11 @@ export const nan: Translation = {
     "complete_next_step_visit": "到 worksafebc.com 看更多資源",
     "complete_start_new": "開始新評估",
     "description_title": "說明",
-    "description_body": "下面的問題是關於你平常工作日做的工作，或你今日欲評估的特定任務或活動。目的就是予你向 MSI360 說明你為完成工作所做的動作。"
+    "description_body": "下面的問題是關於你平常工作日做的工作，或你今日欲評估的特定任務或活動。目的就是予你向 MSI360 說明你為完成工作所做的動作。",
+    "ai_loading_task_description": "咧分析你的工作描述...",
+    "ai_task_analysis_fallback_toast": "AI 工作分析回應逾時。改用本機備援。",
+    "ai_question_pruning_fallback_toast": "AI 問題篩選回應逾時。改用備援追問問題。",
+    "ai_fallback_toast_dismiss": "關閉 AI 備援通知"
   },
   "sections": {
     "intro": "關於工作",

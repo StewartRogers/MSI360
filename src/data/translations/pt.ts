@@ -62,7 +62,11 @@ export const pt: Translation = {
     "complete_next_step_visit": "Visite worksafebc.com para obter recursos adicionais",
     "complete_start_new": "Iniciar nova avaliação",
     "description_title": "Descrição",
-    "description_body": "As perguntas seguintes são sobre o trabalho que realiza durante um dia de trabalho típico ou quando está a concluir a tarefa ou atividade específica que gostaria de avaliar hoje. A intenção é que informe o MSI360 sobre as ações que executa para realizar o seu trabalho."
+    "description_body": "As perguntas seguintes são sobre o trabalho que realiza durante um dia de trabalho típico ou quando está a concluir a tarefa ou atividade específica que gostaria de avaliar hoje. A intenção é que informe o MSI360 sobre as ações que executa para realizar o seu trabalho.",
+    "ai_loading_task_description": "A analisar a descrição da sua tarefa...",
+    "ai_task_analysis_fallback_toast": "A resposta da análise de tarefa por IA excedeu o tempo limite. Está a ser usado o fallback local.",
+    "ai_question_pruning_fallback_toast": "A resposta da seleção de perguntas por IA excedeu o tempo limite. Estão a ser usadas perguntas de seguimento de fallback.",
+    "ai_fallback_toast_dismiss": "Fechar aviso de fallback da IA"
   },
   "sections": {
     "intro": "Sobre o trabalho",

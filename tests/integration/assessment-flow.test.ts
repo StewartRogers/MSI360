@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
 import { isRtlLanguage, languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
-import { getActionButtonLabels, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
+import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -434,6 +434,19 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.af).continueLabel, "Gaan voort");
   assert.equal(getActionButtonLabels(translations.da).continueLabel, "Fortsæt");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
+});
+
+test("ready translations provide localized AI loading and fallback labels", () => {
+  const requiredKeys = ["ai_loading_task_description", "ai_task_analysis_fallback_toast", "ai_question_pruning_fallback_toast", "ai_fallback_toast_dismiss"];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
+
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.en), "Analyzing your task description...");
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.es), "Analizando la descripción de su tarea...");
 });
 
 test("ready translations provide localized question progress labels", () => {

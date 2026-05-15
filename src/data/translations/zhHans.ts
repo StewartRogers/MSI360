@@ -62,7 +62,11 @@ export const zhHans: Translation = {
     "complete_next_step_visit": "访问 worksafebc.com 获取更多资源",
     "complete_start_new": "开始新评估",
     "description_title": "说明",
-    "description_body": "以下问题与你在典型工作日所做的工作有关，或与你今天想评估的特定任务或活动有关。目的是让你告诉 MSI360 你为完成工作所进行的动作。"
+    "description_body": "以下问题与你在典型工作日所做的工作有关，或与你今天想评估的特定任务或活动有关。目的是让你告诉 MSI360 你为完成工作所进行的动作。",
+    "ai_loading_task_description": "正在分析您的任务描述...",
+    "ai_task_analysis_fallback_toast": "AI 任务分析响应超时。正在改用本地备用方案。",
+    "ai_question_pruning_fallback_toast": "AI 问题筛选响应超时。正在改用备用追问问题。",
+    "ai_fallback_toast_dismiss": "关闭 AI 备用通知"
   },
   "sections": {
     "intro": "关于工作",

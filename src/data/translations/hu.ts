@@ -62,7 +62,11 @@ export const hu: Translation = {
     "complete_next_step_visit": "További forrásokért látogasson el a worksafebc.com oldalra",
     "complete_start_new": "Új felmérés indítása",
     "description_title": "Leírás",
-    "description_body": "A következő kérdések arra a munkára vonatkoznak, amelyet egy átlagos munkanapon végez, vagy arra a konkrét feladatra vagy tevékenységre, amelyet ma értékelni szeretne. A cél az, hogy elmondja az MSI360-nak, milyen műveleteket végez a munkája elvégzéséhez."
+    "description_body": "A következő kérdések arra a munkára vonatkoznak, amelyet egy átlagos munkanapon végez, vagy arra a konkrét feladatra vagy tevékenységre, amelyet ma értékelni szeretne. A cél az, hogy elmondja az MSI360-nak, milyen műveleteket végez a munkája elvégzéséhez.",
+    "ai_loading_task_description": "A feladatleírás elemzése folyamatban...",
+    "ai_task_analysis_fallback_toast": "Az AI feladatelemzés válasza időtúllépés miatt megszakadt. Helyette a helyi tartalék működik.",
+    "ai_question_pruning_fallback_toast": "Az AI kérdésszűrés válasza időtúllépés miatt megszakadt. Helyette tartalék követő kérdések jelennek meg.",
+    "ai_fallback_toast_dismiss": "AI tartalék értesítés bezárása"
   },
   "sections": {
     "intro": "A munkáról",

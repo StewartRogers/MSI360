@@ -62,7 +62,11 @@ export const pl: Translation = {
     "complete_next_step_visit": "Odwiedz worksafebc.com, aby uzyskac dodatkowe zasoby",
     "complete_start_new": "Rozpocznij nowa ocene",
     "description_title": "Opis",
-    "description_body": "Ponizsze pytania dotycza pracy wykonywanej podczas typowego dnia pracy albo podczas wykonywania konkretnego zadania lub czynnosci, ktore chcesz dzis ocenic. Celem jest przekazanie MSI360 informacji o czynnosciach, ktore wykonujesz, aby zrealizowac swoja prace."
+    "description_body": "Ponizsze pytania dotycza pracy wykonywanej podczas typowego dnia pracy albo podczas wykonywania konkretnego zadania lub czynnosci, ktore chcesz dzis ocenic. Celem jest przekazanie MSI360 informacji o czynnosciach, ktore wykonujesz, aby zrealizowac swoja prace.",
+    "ai_loading_task_description": "Analizowanie opisu zadania...",
+    "ai_task_analysis_fallback_toast": "Odpowiedź analizy zadania AI przekroczyła limit czasu. Używana jest lokalna opcja awaryjna.",
+    "ai_question_pruning_fallback_toast": "Odpowiedź filtrowania pytań AI przekroczyła limit czasu. Używane są awaryjne pytania uzupełniające.",
+    "ai_fallback_toast_dismiss": "Zamknij powiadomienie awaryjne AI"
   },
   "sections": {
     "intro": "O pracy",

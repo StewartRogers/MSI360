@@ -62,7 +62,11 @@ export const ilo: Translation = {
     "complete_next_step_visit": "Bisitaen ti worksafebc.com para kadagiti dadduma pay a resources",
     "complete_start_new": "Mangrugi iti Baro nga Assessment",
     "description_title": "Deskripsion",
-    "description_body": "Dagiti sumaruno a saludsod ket maipapan iti trabahom iti gagangay nga aldaw ti trabaho wenno iti espesipiko nga aramiden wenno aktibidad a kayatmo nga i-assess ita nga aldaw. Ti panggep ket ibagam iti MSI360 dagiti aksion nga ar-aramidem tapno malpas ti trabahom."
+    "description_body": "Dagiti sumaruno a saludsod ket maipapan iti trabahom iti gagangay nga aldaw ti trabaho wenno iti espesipiko nga aramiden wenno aktibidad a kayatmo nga i-assess ita nga aldaw. Ti panggep ket ibagam iti MSI360 dagiti aksion nga ar-aramidem tapno malpas ti trabahom.",
+    "ai_loading_task_description": "An-analisaren ti deskripsion ti trabahom...",
+    "ai_task_analysis_fallback_toast": "Nag-time out ti sungbat ti AI task analysis. Mausar ti lokal a fallback.",
+    "ai_question_pruning_fallback_toast": "Nag-time out ti sungbat ti AI question pruning. Mausar dagiti fallback follow-up questions.",
+    "ai_fallback_toast_dismiss": "Isara ti AI fallback notice"
   },
   "sections": {
     "intro": "Maipapan iti trabaho",

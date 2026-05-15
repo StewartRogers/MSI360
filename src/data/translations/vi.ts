@@ -62,7 +62,11 @@ export const vi: Translation = {
     "complete_next_step_visit": "Truy cập worksafebc.com để có thêm tài nguyên",
     "complete_start_new": "Bắt đầu đánh giá mới",
     "description_title": "Mô tả",
-    "description_body": "Các câu hỏi sau đây nói về công việc bạn làm trong một ngày làm việc điển hình, hoặc khi bạn đang thực hiện nhiệm vụ hoặc hoạt động cụ thể mà bạn muốn đánh giá hôm nay. Mục đích là để bạn cho MSI360 biết các hành động bạn thực hiện để hoàn thành công việc."
+    "description_body": "Các câu hỏi sau đây nói về công việc bạn làm trong một ngày làm việc điển hình, hoặc khi bạn đang thực hiện nhiệm vụ hoặc hoạt động cụ thể mà bạn muốn đánh giá hôm nay. Mục đích là để bạn cho MSI360 biết các hành động bạn thực hiện để hoàn thành công việc.",
+    "ai_loading_task_description": "Đang phân tích mô tả công việc của bạn...",
+    "ai_task_analysis_fallback_toast": "Phản hồi phân tích công việc bằng AI đã hết thời gian chờ. Đang sử dụng phương án dự phòng cục bộ.",
+    "ai_question_pruning_fallback_toast": "Phản hồi sàng lọc câu hỏi bằng AI đã hết thời gian chờ. Đang sử dụng các câu hỏi theo dõi dự phòng.",
+    "ai_fallback_toast_dismiss": "Đóng thông báo dự phòng AI"
   },
   "sections": {
     "intro": "Về công việc",

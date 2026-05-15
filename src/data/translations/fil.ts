@@ -62,7 +62,11 @@ export const fil: Translation = {
     "complete_next_step_visit": "Bisitahin ang worksafebc.com para sa karagdagang resources",
     "complete_start_new": "Magsimula ng Bagong Assessment",
     "description_title": "Paglalarawan",
-    "description_body": "Ang mga sumusunod na tanong ay tungkol sa trabahong ginagawa mo sa karaniwang araw ng trabaho, o habang ginagawa mo ang partikular na gawain o aktibidad na gusto mong tasahin ngayon. Layunin nitong sabihin mo sa MSI360 ang mga kilos na ginagawa mo para matapos ang iyong trabaho."
+    "description_body": "Ang mga sumusunod na tanong ay tungkol sa trabahong ginagawa mo sa karaniwang araw ng trabaho, o habang ginagawa mo ang partikular na gawain o aktibidad na gusto mong tasahin ngayon. Layunin nitong sabihin mo sa MSI360 ang mga kilos na ginagawa mo para matapos ang iyong trabaho.",
+    "ai_loading_task_description": "Sinusuri ang paglalarawan ng iyong gawain...",
+    "ai_task_analysis_fallback_toast": "Nag-time out ang tugon ng AI task analysis. Lokal na fallback ang ginagamit sa halip.",
+    "ai_question_pruning_fallback_toast": "Nag-time out ang tugon ng AI question pruning. Mga fallback na follow-up question ang ginagamit sa halip.",
+    "ai_fallback_toast_dismiss": "Isara ang abiso ng AI fallback"
   },
   "sections": {
     "intro": "Tungkol sa trabaho",

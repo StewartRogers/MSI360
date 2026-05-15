@@ -62,7 +62,11 @@ export const ko: Translation = {
     "complete_next_step_visit": "추가 자료는 worksafebc.com을 방문하세요",
     "complete_start_new": "새 평가 시작",
     "description_title": "설명",
-    "description_body": "다음 질문은 일반적인 근무일 동안 수행하는 작업 또는 오늘 평가하려는 특정 업무나 활동을 수행할 때의 작업에 관한 것입니다. 목적은 업무를 완료하기 위해 수행하는 동작을 MSI360에 알려주는 것입니다."
+    "description_body": "다음 질문은 일반적인 근무일 동안 수행하는 작업 또는 오늘 평가하려는 특정 업무나 활동을 수행할 때의 작업에 관한 것입니다. 목적은 업무를 완료하기 위해 수행하는 동작을 MSI360에 알려주는 것입니다.",
+    "ai_loading_task_description": "작업 설명을 분석하는 중...",
+    "ai_task_analysis_fallback_toast": "AI 작업 분석 응답 시간이 초과되었습니다. 대신 로컬 대체 기능을 사용합니다.",
+    "ai_question_pruning_fallback_toast": "AI 질문 선별 응답 시간이 초과되었습니다. 대신 대체 후속 질문을 사용합니다.",
+    "ai_fallback_toast_dismiss": "AI 대체 알림 닫기"
   },
   "sections": {
     "intro": "작업 정보",

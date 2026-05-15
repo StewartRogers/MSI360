@@ -62,7 +62,11 @@ export const af: Translation = {
     "complete_next_step_visit": "Besoek worksafebc.com vir bykomende hulpbronne",
     "complete_start_new": "Begin nuwe assessering",
     "description_title": "Beskrywing",
-    "description_body": "Die volgende vrae handel oor die werk wat u gedurende 'n tipiese werksdag doen, of die spesifieke taak of aktiwiteit wat u vandag wil assesseer. Die doel is dat u vir MSI360 vertel watter handelinge u uitvoer om u werk gedoen te kry."
+    "description_body": "Die volgende vrae handel oor die werk wat u gedurende 'n tipiese werksdag doen, of die spesifieke taak of aktiwiteit wat u vandag wil assesseer. Die doel is dat u vir MSI360 vertel watter handelinge u uitvoer om u werk gedoen te kry.",
+    "ai_loading_task_description": "Ontleed jou taakbeskrywing...",
+    "ai_task_analysis_fallback_toast": "KI-taakanalise het uitgetel. Plaaslike rugsteun word eerder gebruik.",
+    "ai_question_pruning_fallback_toast": "KI-vraagfiltrering het uitgetel. Rugsteun-opvolgvrae word eerder gebruik.",
+    "ai_fallback_toast_dismiss": "Maak KI-rugsteunkennisgewing toe"
   },
   "sections": {
     "intro": "Oor die werk",
