@@ -109,27 +109,27 @@ interface BuildReportDataOptions {
 
 const categoryMeta: Record<RiskFactor, { label: string; description: string; riskSubject: string }> = {
   contact_stress: {
-    label: "MSI Risk Score - Contact stress",
+    label: "Contact Stress",
     description: "Pressure from hard or sharp surfaces against the body.",
     riskSubject: "contact stress"
   },
   force: {
-    label: "MSI Risk Score - Force",
+    label: "Force",
     description: "Muscular effort needed to push, pull, lift, carry, grip, or use tools.",
     riskSubject: "force"
   },
   awkward_posture: {
-    label: "MSI Risk Score - Awkward posture",
+    label: "Awkward Postures",
     description: "Body positions that are bent, twisted, extended, or not neutral.",
     riskSubject: "awkward postures"
   },
   repetition: {
-    label: "MSI Risk Score - Repetition",
+    label: "Repetition",
     description: "Repeated movements performed frequently over time.",
     riskSubject: "repetition"
   },
   environmental: {
-    label: "MSI Risk Score - Environmental factors",
+    label: "Environmental Factors",
     description: "Conditions such as lighting, noise, temperature, or work pace.",
     riskSubject: "environmental factors"
   }
