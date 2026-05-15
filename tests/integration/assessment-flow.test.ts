@@ -236,7 +236,7 @@ test("language dropdown displays each language name in that language", () => {
     ta: "தமிழ்",
     el: "Ελληνικά",
     cs: "Čeština",
-    "fa-x-nos": "فارسی",
+    "fa-x-nos": "فارسی (نامشخص)",
     ml: "മലയാളം",
     bn: "বাংলা",
     tr: "Türkçe",

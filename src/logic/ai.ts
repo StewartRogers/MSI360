@@ -424,8 +424,8 @@ function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
   addIf(tags, lower, ["overtime"], ["overtime"]);
 
   const missing: string[] = [];
-  if (tags.includes("lifting_lowering") && !/\b(lb|pound|kg|kilogram)\b/i.test(text)) missing.push("Approximate object weight");
-  if (tags.includes("repetitive_movements") && !/\b(hour|minute|daily|shift|day)\b/i.test(text)) missing.push("Frequency or duration");
+  if (tags.includes("lifting_lowering") && !hasWeightDetail(text)) missing.push("Approximate object weight");
+  if (tags.includes("repetitive_movements") && !hasFrequencyOrDurationDetail(text)) missing.push("Frequency or duration");
 
   return {
     normalized_answer_en: text,
@@ -438,6 +438,14 @@ function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
 
 function addIf(tags: string[], text: string, keywords: string[], matches: string[]) {
   if (keywords.some((keyword) => text.includes(keyword))) tags.push(...matches);
+}
+
+function hasWeightDetail(text: string) {
+  return /\b(lb|lbs|pound|pounds|kg|kgs|kilogram|kilograms|kilo|kilos|kilogramo|kilogramos|libra|libras)\b/i.test(text);
+}
+
+function hasFrequencyOrDurationDetail(text: string) {
+  return /\b(hour|hours|minute|minutes|daily|shift|shifts|day|days|hora|horas|minuto|minutos|diario|diaria|diarios|diarias|turno|turnos|dia|dias|día|días|cada)\b/i.test(text);
 }
 
 function parseGeminiJson(text: string): Record<string, unknown> {

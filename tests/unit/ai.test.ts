@@ -37,6 +37,16 @@ test("equivalent English and translated task descriptions return the same routin
   assert.deepEqual(sortTags(spanish.add_tags), sortTags(english.add_tags));
 });
 
+test("translated task descriptions with Spanish units and frequency do not request missing details", async () => {
+  const question = getQuestion("question-3");
+  const output = await interpretTextAnswer(question, "Levanto repetidamente cajas pesadas de 20 kilos cada hora y uso un taladro.");
+
+  assert.ok(output.add_tags.includes("lifting_lowering"));
+  assert.ok(output.add_tags.includes("repetitive_movements"));
+  assert.equal(output.missing_details.includes("Approximate object weight"), false);
+  assert.equal(output.missing_details.includes("Frequency or duration"), false);
+});
+
 test("buildInterpretTextPrompt instructs Gemini to handle multilingual text and canonical tags", () => {
   const question = getQuestion("question-3");
   const prompt = buildInterpretTextPrompt(question, "Levanto cajas pesadas todos los dias.");

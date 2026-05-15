@@ -35,7 +35,7 @@ export const languages: Language[] = [
   { code: "ta", name: "தமிழ்", flag: "🇮🇳", flagCode: "in", ready: true },
   { code: "el", name: "Ελληνικά", flag: "🇬🇷", flagCode: "gr", ready: true },
   { code: "cs", name: "Čeština", flag: "🇨🇿", flagCode: "cz", ready: true },
-  { code: "fa-x-nos", name: "فارسی", flag: "🇮🇷", flagCode: "ir", ready: true },
+  { code: "fa-x-nos", name: "فارسی (نامشخص)", flag: "🇮🇷", flagCode: "ir", ready: true },
   { code: "ml", name: "മലയാളം", flag: "🇮🇳", flagCode: "in", ready: true },
   { code: "bn", name: "বাংলা", flag: "🇧🇩", flagCode: "bd", ready: true },
   { code: "tr", name: "Türkçe", flag: "🇹🇷", flagCode: "tr", ready: true },

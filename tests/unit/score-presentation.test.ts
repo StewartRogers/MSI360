@@ -1,8 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import React from "react";
 import { translations } from "../../src/data/translations";
 import { scoreAssessment } from "../../src/logic/scoring";
 import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../src/logic/scorePresentation";
+import { ScoreScreen } from "../../src/ui/screens/ResultScreens";
+import type { FactorScore, ScoreResult } from "../../src/types";
 
 test("score presentation helpers preserve existing labels and formatting", () => {
   assert.equal(formatScore(2), "2.0 / 4");
@@ -43,6 +46,22 @@ test("score presentation helpers use selected translations", () => {
   assert.equal(getFactorSummaries(result, translations.ja)[1].label, "力の使用");
 });
 
+test("score screen renders the localized overall score instead of hardcoded English", () => {
+  const text = collectText(
+    ScoreScreen({
+      result: getScoreResult(3.7),
+      progressStep: 5,
+      totalSteps: 5,
+      translations: translations.ja,
+      onBack: () => undefined,
+      onContinue: () => undefined
+    })
+  );
+
+  assert.ok(text.includes("4点中3.7"));
+  assert.ok(!text.includes("out of"));
+});
+
 test("factor risk interpretations match score thresholds", () => {
   assert.equal(describeFactorRisk(null, "repetition"), "Not enough data to interpret repetition.");
   assert.equal(describeFactorRisk(1.4, "repetition"), "Currently low risk associated with repetition.");
@@ -70,3 +89,47 @@ test("psychosocial influence message appears only when the final score is negati
   assert.equal(getPsychosocialInfluenceMessage(moderateInfluence), "Psychosocial factors negatively influenced the overall MSI risk score (x1.3).");
   assert.equal(getPsychosocialInfluenceMessage(highInfluence), "Psychosocial factors negatively influenced the overall MSI risk score (x1.6).");
 });
+
+function getScoreResult(compositeScore: number): ScoreResult {
+  return {
+    scoring_version: "test",
+    aggregation: "test",
+    factors: {
+      contact_stress: unscoredFactor(),
+      force: unscoredFactor(),
+      awkward_posture: unscoredFactor(),
+      repetition: unscoredFactor(),
+      environmental: unscoredFactor()
+    },
+    grouped_scores: {
+      physical: null,
+      environmental: null,
+      organizational: null
+    },
+    base_composite_score: compositeScore,
+    composite_score: compositeScore,
+    psychosocial_modifier: {
+      score: null,
+      applicable_questions: 0,
+      multiplier: 1,
+      influenced_score: false
+    },
+    warnings: []
+  };
+}
+
+function unscoredFactor(): FactorScore {
+  return {
+    score: null,
+    applicable_questions: 0,
+    severity: "unscored"
+  };
+}
+
+function collectText(node: React.ReactNode): string {
+  if (node === null || node === undefined || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(collectText).join("");
+  if (React.isValidElement<{ children?: React.ReactNode }>(node)) return collectText(node.props.children);
+  return "";
+}
