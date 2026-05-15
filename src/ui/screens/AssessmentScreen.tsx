@@ -7,6 +7,12 @@ import { isRecord, splitParagraphs } from "../../logic/appFlow";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
 
+/**
+ * Assessment question screen for the dynamic, tag-routed part of the survey.
+ *
+ * The screen receives the already-filtered current question from `App.tsx`.
+ * Answer changes are draft-only until the parent commits them on Continue.
+ */
 export function AssessmentQuestionScreen(props: {
   question?: Question;
   answer?: Answer;
@@ -46,6 +52,9 @@ export function AssessmentQuestionScreen(props: {
   );
 }
 
+/**
+ * Renders the prompt, optional illustration, and answer control for a question.
+ */
 function QuestionContent({ question, answer, translations: t, isRtl = false, onAnswer }: { question: Question; answer?: Answer; translations: Translation; isRtl?: boolean; onAnswer: (value: AnswerValue) => void }) {
   const text = getQuestionText(t, question.question_id);
   if (!text) return null;
@@ -59,6 +68,12 @@ function QuestionContent({ question, answer, translations: t, isRtl = false, onA
   );
 }
 
+/**
+ * Chooses between title-style and section-title prompt layouts.
+ *
+ * Some localized labels are long, so the section title can be used as the visual
+ * heading while the full prompt is rendered as body copy.
+ */
 function QuestionPrompt({ question, text, sectionTitle }: { question: Question; text: QuestionText; sectionTitle: string }) {
   const paragraphs = splitParagraphs(text.label);
 
@@ -97,6 +112,12 @@ function QuestionPrompt({ question, text, sectionTitle }: { question: Question; 
   );
 }
 
+/**
+ * Renders the correct answer control for the question type.
+ *
+ * All emitted values use canonical option/group IDs; labels come from the active
+ * translation bundle.
+ */
 function QuestionAnswer({ question, text, answer, isRtl = false, onAnswer }: { question: Question; text: QuestionText; answer?: Answer; isRtl?: boolean; onAnswer: (value: AnswerValue) => void }) {
   if (question.type === "multi_choice" && question.options && text.options) {
     const selected = typeof answer?.value === "string" ? answer.value : "";

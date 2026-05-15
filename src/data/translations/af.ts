@@ -112,6 +112,8 @@ export const af: Translation = {
         "prefer_not_to_say": "Verkies om nie te sê nie"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Hoe sou u die tipe werk of taak wat geassesseer word opsom?",
       "options": {

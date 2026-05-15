@@ -1,8 +1,14 @@
-import { Document, Image, Line, Link, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
+import { Document, Image, Link, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 import { reportAssets } from "./reportAssets";
-import type { ReportAiGeneratedAnalysis, ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import type { ReportAiGeneratedAnalysis, ReportBodySymptomArea, ReportBodySymptoms, ReportData, ReviewPriority } from "./reportData";
 import { BodyDiagramSvg } from "./BodyDiagramSvg";
 
+/**
+ * Shared color palette for the React PDF document.
+ *
+ * React PDF styles do not consume the app CSS, so report-specific colors are
+ * centralized here.
+ */
 const colors = {
   black: "#111111",
   text: "#222222",
@@ -18,6 +24,13 @@ const colors = {
   bgGray: "#f9fafb"
 };
 
+/**
+ * React PDF document for the generated MSI360 report.
+ *
+ * The component receives a fully prepared `ReportData` object. Keep scoring,
+ * routing, and guidance decisions in `reportData.ts`; this file should remain
+ * responsible for layout and visual structure.
+ */
 export function ReportDocument({ report }: { report: ReportData }) {
   return (
     <Document title="MSI 360 Risk Score Report" author="MSI360">
@@ -32,6 +45,9 @@ export function ReportDocument({ report }: { report: ReportData }) {
   );
 }
 
+/**
+ * Introductory report section with metadata, privacy note, and user guidance.
+ */
 function IntroContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
@@ -103,6 +119,10 @@ function IntroContent({ report }: { report: ReportData }) {
   );
 }
 
+/**
+ * Overview section with hazard counts, optional AI analysis, symptom summary,
+ * and hierarchy-of-controls guidance.
+ */
 function OverviewContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
@@ -164,6 +184,9 @@ function OverviewContent({ report }: { report: ReportData }) {
   );
 }
 
+/**
+ * Category summary table and repeated detail blocks for the five MSI categories.
+ */
 function CategoriesFlowContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
@@ -190,7 +213,7 @@ function CategoriesFlowContent({ report }: { report: ReportData }) {
               <Text>{category.label}</Text>
             </View>
             <Text style={[styles.tableCell, styles.scoreCell, styles.tableScore]}>{category.scoreDisplay}</Text>
-            <Text style={[styles.tableCell, styles.statusCell, styles.tableStatus]}>{category.currentStatus}</Text>
+            <Text style={[styles.tableCell, styles.statusCell]}>{category.currentStatus}</Text>
             <View style={[styles.tableCell, styles.priorityCell]}>
               <View style={[styles.priorityPill, priorityPillStyle(category.reviewPriority)]}>
                 <Text style={[styles.priorityPillText, priorityPillTextStyle(category.reviewPriority)]}>{category.priorityLabel}</Text>
@@ -238,6 +261,9 @@ function CategoriesFlowContent({ report }: { report: ReportData }) {
   );
 }
 
+/**
+ * Appendix listing the English question text and recorded answers.
+ */
 function ResponseRecordContent({ report }: { report: ReportData }) {
   return (
     <View style={styles.pageContent}>
@@ -259,6 +285,9 @@ function ResponseRecordContent({ report }: { report: ReportData }) {
   );
 }
 
+/**
+ * Optional AI analysis block for the overview page.
+ */
 function AiGeneratedAnalysisBlock({ analysis }: { analysis: ReportAiGeneratedAnalysis }) {
   return (
     <View style={styles.aiAnalysisBlock}>
@@ -275,6 +304,9 @@ function AiGeneratedAnalysisBlock({ analysis }: { analysis: ReportAiGeneratedAna
   );
 }
 
+/**
+ * Small icon/label/value item used in the introductory metadata grid.
+ */
 function MetaItem({
   icon,
   label,
@@ -307,6 +339,9 @@ function MetaItem({
   );
 }
 
+/**
+ * Numbered section wrapper used by the intro page.
+ */
 function NumberedSection({ number, title, children }: { number: string; title: string; children: React.ReactNode }) {
   return (
     <View style={styles.numberedSection} wrap={false}>
@@ -321,6 +356,9 @@ function NumberedSection({ number, title, children }: { number: string; title: s
   );
 }
 
+/**
+ * Audience card used in the "Who should use this report?" section.
+ */
 function AudienceCard({ icon, title, text }: { icon: string; title: string; text: string }) {
   return (
     <View style={styles.audienceCard}>
@@ -333,6 +371,9 @@ function AudienceCard({ icon, title, text }: { icon: string; title: string; text
   );
 }
 
+/**
+ * Prominent symptom status alert shown on the overview page.
+ */
 function SymptomsAlert({ symptoms }: { symptoms: ReportBodySymptoms }) {
   return (
     <View style={[styles.symptomAlert, symptoms.reported ? styles.symptomAlertWarn : styles.symptomAlertClear]} wrap={false}>
@@ -344,6 +385,9 @@ function SymptomsAlert({ symptoms }: { symptoms: ReportBodySymptoms }) {
   );
 }
 
+/**
+ * Lists symptom body areas for one symptom grouping.
+ */
 function SymptomList({ title, items }: { title: string; items: ReportBodySymptomArea[] }) {
   if (!items.length) return null;
   return (
@@ -359,6 +403,9 @@ function SymptomList({ title, items }: { title: string; items: ReportBodySymptom
 }
 
 
+/**
+ * Three-row priority count component used for total and category summaries.
+ */
 function PriorityBreakdown({ counts }: { counts: { high: number; medium: number; review: number } }) {
   return (
     <View style={styles.priorityBreakdown}>
@@ -369,6 +416,9 @@ function PriorityBreakdown({ counts }: { counts: { high: number; medium: number;
   );
 }
 
+/**
+ * One row in the priority breakdown.
+ */
 function PriorityRow({ icon, label, sublabel, count, tone }: { icon: string; label: string; sublabel: string; count: number; tone: Exclude<ReviewPriority, "low"> }) {
   return (
     <View style={styles.priorityRow}>
@@ -384,6 +434,9 @@ function PriorityRow({ icon, label, sublabel, count, tone }: { icon: string; lab
   );
 }
 
+/**
+ * Simple text bullet list. React PDF does not provide native list layout.
+ */
 function BulletList({ items }: { items: string[] }) {
   return (
     <View>
@@ -396,6 +449,9 @@ function BulletList({ items }: { items: string[] }) {
   );
 }
 
+/**
+ * Fixed page number shown at the bottom-right of every PDF page.
+ */
 function PageNumber() {
   return <Text fixed style={styles.pageNumber} render={({ pageNumber, totalPages }) => `${pageNumber} / ${totalPages}`} />;
 }
@@ -428,13 +484,6 @@ function priorityCountTextStyle(priority: Exclude<ReviewPriority, "low">) {
 
 const styles = StyleSheet.create({
   page: {
-    backgroundColor: colors.page,
-    color: colors.text,
-    fontFamily: "Helvetica",
-    fontSize: 9,
-    padding: "42 42 42"
-  },
-  introPage: {
     backgroundColor: colors.page,
     color: colors.text,
     fontFamily: "Helvetica",
@@ -696,18 +745,6 @@ const styles = StyleSheet.create({
     lineHeight: 1.3,
     paddingLeft: 8
   },
-  bodyDiagram: {
-    width: 200,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  bodyDiagramCaption: {
-    width: 160,
-    color: colors.muted,
-    fontSize: 7,
-    textAlign: "center",
-    marginTop: 8
-  },
   noteBlock: {
     marginBottom: 20
   },
@@ -937,7 +974,6 @@ const styles = StyleSheet.create({
     color: colors.orange,
     fontSize: 16
   },
-  tableStatus: {},
   priorityPill: {
     padding: "4 12",
     borderRadius: 2,

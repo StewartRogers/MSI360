@@ -40,6 +40,13 @@ import { vi } from "./vi";
 import { yue } from "./yue";
 import { zhHans } from "./zhHans";
 
+/**
+ * Translation bundle registry keyed by language code.
+ *
+ * The keys must match `languages` entries in `src/data/languages.ts`. English is
+ * always required because question and app text fall back to it when localized
+ * fields are missing.
+ */
 export const translations: Record<string, Translation> = {
   en,
   pa,

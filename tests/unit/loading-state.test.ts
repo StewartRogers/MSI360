@@ -1,3 +1,6 @@
+/**
+ * Unit coverage for busy button behavior and AI fallback toast localization.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { translations } from "../../src/data/translations";

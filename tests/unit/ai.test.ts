@@ -1,3 +1,8 @@
+/**
+ * Unit coverage for Gemini prompt construction, fallback routing, and AI output
+ * validation. These tests protect the safety boundary between model output and
+ * committed survey state.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions } from "../../src/data/catalog";

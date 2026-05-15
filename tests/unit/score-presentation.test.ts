@@ -1,3 +1,6 @@
+/**
+ * Unit coverage for localized score formatting and score-summary rendering.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import React from "react";

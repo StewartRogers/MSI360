@@ -112,6 +112,8 @@ export const fa: Translation = {
         "prefer_not_to_say": "ترجیح می‌دهم نگویم"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "نوع شغل یا وظیفه‌ای را که ارزیابی می‌شود چگونه خلاصه می‌کنید؟",
       "options": {

@@ -1,3 +1,9 @@
+/*
+ * Reusable controls shared across onboarding, assessment, and result screens.
+ *
+ * The React components in src/ui/components emit these classes. Keep interaction
+ * states here so screen files can focus on layout.
+ */
 .answer-list {
   display: grid;
   gap: 24px;

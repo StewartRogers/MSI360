@@ -112,6 +112,8 @@ export const hu: Translation = {
         "prefer_not_to_say": "Nem szeretnék válaszolni"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Hogyan foglalná össze az értékelt munka vagy feladat típusát?",
       "options": {

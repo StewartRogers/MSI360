@@ -1,3 +1,7 @@
+/**
+ * Unit coverage for score aggregation, psychosocial modifiers, and score
+ * boundary labels.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { getPsychosocialMultiplier, scoreAssessment } from "../../src/logic/scoring";

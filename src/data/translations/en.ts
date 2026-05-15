@@ -112,6 +112,8 @@ export const en: Translation = {
         "prefer_not_to_say": "Prefer not to say"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "How would you summarize the type of job or task being assessed?",
       "options": {

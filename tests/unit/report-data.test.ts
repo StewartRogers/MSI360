@@ -1,3 +1,7 @@
+/**
+ * Unit coverage for converting app state and score output into the PDF report
+ * data model.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildReportData, getRiskBearingSelectionsMissingGuidance, reportCategoryOrder } from "../../src/report/reportData";

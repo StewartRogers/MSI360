@@ -8,8 +8,17 @@ import type { AiOutputs, AiReportAnalysis, Answer, Answers, Option, Question, Ri
 import { categoryIconByFactor } from "./reportAssets";
 import { reportGuidanceBySelection, reportGuidanceKey, type ReportGuidance } from "./reportGuidance";
 
+/**
+ * Priority buckets used in the PDF report.
+ *
+ * `low` is only used at the category level when no review/medium/high drivers
+ * exist. Individual risk drivers are always review or higher.
+ */
 export type ReviewPriority = "high" | "medium" | "review" | "low";
 
+/**
+ * One selected answer option that materially contributes to a report category.
+ */
 export interface ReportRiskDriver {
   questionId: string;
   questionLabel: string;
@@ -22,6 +31,9 @@ export interface ReportRiskDriver {
   guidance: ReportGuidance;
 }
 
+/**
+ * Render-ready summary for one of the five PDF category pages.
+ */
 export interface ReportCategorySummary {
   key: RiskFactor;
   label: string;
@@ -47,6 +59,9 @@ export interface ReportCategorySummary {
   suggestedActions: string[];
 }
 
+/**
+ * Body-symptom summary split into the report's visual groups.
+ */
 export interface ReportBodySymptoms {
   reported: boolean;
   oneSide: ReportBodySymptomArea[];
@@ -54,17 +69,26 @@ export interface ReportBodySymptoms {
   lastedTwoDays: ReportBodySymptomArea[];
 }
 
+/**
+ * Body area displayed in the symptom list and diagram.
+ */
 export interface ReportBodySymptomArea {
   id: string;
   label: string;
 }
 
+/**
+ * One question-and-answer row for the PDF response-record appendix.
+ */
 export interface ReportAnswerRecord {
   questionId: string;
   question: string;
   answers: string[];
 }
 
+/**
+ * Optional AI-authored analysis block shown on the PDF overview page.
+ */
 export interface ReportAiGeneratedAnalysis {
   title: string;
   disclaimer: string;
@@ -72,6 +96,12 @@ export interface ReportAiGeneratedAnalysis {
   sources: Array<{ label: string; url: string }>;
 }
 
+/**
+ * Complete render model consumed by `ReportDocument`.
+ *
+ * This type intentionally contains formatted labels, counts, priorities, and
+ * explanation text so the React PDF component stays mostly presentational.
+ */
 export interface ReportData {
   generatedAt: Date;
   generatedDate: string;
@@ -102,6 +132,10 @@ export interface ReportData {
   answerRecords: ReportAnswerRecord[];
 }
 
+/**
+ * Optional build inputs used by tests and by the asynchronous report-analysis
+ * path.
+ */
 interface BuildReportDataOptions {
   now?: Date;
   reportAnalysis?: AiReportAnalysis | null;
@@ -141,8 +175,21 @@ const lowRiskActions = [
   "Maintain controls that are already helping reduce MSI risk."
 ];
 
+/**
+ * Fixed order for PDF categories.
+ *
+ * The PDF always presents the same five category pages, even if a category has
+ * no scored hazards. Keep this order aligned with the client score summary.
+ */
 export const reportCategoryOrder: RiskFactor[] = ["contact_stress", "force", "awkward_posture", "repetition", "environmental"];
 
+/**
+ * Converts app state into a render-only report model.
+ *
+ * `ReportDocument` should stay mostly presentational; business rules belong here
+ * and in scoring/routing helpers. Tests use this function heavily to verify
+ * report behavior without rendering a PDF.
+ */
 export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreResult: ScoreResult, options: BuildReportDataOptions = {}): ReportData {
   const generatedAt = options.now || new Date();
   const activeTags = recomputeTags(answers, aiOutputs);
@@ -180,6 +227,12 @@ export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreRes
   };
 }
 
+/**
+ * Extracts all answer selections that should drive report guidance.
+ *
+ * Only selected options with risk scores of 2 or higher are included, and each
+ * must have a matching `ReportGuidance` entry before it appears in the PDF.
+ */
 export function getRiskDrivers(answers: Answers): ReportRiskDriver[] {
   return questions.flatMap((question) => {
     const answer = answers[question.question_id];
@@ -207,6 +260,9 @@ export function getRiskDrivers(answers: Answers): ReportRiskDriver[] {
   });
 }
 
+/**
+ * Builds the summary object for one report category.
+ */
 function buildCategorySummary(factor: RiskFactor, scoreResult: ScoreResult, drivers: ReportRiskDriver[]): ReportCategorySummary {
   const meta = categoryMeta[factor];
   const factorScore = scoreResult.factors[factor];
@@ -244,6 +300,9 @@ function buildCategorySummary(factor: RiskFactor, scoreResult: ScoreResult, driv
   };
 }
 
+/**
+ * Converts symptom answers into front/back body diagram groups.
+ */
 function getBodySymptoms(answers: Answers): ReportBodySymptoms {
   const reported = answers[questionIds.bodyDiscomfortAreas] || answers["question-9"]?.value === "yes";
   const symptoms: ReportBodySymptoms = {
@@ -269,6 +328,9 @@ function getBodySymptoms(answers: Answers): ReportBodySymptoms {
   return symptoms;
 }
 
+/**
+ * Builds the response-record appendix using English report labels.
+ */
 function getAnswerRecords(answers: Answers, aiOutputs: AiOutputs): ReportAnswerRecord[] {
   return questions.flatMap((question) => {
     const answer = answers[question.question_id];
@@ -283,6 +345,10 @@ function getAnswerRecords(answers: Answers, aiOutputs: AiOutputs): ReportAnswerR
   });
 }
 
+/**
+ * Normalizes a stored answer into selected options plus optional group IDs for
+ * report guidance lookup.
+ */
 function getSelectedReportOptions(question: Question, answer: Answer): Array<{ option: Option; groupId?: string }> {
   const value = answer.value;
   if (question.options) {
@@ -299,6 +365,9 @@ function getSelectedReportOptions(question: Question, answer: Answer): Array<{ o
   });
 }
 
+/**
+ * Formats one answer for the response-record appendix.
+ */
 function formatAnswer(question: Question, value: unknown, aiOutput = undefined as AiOutputs[string] | undefined): string[] {
   if (question.type === "text") {
     return [`Answer: ${getEnglishTextAnswer(value, aiOutput, "No answer")}`];
@@ -464,6 +533,12 @@ function pluralize(word: string, count: number) {
   return count === 1 ? word : `${word}s`;
 }
 
+/**
+ * Lists risk-bearing catalog selections that are missing PDF guidance.
+ *
+ * Unit tests call this to ensure new scored options do not silently disappear
+ * from category explanations and suggested actions.
+ */
 export function getRiskBearingSelectionsMissingGuidance() {
   return questions.flatMap((question) => {
     const optionEntries = question.options

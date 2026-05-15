@@ -1,3 +1,9 @@
+/**
+ * Shared bottom action area used by onboarding and assessment screens.
+ *
+ * `isBusy` disables both buttons so repeated submits and back navigation cannot
+ * interrupt an in-flight AI request.
+ */
 export function ActionButtons({
   onBack,
   onContinue,
@@ -32,6 +38,9 @@ export function ActionButtons({
   );
 }
 
+/**
+ * Pure button-state helper used by both the component and unit tests.
+ */
 export function getActionButtonState(canContinue: boolean, isBusy: boolean) {
   return {
     continueDisabled: !canContinue || isBusy,

@@ -112,6 +112,8 @@ export const el: Translation = {
         "prefer_not_to_say": "Προτιμώ να μην απαντήσω"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Πώς θα συνοψίζατε τον τύπο της εργασίας ή του καθήκοντος που αξιολογείται;",
       "options": {

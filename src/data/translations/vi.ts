@@ -112,6 +112,8 @@ export const vi: Translation = {
         "prefer_not_to_say": "Không muốn trả lời"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Bạn sẽ tóm tắt loại công việc hoặc nhiệm vụ đang được đánh giá như thế nào?",
       "options": {

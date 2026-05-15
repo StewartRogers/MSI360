@@ -112,6 +112,8 @@ export const yue: Translation = {
         "prefer_not_to_say": "唔想講"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "你會點概括今次評估嘅工作或任務類型？",
       "options": {

@@ -1,3 +1,10 @@
+/**
+ * Stable aliases for question IDs that are referenced from app logic.
+ *
+ * The full catalog keeps canonical IDs such as `question-17` to match the source
+ * questionnaire. These aliases prevent important flow logic from relying on
+ * magic strings throughout the application.
+ */
 export const questionIds = {
   role: "question-1",
   timeInRole: "question-2",
@@ -10,13 +17,27 @@ export const questionIds = {
   headPosition: "question-25"
 } as const;
 
+/**
+ * Fixed onboarding questions shown before the dynamic assessment path begins.
+ *
+ * Everything after these IDs is routed by tags and may be skipped or hidden by
+ * validated AI pre-answers.
+ */
 export const onboardingQuestionIds = new Set<string>([questionIds.role, questionIds.timeInRole, questionIds.taskDescription, questionIds.height]);
+
+/**
+ * Questions whose prompt is visually grouped under the section title because
+ * the localized label is long or needs additional context.
+ */
 export const promptUsesSectionTitle = new Set<string>([questionIds.bodyMakeshiftTool, questionIds.handheldToolContact, questionIds.upperBodyPosture, questionIds.headPosition]);
 
+/**
+ * Standalone prompt illustrations keyed by question ID.
+ *
+ * Paths are served from Vite's `public/` directory. Leave missing entries
+ * undefined; the UI simply renders a text-only question for those IDs.
+ */
 export const standaloneImages: Record<string, string> = {
-  // Job context
-  "question-5": "/images/indooroutdoor.png",
-
   // Organizational
   "question-7": "/images/input2.png",
   "question-8": "/images/input2.png",
@@ -62,6 +83,9 @@ export const standaloneImages: Record<string, string> = {
   "question-40": "/images/cold.jpeg"
 };
 
+/**
+ * Group-level illustrations for grouped questions.
+ */
 export const groupImages: Record<string, Record<string, string>> = {
   [questionIds.upperBodyPosture]: {
     forward_backward: "/images/lean-forward.png",
@@ -69,6 +93,9 @@ export const groupImages: Record<string, Record<string, string>> = {
   }
 };
 
+/**
+ * Option-level illustrations for image radio cards.
+ */
 export const optionImages: Record<string, Record<string, string>> = {
   [questionIds.headPosition]: {
     neutral: "/images/head-neutral.png",

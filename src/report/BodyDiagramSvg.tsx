@@ -5,6 +5,9 @@ interface BodyDiagramSvgProps {
   symptoms: ReportBodySymptoms;
 }
 
+/**
+ * Canonical body-area IDs used by question 10 and the PDF body diagram.
+ */
 const bodyPartIds = {
   neck: "neck",
   shouldersUpperArms: "shoulders_upper_arms",
@@ -16,6 +19,13 @@ const bodyPartIds = {
   anklesFeet: "ankles_feet"
 } as const;
 
+/**
+ * Inline React PDF SVG body diagram.
+ *
+ * The report highlights body regions selected in the symptom question. The
+ * detailed SVG paths are intentionally local so the PDF can render without
+ * loading an external body-diagram image.
+ */
 export function BodyDiagramSvg({ symptoms }: BodyDiagramSvgProps) {
   const hasSymptom = (bodyPartId: string) => {
     const hasMatchingId = (area: ReportBodySymptomArea) => area.id === bodyPartId;

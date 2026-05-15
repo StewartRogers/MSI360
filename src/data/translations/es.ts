@@ -112,6 +112,8 @@ export const es: Translation = {
         "prefer_not_to_say": "Prefiero no responder"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "¿Cómo resumirías el tipo de trabajo o tarea que se está evaluando?",
       "options": {

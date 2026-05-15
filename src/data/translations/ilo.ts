@@ -112,6 +112,8 @@ export const ilo: Translation = {
         "prefer_not_to_say": "Diak kayat ibaga"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Kasano nga ikabuklam ti klase ti trabaho wenno aramiden a ma-assess?",
       "options": {

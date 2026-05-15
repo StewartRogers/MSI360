@@ -112,6 +112,8 @@ export const ceb: Translation = {
         "prefer_not_to_say": "Dili ko gusto mosulti"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Unsaon nimo pag-summarize ang klase sa trabaho o buluhaton nga gi-assess?",
       "options": {

@@ -23,6 +23,21 @@ interface AiFallbackToast {
   message: string;
 }
 
+/**
+ * Root component and state coordinator for the MSI360 prototype.
+ *
+ * Responsibilities:
+ * - render the current screen in the single-page assessment flow
+ * - keep committed answers, draft assessment answers, active routing tags, and
+ *   AI outputs synchronized
+ * - trigger optional Gemini interpretation/pre-answer/report-analysis passes
+ * - score the assessment and pass report inputs to the PDF generator
+ *
+ * There is intentionally no backend state in this prototype. A future team can
+ * introduce persistence by replacing these local state updates with a store or
+ * API layer while preserving the same `Answers`, `AiOutputs`, and `ScoreResult`
+ * contracts.
+ */
 export default function App() {
   const [step, setStep] = useState<StepId>("intro");
   const [assessmentIndex, setAssessmentIndex] = useState(0);
@@ -76,6 +91,13 @@ export default function App() {
   const canContinueHeight = isQuestionAnswered(getQuestionById(questionIds.height), answers[questionIds.height]);
   const canContinueAssessmentQuestion = currentAssessmentQuestion ? isQuestionAnswered(currentAssessmentQuestion, displayedAssessmentAnswer) : true;
 
+  /**
+   * Commits or clears an onboarding answer and invalidates dependent derived data.
+   *
+   * The task description drives AI routing and hidden auto-answers. If it
+   * changes, dependent AI output and pre-answered assessment answers must be
+   * removed so stale routing cannot leak into the next path or PDF report.
+   */
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
     const isTaskDescriptionUpdate = questionId === questionIds.taskDescription;
     const shouldResetReportAnalysis = onboardingQuestionIds.has(questionId);
@@ -97,6 +119,13 @@ export default function App() {
     setScoreResult(null);
   }
 
+  /**
+   * Advances the fixed onboarding screens.
+   *
+   * Continuing past the task-description screen runs AI interpretation and
+   * optional pre-answering before moving to height. Continuing past height starts
+   * the optional report-analysis request in the background.
+   */
   async function continueFromStep() {
     setStatus("");
     if (step === "intro") return setStep("language");
@@ -141,6 +170,13 @@ export default function App() {
     }
   }
 
+  /**
+   * Starts the optional Gemini report-analysis request.
+   *
+   * The request is fire-and-forget. The report can still be downloaded without
+   * it, and the request ID prevents late responses from older onboarding answers
+   * from appearing in a newer report.
+   */
   function startReportAnalysis(nextAnswers: Answers, nextAiOutputs: AiOutputs) {
     const hasOnboardingAnswers = [questionIds.role, questionIds.timeInRole, questionIds.taskDescription, questionIds.height].every((questionId) =>
       isQuestionAnswered(getQuestionById(questionId), nextAnswers[questionId])
@@ -154,6 +190,9 @@ export default function App() {
     });
   }
 
+  /**
+   * Adds one or more AI fallback notices to the toast queue.
+   */
   function queueAiFallbackToasts(kinds: AiFallbackToastKind[], activeTranslations = t) {
     setToastQueue((queuedToasts) => [
       ...queuedToasts,
@@ -164,6 +203,10 @@ export default function App() {
     ]);
   }
 
+  /**
+   * Moves backward through the current flow while discarding uncommitted drafts
+   * for assessment questions.
+   */
   function goBack() {
     setStatus("");
     if (step === "language") return setStep("intro");
@@ -188,6 +231,14 @@ export default function App() {
     if (step === "submit") return setStep("report");
   }
 
+  /**
+   * Commits the current assessment draft, recomputes routing, and chooses the
+   * next assessment question.
+   *
+   * Assessment answers are drafted until Continue is clicked. Committing here
+   * avoids rerouting the current question while the worker is still changing a
+   * selection.
+   */
   function continueAssessment() {
     if (!currentAssessmentQuestion) {
       const nextResult = scoreAssessment(answers);
@@ -220,10 +271,16 @@ export default function App() {
     setStep("score");
   }
 
+  /**
+   * Updates the draft answer for the currently displayed assessment question.
+   */
   function setAssessmentAnswer(question: Question, value: AnswerValue) {
     setDraftAssessmentAnswers((draftAnswers) => applyDraftAnswer(draftAnswers, question.question_id, question.type, value));
   }
 
+  /**
+   * Reuses the latest score result, builds report data, and downloads the PDF.
+   */
   async function handleDownloadReport() {
     const nextResult = scoreResult || scoreAssessment(answers);
     setScoreResult(nextResult);
@@ -231,6 +288,9 @@ export default function App() {
     await downloadReport(answers, aiOutputs, nextResult, reportAnalysis);
   }
 
+  /**
+   * Clears all local state for a fresh assessment.
+   */
   function startNewAssessment() {
     setAnswers({});
     setAiOutputs({});
@@ -378,6 +438,10 @@ export default function App() {
   );
 }
 
+/**
+ * Small queued toast used when an attempted Gemini path falls back to local or
+ * non-pruned behavior.
+ */
 function AiFallbackToast({ toast, translations: activeTranslations, onDismiss }: { toast: AiFallbackToast | null; translations: Translation; onDismiss: () => void }) {
   if (!toast) return null;
 

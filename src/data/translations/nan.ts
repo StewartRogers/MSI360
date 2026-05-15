@@ -112,6 +112,8 @@ export const nan: Translation = {
         "prefer_not_to_say": "不想回答"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "你會按怎概述這个工作或任務類型？",
       "options": {

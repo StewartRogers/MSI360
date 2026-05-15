@@ -1,9 +1,21 @@
+/**
+ * Plain-language report guidance for one risk-driving answer selection.
+ *
+ * `concern` explains why the answer matters, `actions` become suggested report
+ * actions, and `tip` is used in the category detail panel when available.
+ */
 export interface ReportGuidance {
   concern: string;
   actions: string[];
   tip?: string;
 }
 
+/**
+ * Builds a stable lookup key for report guidance.
+ *
+ * Grouped questions include `groupId` because the same option ID may appear
+ * under several body regions or posture groups.
+ */
 export function reportGuidanceKey(questionId: string, optionId: string, groupId?: string) {
   return groupId ? `${questionId}.${groupId}.${optionId}` : `${questionId}.${optionId}`;
 }
@@ -206,6 +218,13 @@ const deadlines: ReportGuidance = {
   tip: "Pace and recovery should be reviewed alongside physical hazards."
 };
 
+/**
+ * Selection-to-guidance map used by report data construction.
+ *
+ * Every selected option with any risk score of 2 or higher should have a mapping
+ * here unless the team intentionally wants it excluded from PDF guidance. The
+ * `getRiskBearingSelectionsMissingGuidance` test helper flags omissions.
+ */
 export const reportGuidanceBySelection: Record<string, ReportGuidance> = {
   [reportGuidanceKey("question-6", "mostly_sit")]: sustainedSitting,
   [reportGuidanceKey("question-6", "mostly_stand_move")]: sustainedStanding,

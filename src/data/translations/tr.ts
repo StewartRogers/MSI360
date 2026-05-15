@@ -112,6 +112,8 @@ export const tr: Translation = {
         "prefer_not_to_say": "Söylememeyi tercih ederim"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Değerlendirilen iş veya görevin türünü nasıl özetlersiniz?",
       "options": {

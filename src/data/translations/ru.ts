@@ -112,6 +112,8 @@ export const ru: Translation = {
         "prefer_not_to_say": "Предпочитаю не отвечать"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Как бы вы кратко описали тип оцениваемой работы или задачи?",
       "options": {

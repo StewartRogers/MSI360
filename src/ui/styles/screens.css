@@ -1,3 +1,9 @@
+/*
+ * Screen-specific layouts for the MSI360 single-page flow.
+ *
+ * Use this file for page composition and one-off screen adjustments. Shared
+ * buttons, answer rows, inputs, and headers belong in components.css/base.css.
+ */
 .page-intro {
   padding: 45px 42px 48px 56px;
 }

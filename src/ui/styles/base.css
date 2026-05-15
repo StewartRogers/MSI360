@@ -1,3 +1,10 @@
+/*
+ * Global browser layout and shell styles.
+ *
+ * The prototype is designed mobile-first and constrains the app shell to a
+ * phone-sized column on wider screens. Component and screen-specific selectors
+ * live in the sibling CSS files.
+ */
 :root {
   color: #4c4642;
   background: #ededed;

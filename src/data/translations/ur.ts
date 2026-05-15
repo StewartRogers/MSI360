@@ -112,6 +112,8 @@ export const ur: Translation = {
         "prefer_not_to_say": "بتانا پسند نہیں"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "جس نوکری یا کام کا جائزہ لیا جا رہا ہے، آپ اسے کیسے بیان کریں گے؟",
       "options": {

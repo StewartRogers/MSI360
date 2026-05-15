@@ -2,6 +2,14 @@ import { questions, riskFactors } from "../data/catalog";
 import type { Answers, RiskFactor, ScoreResult } from "../types";
 import { getSelectedOptions } from "./routing";
 
+/**
+ * Scores the committed assessment answers.
+ *
+ * Prototype scoring uses catalog-defined placeholder mappings. For each
+ * question, the highest selected score per factor counts once, then factor
+ * scores are averaged into the base composite. Psychosocial values are averaged
+ * separately and applied only as a bounded final-score multiplier.
+ */
 export function scoreAssessment(answers: Answers): ScoreResult {
   const factorQuestionScores = Object.fromEntries(riskFactors.map((factor) => [factor, [] as number[]])) as Record<RiskFactor, number[]>;
   const psychosocialQuestionScores: number[] = [];
@@ -83,6 +91,12 @@ function round(value: number) {
   return Math.round(value * 10) / 10;
 }
 
+/**
+ * Maps the psychosocial average to the final composite-score multiplier.
+ *
+ * These thresholds are prototype values and should be reviewed before
+ * production use.
+ */
 export function getPsychosocialMultiplier(score: number | null) {
   if (score === null || score < 1.5) return 1;
   if (score < 2.4) return 1.3;

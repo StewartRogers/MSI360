@@ -1,3 +1,10 @@
+/*
+ * CSS entry point for the MSI360 prototype.
+ *
+ * The app uses plain CSS split by responsibility: global/mobile shell styles,
+ * reusable controls, and screen-specific layouts. React PDF styles are separate
+ * in src/report/ReportDocument.tsx because they do not use browser CSS.
+ */
 @import "./styles/base.css";
 @import "./styles/components.css";
 @import "./styles/screens.css";

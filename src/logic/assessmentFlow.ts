@@ -1,5 +1,11 @@
 import type { Answer, Answers, AnswerValue, Question, QuestionType } from "../types";
 
+/**
+ * Applies a committed answer to the canonical answer map.
+ *
+ * Empty values remove the answer entirely so required-question checks, routing,
+ * scoring, and report generation all observe the same incomplete state.
+ */
 export function applyAnswer(answers: Answers, questionId: string, type: QuestionType, value: AnswerValue): Answers {
   const nextAnswers = { ...answers };
 
@@ -12,6 +18,12 @@ export function applyAnswer(answers: Answers, questionId: string, type: Question
   return nextAnswers;
 }
 
+/**
+ * Stores a draft assessment answer without removing empty values.
+ *
+ * Drafts intentionally preserve empty values so clearing a selected answer is
+ * visible to the current screen before the worker commits by clicking Continue.
+ */
 export function applyDraftAnswer(draftAnswers: Answers, questionId: string, type: QuestionType, value: AnswerValue): Answers {
   return {
     ...draftAnswers,
@@ -19,14 +31,36 @@ export function applyDraftAnswer(draftAnswers: Answers, questionId: string, type
   };
 }
 
+/**
+ * Returns the answer that should be displayed for the current assessment screen.
+ *
+ * Draft answers take precedence over committed answers because the worker may be
+ * editing an existing response. Use `hasOwnProperty` rather than truthiness so an
+ * intentionally empty draft still overrides the committed value.
+ */
 export function getDisplayedAssessmentAnswer(questionId: string, committedAnswers: Answers, draftAnswers: Answers): Answer | undefined {
   return Object.prototype.hasOwnProperty.call(draftAnswers, questionId) ? draftAnswers[questionId] : committedAnswers[questionId];
 }
 
+/**
+ * Filters visible questions down to assessment questions.
+ *
+ * Onboarding questions are rendered by dedicated screens. Validated AI
+ * pre-answers are still stored and scored, but they are hidden from navigation to
+ * reduce duplicate worker effort.
+ */
 export function getAssessmentQuestions(visibleQuestions: Question[], onboardingQuestionIds: Set<string>, autoAnsweredQuestionIds: string[]): Question[] {
   return visibleQuestions.filter((question) => !onboardingQuestionIds.has(question.question_id) && !autoAnsweredQuestionIds.includes(question.question_id));
 }
 
+/**
+ * Determines where the assessment should move after a question is committed.
+ *
+ * A committed answer can change tags and reveal earlier follow-up questions in
+ * section order. This helper prioritizes newly visible unanswered questions,
+ * then moves forward to the next unanswered item, and returns `null` when the
+ * assessment is complete.
+ */
 export function findNextAssessmentIndexAfterCommit(
   previousAssessmentQuestions: Question[],
   nextAssessmentQuestions: Question[],
@@ -57,6 +91,12 @@ export function findNextAssessmentIndexAfterCommit(
   return firstUnansweredIndex >= 0 ? firstUnansweredIndex : null;
 }
 
+/**
+ * Returns whether a question has enough data to continue.
+ *
+ * Required grouped radio questions need every group answered. Required grouped
+ * checkbox questions need at least one selected body area/group.
+ */
 export function isQuestionAnswered(question: Question | undefined, answer: Answer | undefined) {
   if (!question?.required) return true;
   if (!answer) return false;
@@ -90,6 +130,9 @@ export function isQuestionAnswered(question: Question | undefined, answer: Answe
   return false;
 }
 
+/**
+ * Returns whether a value should be treated as no committed answer.
+ */
 export function isEmptyAnswerValue(value: AnswerValue | undefined) {
   if (value === undefined) return true;
   if (typeof value === "string") return value.trim().length === 0;

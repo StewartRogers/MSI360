@@ -1,3 +1,9 @@
+/**
+ * Bundle smoke test for the React PDF document.
+ *
+ * This catches browser-bundle regressions in `@react-pdf/renderer` usage without
+ * needing to visually inspect a generated PDF for every code change.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 

@@ -3,6 +3,14 @@ import type { AiOutputs, Answer, Answers, Option, Question } from "../types";
 
 const allowedTags = new Set(tagTaxonomy);
 
+/**
+ * Rebuilds the active routing tag set from committed answers and AI outputs.
+ *
+ * Routing is tag-based: answered questions and selected options can add
+ * canonical tags, and text questions can add validated AI tags. The result is
+ * fully recomputed instead of incrementally mutated so backtracking and answer
+ * edits cannot leave stale tags behind.
+ */
 export function recomputeTags(answers: Answers, aiOutputs: AiOutputs): string[] {
   const tags = new Set<string>(["start"]);
 
@@ -25,6 +33,13 @@ export function recomputeTags(answers: Answers, aiOutputs: AiOutputs): string[] 
   return [...tags];
 }
 
+/**
+ * Returns catalog questions whose display conditions match the active tags.
+ *
+ * Display-condition tags currently use permissive OR behavior: any matching tag
+ * makes the question visible. Keep this behavior unless the data model grows a
+ * separate "all tags required" concept.
+ */
 export function getVisibleQuestions(activeTags: string[]): Question[] {
   const tagSet = new Set(activeTags);
   return questions.filter((question) => {
@@ -33,6 +48,13 @@ export function getVisibleQuestions(activeTags: string[]): Question[] {
   });
 }
 
+/**
+ * Normalizes a stored answer into selected catalog option objects.
+ *
+ * Scoring and report generation both need option metadata such as risk scores
+ * and routing tags, so grouped and non-grouped answer shapes are handled here
+ * instead of duplicated downstream.
+ */
 export function getSelectedOptions(question: Question, answer?: Answer): Option[] {
   if (!answer) return [];
   const value = answer.value;

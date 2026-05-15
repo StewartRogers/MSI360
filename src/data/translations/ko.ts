@@ -112,6 +112,8 @@ export const ko: Translation = {
         "prefer_not_to_say": "응답하지 않음"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "평가 중인 직무 또는 업무 유형을 어떻게 요약하시겠습니까?",
       "options": {

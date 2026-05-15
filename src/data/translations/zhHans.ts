@@ -112,6 +112,8 @@ export const zhHans: Translation = {
         "prefer_not_to_say": "不愿回答"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "你会如何概括正在评估的工作或任务类型？",
       "options": {

@@ -8,6 +8,9 @@ import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingBu
 import { toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, Language, Translation } from "../../types";
 
+/**
+ * First screen shown to workers before any stateful questionnaire data exists.
+ */
 export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   return (
     <>
@@ -33,6 +36,12 @@ export function IntroScreen({ onContinue }: { onContinue: () => void }) {
   );
 }
 
+/**
+ * Language selection screen.
+ *
+ * The selected language controls in-app question text and layout direction. PDF
+ * reports remain English-only in this prototype.
+ */
 export function LanguageScreen(props: {
   languages: Language[];
   selectedLanguage: Language | null;
@@ -120,6 +129,10 @@ export function LanguageScreen(props: {
   );
 }
 
+/**
+ * Generic single-choice onboarding screen used for role, time in role, and
+ * worker height.
+ */
 export function ChoiceScreen(props: {
   questionId: string;
   answer?: Answer;
@@ -165,6 +178,9 @@ export function ChoiceScreen(props: {
   );
 }
 
+/**
+ * Informational bridge screen before the worker enters a task description.
+ */
 export function DescriptionScreen(props: { progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
   const title = props.translations.app.description_title || "Description";
   const body =
@@ -186,6 +202,12 @@ export function DescriptionScreen(props: { progressStep: number; totalSteps: num
   );
 }
 
+/**
+ * Free-text task-description screen.
+ *
+ * The parent owns AI loading state so the shared action buttons can prevent
+ * duplicate submissions while task interpretation is running.
+ */
 export function TextScreen(props: {
   questionId: string;
   value: string;

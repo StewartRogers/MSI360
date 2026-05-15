@@ -112,6 +112,8 @@ export const hi: Translation = {
         "prefer_not_to_say": "न बताना पसंद करूंगा/करूंगी"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "जिस नौकरी या कार्य का आकलन हो रहा है, उसके प्रकार को आप कैसे संक्षेप में बताएंगे?",
       "options": {

@@ -2,6 +2,13 @@ import type { Language } from "../types";
 
 const rtlLanguageCodes = new Set(["ar", "fa", "fa-x-nos", "prs", "ur"]);
 
+/**
+ * Languages shown in the selector.
+ *
+ * Keep `code` aligned with `translations` exports and keep `name` in the
+ * language's own script so users can recognize their option before selecting it.
+ * `ready=false` languages can be displayed as disabled "coming soon" entries.
+ */
 export const languages: Language[] = [
   { code: "en", name: "English", flag: "🇨🇦", flagCode: "ca", ready: true },
   { code: "pa", name: "ਪੰਜਾਬੀ", flag: "🇮🇳", flagCode: "in", ready: true },
@@ -45,6 +52,10 @@ export const languages: Language[] = [
   { code: "da", name: "Dansk", flag: "🇩🇰", flagCode: "dk", ready: true }
 ];
 
+/**
+ * Returns whether answer controls and wrap-up screens should use RTL layout
+ * adjustments for the selected language.
+ */
 export function isRtlLanguage(code: string) {
   return rtlLanguageCodes.has(code);
 }

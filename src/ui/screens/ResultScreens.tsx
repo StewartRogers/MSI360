@@ -7,6 +7,12 @@ import { toggleSingleOption } from "../../logic/answerSelection";
 import { describeFactorRisk, describeRisk, formatOverallScoreTokens, formatScore, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
 import type { ScoreResult, Translation } from "../../types";
 
+/**
+ * Displays the final on-screen MSI score summary before report collection.
+ *
+ * This screen uses the same `ScoreResult` object as the PDF report, so changes
+ * to scoring should appear consistently in both places.
+ */
 export function ScoreScreen({ result, progressStep, totalSteps, translations, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
   const factors = getFactorSummaries(result, translations);
   const psychosocialMessage = getPsychosocialInfluenceMessage(result, translations);
@@ -59,6 +65,12 @@ export function ScoreScreen({ result, progressStep, totalSteps, translations, on
   );
 }
 
+/**
+ * Optional email collection screen.
+ *
+ * The current prototype records the email only in local state and displays it on
+ * the next screen. It does not send email without a future backend integration.
+ */
 export function EmailScreen({ value, translations, isRtl = false, onChange, onBack, onContinue }: { value: string; translations: Translation; isRtl?: boolean; onChange: (value: string) => void; onBack: () => void; onContinue: () => void }) {
   const actionLabels = getActionButtonLabels(translations);
 
@@ -87,6 +99,12 @@ export function EmailScreen({ value, translations, isRtl = false, onChange, onBa
   );
 }
 
+/**
+ * Final report download screen.
+ *
+ * Summarizes the completed assessment and exposes PDF download, email-edit, and
+ * done actions. The actual PDF generation is handled by `logic/report.ts`.
+ */
 export function ReportReadyScreen({
   result,
   email,
@@ -162,6 +180,12 @@ export function ReportReadyScreen({
   );
 }
 
+/**
+ * Wrap-up question asking whether the user wants another assessment.
+ *
+ * Only the "start new" behavior is currently implemented by the parent
+ * completion screen; reuse/restart responses are captured for prototype flow.
+ */
 export function SubmitScreen({ value, translations, isRtl = false, onChange, onBack, onSubmit }: { value: string; translations: Translation; isRtl?: boolean; onChange: (value: string) => void; onBack: () => void; onSubmit: () => void }) {
   const { backLabel } = getActionButtonLabels(translations);
   const options = [
@@ -196,6 +220,9 @@ export function SubmitScreen({ value, translations, isRtl = false, onChange, onB
   );
 }
 
+/**
+ * Completion screen and reset entry point for a fresh assessment.
+ */
 export function CompleteScreen({ translations, isRtl = false, onStartNew }: { translations: Translation; isRtl?: boolean; onStartNew: () => void }) {
   return (
     <>

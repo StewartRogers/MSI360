@@ -112,6 +112,8 @@ export const de: Translation = {
         "prefer_not_to_say": "Möchte ich nicht angeben"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Wie würden Sie die Art der zu bewertenden Arbeit oder Aufgabe zusammenfassen?",
       "options": {

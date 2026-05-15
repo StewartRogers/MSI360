@@ -8,7 +8,8 @@ declare const __MSI360_TEST_GEMINI_TIMEOUT_MS__: number | undefined;
 
 const allowedTags = new Set(tagTaxonomy);
 const preAnswerConfidenceThreshold = 0.9;
-// Change this number to set how long app should wait for Gemini API call. Default = 15000ms
+// Keep task-routing requests short enough that the prototype can fall back
+// without blocking the assessment flow.
 const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 15000;
 const reportAnalysisRequestTimeoutMs = 60000;
 const interpretTextPromptGuidance = [
@@ -23,6 +24,13 @@ const preAnswerPromptGuidance = [
 ];
 const reportAnalysisMaxCharacters = 750;
 
+/**
+ * Interprets the worker's free-text task description into routing metadata.
+ *
+ * Gemini is used when configured. If Gemini is missing, times out, or returns
+ * invalid output, this function falls back to local keyword matching and still
+ * filters all tags against the question's allowed tag list.
+ */
 export async function interpretTextAnswer(question: Question, response: string): Promise<AiOutput> {
   const output = await interpretWithGemini(question, response).catch((error) => ({
     ...fallbackInterpretation(response),
@@ -36,6 +44,12 @@ export async function interpretTextAnswer(question: Question, response: string):
   };
 }
 
+/**
+ * Attempts to pre-answer visible follow-up questions from the task description.
+ *
+ * Pre-answering is an optional convenience only. When Gemini is unavailable or
+ * uncertain, the app asks the worker the visible questions normally.
+ */
 export async function preAnswerQuestions(candidateQuestions: Question[], response: string, existingAnswers: Answers): Promise<AiPreAnswerOutput> {
   if (!candidateQuestions.length || !response.trim()) {
     return {
@@ -52,6 +66,12 @@ export async function preAnswerQuestions(candidateQuestions: Question[], respons
   }));
 }
 
+/**
+ * Generates optional report-background analysis for the PDF.
+ *
+ * Report analysis must never block report generation; callers receive `null`
+ * when Gemini is absent, slow, or returns unusable output.
+ */
 export async function generateReportAnalysis(answers: Answers, aiOutputs: Record<string, AiOutput>): Promise<AiReportAnalysis | null> {
   return generateReportAnalysisWithGemini(answers, aiOutputs).catch(() => null);
 }
@@ -151,6 +171,12 @@ async function generateReportAnalysisWithGemini(answers: Answers, aiOutputs: Rec
   return validateReportAnalysisOutput(parseGeminiJson(text));
 }
 
+/**
+ * Builds the Gemini prompt for task-description routing.
+ *
+ * The prompt requires strict JSON and canonical tag IDs so output can be parsed,
+ * filtered, and merged into the same routing system used by manual answers.
+ */
 export function buildInterpretTextPrompt(question: Question, response: string): string {
   const instruction = question.ai_instructions;
   const allowedAddTags = instruction?.allowed_add_tags ?? [];
@@ -173,6 +199,12 @@ export function buildInterpretTextPrompt(question: Question, response: string): 
   ].join("\n");
 }
 
+/**
+ * Builds the Gemini prompt for optional question pre-answering.
+ *
+ * Candidate questions include canonical question/group/option IDs. The model may
+ * reason over multilingual worker text, but accepted values must use those IDs.
+ */
 export function buildPreAnswerPrompt(candidateQuestions: Question[], response: string): string {
   const candidates = createPreAnswerCandidates(candidateQuestions);
 
@@ -194,6 +226,13 @@ export function buildPreAnswerPrompt(candidateQuestions: Question[], response: s
   ].join("\n");
 }
 
+/**
+ * Builds the Gemini prompt for the optional PDF report analysis paragraph.
+ *
+ * The prompt is deliberately limited to onboarding answers (`question-1` through
+ * `question-4`) so generated analysis cannot imply it used detailed assessment
+ * answers or category scores.
+ */
 export function buildReportAnalysisPrompt(answers: Answers, aiOutputs: Record<string, AiOutput>): string {
   const onboardingContext = createReportAnalysisContext(answers, aiOutputs);
 
@@ -218,6 +257,12 @@ export function buildReportAnalysisPrompt(answers: Answers, aiOutputs: Record<st
   ].join("\n");
 }
 
+/**
+ * Validates and normalizes Gemini report-analysis output.
+ *
+ * The PDF renderer only accepts a normalized paragraph plus a provider marker.
+ * Source labels and the fixed disclaimer are added later in `reportData.ts`.
+ */
 export function validateReportAnalysisOutput(rawOutput: unknown): AiReportAnalysis | null {
   if (!isRecord(rawOutput)) return null;
   const paragraph = typeof rawOutput.paragraph === "string" ? normalizeAiParagraph(rawOutput.paragraph) : "";
@@ -260,10 +305,19 @@ function isAbortError(error: unknown) {
   return error instanceof DOMException && error.name === "AbortError";
 }
 
+/**
+ * Filters model-suggested tags to globally known tags allowed for the question.
+ */
 export function filterAllowedAddTags(question: Question, tags: string[]): string[] {
   return tags.filter((tag) => allowedTags.has(tag) && question.ai_instructions?.allowed_add_tags.includes(tag));
 }
 
+/**
+ * Converts catalog questions into compact prompt candidates for Gemini.
+ *
+ * Candidate payloads intentionally use English display text and canonical IDs.
+ * Gemini can reason across languages, but it must return IDs from the catalog.
+ */
 export function createPreAnswerCandidates(candidateQuestions: Question[]): AiPreAnswerCandidate[] {
   return candidateQuestions.flatMap((question) => {
     const text = translations.en.questions[question.question_id];
@@ -343,6 +397,13 @@ function getOptionLabel(questionId: string, optionId: string) {
   return translations.en.questions[questionId]?.options?.[optionId] || optionId;
 }
 
+/**
+ * Validates raw Gemini pre-answer JSON before it can affect app state.
+ *
+ * A returned pre-answer is accepted only when it targets an eligible unanswered
+ * question, meets the confidence threshold, cites exact evidence from the worker
+ * response, uses canonical IDs, and does not violate exclusive-option rules.
+ */
 export function validatePreAnswers(rawOutput: unknown, candidateQuestions: Question[], workerResponse: string, existingAnswers: Answers): AiPreAnswer[] {
   if (!isRecord(rawOutput) || !Array.isArray(rawOutput.auto_answers)) return [];
 
@@ -382,6 +443,13 @@ export function validatePreAnswers(rawOutput: unknown, candidateQuestions: Quest
   return accepted;
 }
 
+/**
+ * Local, conservative keyword fallback for task-description routing.
+ *
+ * The fallback is intentionally simple and should remain safe: it can add broad
+ * routing tags and missing-detail prompts, but it does not score answers or hide
+ * follow-up questions.
+ */
 function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
   const lower = text.toLowerCase();
   const tags: string[] = [];
@@ -448,6 +516,9 @@ function hasFrequencyOrDurationDetail(text: string) {
   return /\b(hour|hours|minute|minutes|daily|shift|shifts|day|days|hora|horas|minuto|minutos|diario|diaria|diarios|diarias|turno|turnos|dia|dias|día|días|cada)\b/i.test(text);
 }
 
+/**
+ * Parses a Gemini JSON response, tolerating small amounts of surrounding text.
+ */
 function parseGeminiJson(text: string): Record<string, unknown> {
   try {
     return JSON.parse(text);
@@ -458,6 +529,9 @@ function parseGeminiJson(text: string): Record<string, unknown> {
   }
 }
 
+/**
+ * Validates a Gemini-proposed answer value against the catalog question shape.
+ */
 function validatePreAnswerValue(question: Question, value: unknown): AnswerValue | undefined {
   if (question.type === "multi_choice" && question.options) {
     return typeof value === "string" && hasOption(question, value) ? value : undefined;

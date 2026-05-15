@@ -112,6 +112,8 @@ export const ta: Translation = {
         "prefer_not_to_say": "சொல்ல விரும்பவில்லை"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "மதிப்பிடப்படும் வேலை அல்லது பணியின் வகையை எவ்வாறு சுருக்கமாக விவரிப்பீர்கள்?",
       "options": {

@@ -1,6 +1,9 @@
 import type { Question } from "../types";
 import { tagTaxonomy } from "./tags";
 
+// The catalog is the source of truth for routing, scoring, and AI pre-answer
+// validation. Question text lives in translations so copy can change without
+// altering these stable IDs and option IDs.
 export const questions: Question[] = [
   {
     question_id: "question-1",
@@ -57,7 +60,8 @@ export const questions: Question[] = [
       { option_id: "prefer_not_to_say", risk_scores: {} }
     ]
   },
-  // removing this question for now, as it was made redundant by the task_description question
+  // skipping this question for now, as it was made redundant by the task_description question.
+  // we're leaving this in the code in case it is used in the future
   // {
   //   question_id: "question-5",
   //   section: "intro",

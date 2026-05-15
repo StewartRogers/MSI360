@@ -1,5 +1,18 @@
+/**
+ * Risk factors that participate in score aggregation.
+ *
+ * Keep this list synchronized with `RiskFactor`, score presentation labels, and
+ * report category order.
+ */
 export const riskFactors = ["contact_stress", "force", "awkward_posture", "repetition", "environmental"] as const;
 
+/**
+ * Canonical routing tag taxonomy.
+ *
+ * AI output, question-level tags, and option-level tags are all filtered through
+ * this list before they can affect routing. New routing behavior should add a
+ * tag here, then reference it from `questions.ts` display conditions or options.
+ */
 export const tagTaxonomy = [
   // General & Routing
   "start",

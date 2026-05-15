@@ -1,3 +1,10 @@
+/**
+ * Integration-style coverage for the MSI360 assessment flow.
+ *
+ * These tests exercise routing, draft-vs-committed answers, AI fallback routing,
+ * localization coverage, and cross-module behavior without rendering the full
+ * React app.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";

@@ -1,5 +1,11 @@
 import type { RiskFactor } from "../types";
 
+/**
+ * Static assets used by the generated PDF report.
+ *
+ * Paths resolve from Vite's `public/` directory at runtime. These are kept in one
+ * place so report layout code does not scatter string paths across components.
+ */
 export const reportAssets = {
   icons: {
     alert: "/icons/alert.png",
@@ -30,6 +36,9 @@ export const reportAssets = {
   }
 } as const;
 
+/**
+ * Maps each scored risk factor to the icon used in summary and detail sections.
+ */
 export const categoryIconByFactor: Record<RiskFactor, string> = {
   contact_stress: reportAssets.icons.contactStress,
   force: reportAssets.icons.force,

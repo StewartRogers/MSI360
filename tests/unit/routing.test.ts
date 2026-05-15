@@ -1,3 +1,7 @@
+/**
+ * Unit coverage for tag recomputation, question visibility, and selected-option
+ * normalization.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions } from "../../src/data/catalog";

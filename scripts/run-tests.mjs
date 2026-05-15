@@ -4,6 +4,13 @@ import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { build } from "esbuild";
 
+/**
+ * Bundles TypeScript test files to temporary JavaScript files, then executes
+ * them with Node's built-in test runner.
+ *
+ * The app is browser-oriented, but most logic tests run in Node. esbuild bridges
+ * that gap without introducing a separate test framework.
+ */
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const testDir = join(root, "tests");
 const outDir = join(root, "tmp", "automated-tests");
@@ -48,6 +55,9 @@ const result = spawnSync(process.execPath, ["--test", ...builtFiles], {
 if (result.error) throw result.error;
 process.exit(result.status ?? 1);
 
+/**
+ * Recursively collects TypeScript test entry points.
+ */
 function collectTestFiles(dir) {
   return readdirSync(dir).flatMap((item) => {
     const fullPath = join(dir, item);
@@ -56,6 +66,9 @@ function collectTestFiles(dir) {
   });
 }
 
+/**
+ * Recursively collects bundled JavaScript files emitted by esbuild.
+ */
 function collectBuiltFiles(dir) {
   return readdirSync(dir).flatMap((item) => {
     const fullPath = join(dir, item);

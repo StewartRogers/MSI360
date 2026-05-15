@@ -1,3 +1,7 @@
+/**
+ * Unit coverage for low-level answer toggling helpers used by radio, checkbox,
+ * and grouped answer controls.
+ */
 import test from "node:test";
 import assert from "node:assert/strict";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../src/logic/answerSelection";

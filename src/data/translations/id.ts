@@ -112,6 +112,8 @@ export const id: Translation = {
         "prefer_not_to_say": "Memilih untuk tidak menjawab"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "Bagaimana Anda merangkum jenis pekerjaan atau tugas yang sedang dinilai?",
       "options": {

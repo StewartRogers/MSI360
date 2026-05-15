@@ -112,6 +112,8 @@ export const ar: Translation = {
         "prefer_not_to_say": "أفضل عدم الإجابة"
       }
     },
+    // skipping this question for now, as it was made redundant by the task_description question.
+    // we're leaving this in the code in case it is used in the future
     "question-5": {
       "label": "كيف تلخص نوع الوظيفة أو المهمة التي يجري تقييمها؟",
       "options": {
