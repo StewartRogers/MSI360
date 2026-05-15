@@ -132,6 +132,15 @@ function OverviewContent({ report }: { report: ReportData }) {
         <Text style={styles.infoLine}>Higher-priority risks should be reviewed first. This report remains a starting point for discussion and action.</Text>
       </View>
 
+      <View style={report.aiGeneratedAnalysis ? styles.noteGrid : styles.noteBlock} wrap={false}>
+        <View style={report.aiGeneratedAnalysis ? styles.noteGridItem : undefined}>
+          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
+          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
+          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+        </View>
+        {report.aiGeneratedAnalysis && <AiGeneratedAnalysisBlock analysis={report.aiGeneratedAnalysis} />}
+      </View>
+
       <Text style={styles.sectionHeading}>Current symptoms</Text>
       <SymptomsAlert symptoms={report.symptoms} />
       <View style={styles.symptomDiagramRow} wrap={false}>
@@ -140,15 +149,6 @@ function OverviewContent({ report }: { report: ReportData }) {
           <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
         </View>
         <BodyDiagramSvg symptoms={report.symptoms} />
-      </View>
-
-      <View style={report.aiGeneratedAnalysis ? styles.noteGrid : styles.noteBlock} wrap={false}>
-        <View style={report.aiGeneratedAnalysis ? styles.noteGridItem : undefined}>
-          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
-          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
-          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
-        </View>
-        {report.aiGeneratedAnalysis && <AiGeneratedAnalysisBlock analysis={report.aiGeneratedAnalysis} />}
       </View>
 
       <View style={styles.controlsRow} wrap={false}>
