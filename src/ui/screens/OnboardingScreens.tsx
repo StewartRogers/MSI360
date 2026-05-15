@@ -4,7 +4,7 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
-import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, Language, Translation } from "../../types";
 
@@ -71,7 +71,7 @@ export function LanguageScreen(props: {
 
   return (
     <>
-      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
+      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} />
       <section className="page page-with-actions language-page">
         <div className="content-block">
           <h2>Choose Your Language</h2>
@@ -127,6 +127,7 @@ export function ChoiceScreen(props: {
   totalSteps: number;
   tone: HeaderTone;
   translations: Translation;
+  isRtl?: boolean;
   onAnswer: (value: string) => void;
   onBack: () => void;
   canContinue: boolean;
@@ -141,7 +142,7 @@ export function ChoiceScreen(props: {
 
   return (
     <>
-      <AppHeader tone={props.tone} progressStep={props.progressStep} totalSteps={props.totalSteps} />
+      <AppHeader tone={props.tone} progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} />
       <section className="page page-with-actions">
         <div className="content-block">
           <h2>{text.label}</h2>
@@ -152,6 +153,7 @@ export function ChoiceScreen(props: {
                 name={props.questionId}
                 checked={selected === option.option_id}
                 label={text.options?.[option.option_id] || option.option_id}
+                isRtl={props.isRtl}
                 onChange={() => props.onAnswer(toggleSingleOption(selected, option.option_id))}
               />
             ))}
@@ -172,7 +174,7 @@ export function DescriptionScreen(props: { progressStep: number; totalSteps: num
 
   return (
     <>
-      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
+      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} />
       <section className="page page-with-actions">
         <div className="content-block description-copy">
           <h2>{title}</h2>
@@ -203,7 +205,7 @@ export function TextScreen(props: {
 
   return (
     <>
-      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} />
+      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} />
       <section className="page page-with-actions">
         <div className="content-block">
           <h2>{text.label}</h2>
@@ -218,7 +220,7 @@ export function TextScreen(props: {
           {props.isLoading ? (
             <div className="loading-status" role="status" aria-live="polite">
               <span className="loading-spinner" aria-hidden="true" />
-              <span>Analyzing your task description...</span>
+              <span>{getAiLoadingTaskDescriptionLabel(props.translations)}</span>
             </div>
           ) : (
             props.status && <p className="small-status">{props.status}</p>

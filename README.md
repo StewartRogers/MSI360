@@ -217,12 +217,12 @@ Question text lives in language-specific files:
 src/data/translations/*.ts
 ```
 
-Current non-English files are placeholders that export English text. Replace each file with complete hard-coded translated question text when translations are ready. Add new languages by:
+Ready non-English files export hard-coded localized app text, section labels, and question text. `getQuestionText` still falls back to English for missing fields, but languages marked ready should keep full translation coverage for app labels, questions, options, and grouped options. Add new languages by:
 
 1. Creating a new file in `src/data/translations/`.
 2. Exporting a `Translation`.
 3. Adding it to `src/data/translations/index.ts`.
-4. Adding the language to `languages` in `src/data/catalog.ts`.
+4. Adding the language to `languages` in `src/data/languages.ts`, using the language's native display name for the selector label.
 
 During the assessment flow, option selections are treated as draft answers until the worker clicks Continue. Routing tags and follow-up questions are recomputed only after that commit, so choosing an option does not unexpectedly move the worker to another question.
 

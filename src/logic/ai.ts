@@ -386,11 +386,24 @@ function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
   const lower = text.toLowerCase();
   const tags: string[] = [];
 
-  addIf(tags, lower, ["computer", "keyboard", "mouse", "desk", "screen", "office"], ["office_computer", "desk_based", "screen_work", "seated_work"]);
-  addIf(tags, lower, ["lift", "carry", "box", "load"], ["manual_handling", "lifting_lowering", "carrying"]);
-  addIf(tags, lower, ["heavy", "80", "pound", "kg"], ["heavy_loads"]);
-  addIf(tags, lower, ["push", "pull", "cart", "dolly", "wheelbarrow", "rough surface", "soft surface"], ["pushing_pulling"]);
-  addIf(tags, lower, ["tool", "drill", "hammer", "wrench", "equipment", "machine", "lawnmower"], ["tool_use"]);
+  addIf(tags, lower, ["computer", "keyboard", "mouse", "desk", "screen", "office", "computadora", "teclado", "raton", "ratón", "escritorio", "pantalla", "oficina"], [
+    "office_computer",
+    "desk_based",
+    "screen_work",
+    "seated_work"
+  ]);
+  addIf(tags, lower, ["lift", "carry", "box", "load", "levanto", "levantar", "llevo", "cargar", "cargo", "caja", "cajas", "carga"], [
+    "manual_handling",
+    "lifting_lowering",
+    "carrying"
+  ]);
+  addIf(tags, lower, ["heavy", "80", "pound", "kg", "pesado", "pesada", "pesados", "pesadas"], ["heavy_loads"]);
+  addIf(tags, lower, ["push", "pull", "cart", "dolly", "wheelbarrow", "rough surface", "soft surface", "empujo", "empujar", "jalo", "jalar", "carro"], [
+    "pushing_pulling"
+  ]);
+  addIf(tags, lower, ["tool", "drill", "hammer", "wrench", "equipment", "machine", "lawnmower", "herramienta", "taladro", "martillo", "llave", "equipo", "maquina", "máquina"], [
+    "tool_use"
+  ]);
   addIf(tags, lower, ["vehicle", "forklift", "loader", "tractor", "pedal"], ["vehicle_equipment", "tool_use"]);
   addIf(tags, lower, ["vibration", "vibrating", "jackhammer"], ["vibrating_tools", "tool_use"]);
   addIf(tags, lower, ["sharp", "edge"], ["sharp_edges"]);
@@ -399,7 +412,7 @@ function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
   addIf(tags, lower, ["reach", "outstretched", "extended"], ["reaching_forward"]);
   addIf(tags, lower, ["bend", "lean", "stoop"], ["bending_trunk"]);
   addIf(tags, lower, ["twist", "rotate"], ["twisting"]);
-  addIf(tags, lower, ["repeat", "repetitive", "typing", "assembly"], ["repetitive_movements"]);
+  addIf(tags, lower, ["repeat", "repetitive", "typing", "assembly", "repetidamente", "repetitivo", "repetitiva", "ensamblaje"], ["repetitive_movements"]);
   addIf(tags, lower, ["wrist", "hand", "grip"], ["wrist_bending"]);
   addIf(tags, lower, ["pinch"], ["pinch_grip"]);
   addIf(tags, lower, ["power grip", "wrap my hand", "wrap hand"], ["power_grip"]);
@@ -411,8 +424,8 @@ function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
   addIf(tags, lower, ["overtime"], ["overtime"]);
 
   const missing: string[] = [];
-  if (tags.includes("lifting_lowering") && !/\b(lb|pound|kg|kilogram)\b/i.test(text)) missing.push("Approximate object weight");
-  if (tags.includes("repetitive_movements") && !/\b(hour|minute|daily|shift|day)\b/i.test(text)) missing.push("Frequency or duration");
+  if (tags.includes("lifting_lowering") && !hasWeightDetail(text)) missing.push("Approximate object weight");
+  if (tags.includes("repetitive_movements") && !hasFrequencyOrDurationDetail(text)) missing.push("Frequency or duration");
 
   return {
     normalized_answer_en: text,
@@ -425,6 +438,14 @@ function fallbackInterpretation(text: string): Omit<AiOutput, "provider"> {
 
 function addIf(tags: string[], text: string, keywords: string[], matches: string[]) {
   if (keywords.some((keyword) => text.includes(keyword))) tags.push(...matches);
+}
+
+function hasWeightDetail(text: string) {
+  return /\b(lb|lbs|pound|pounds|kg|kgs|kilogram|kilograms|kilo|kilos|kilogramo|kilogramos|libra|libras)\b/i.test(text);
+}
+
+function hasFrequencyOrDurationDetail(text: string) {
+  return /\b(hour|hours|minute|minutes|daily|shift|shifts|day|days|hora|horas|minuto|minutos|diario|diaria|diarios|diarias|turno|turnos|dia|dias|día|días|cada)\b/i.test(text);
 }
 
 function parseGeminiJson(text: string): Record<string, unknown> {

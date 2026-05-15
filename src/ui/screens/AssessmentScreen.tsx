@@ -2,7 +2,7 @@ import { groupImages, optionImages, promptUsesSectionTitle, questionIds, standal
 import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { CheckboxRow, ImageRadioCard, RadioRow } from "../components/AnswerControls";
-import { getActionButtonLabels, getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getProgressLabel, getQuestionText } from "../../data/translationText";
 import { isRecord, splitParagraphs } from "../../logic/appFlow";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
@@ -13,6 +13,7 @@ export function AssessmentQuestionScreen(props: {
   progressStep: number;
   totalSteps: number;
   translations: Translation;
+  isRtl?: boolean;
   onAnswer: (value: AnswerValue) => void;
   onBack: () => void;
   canContinue: boolean;
@@ -23,7 +24,7 @@ export function AssessmentQuestionScreen(props: {
   if (!props.question) {
     return (
       <>
-        <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
+        <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} compact />
         <section className="page page-with-actions">
           <div className="content-block">
             <h2>No additional questions are needed.</h2>
@@ -36,24 +37,24 @@ export function AssessmentQuestionScreen(props: {
 
   return (
     <>
-      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} compact />
+      <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} compact />
       <section className={`page page-with-actions question-page question-${props.question.question_id}`}>
-        <QuestionContent question={props.question} answer={props.answer} translations={props.translations} onAnswer={props.onAnswer} />
+        <QuestionContent question={props.question} answer={props.answer} translations={props.translations} isRtl={props.isRtl} onAnswer={props.onAnswer} />
         <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
       </section>
     </>
   );
 }
 
-function QuestionContent({ question, answer, translations: t, onAnswer }: { question: Question; answer?: Answer; translations: Translation; onAnswer: (value: AnswerValue) => void }) {
+function QuestionContent({ question, answer, translations: t, isRtl = false, onAnswer }: { question: Question; answer?: Answer; translations: Translation; isRtl?: boolean; onAnswer: (value: AnswerValue) => void }) {
   const text = getQuestionText(t, question.question_id);
   if (!text) return null;
 
   return (
-    <div className="content-block">
+    <div className={`content-block ${isRtl ? "rtl-answer-content" : ""}`}>
       <QuestionPrompt question={question} text={text} sectionTitle={t.sections[question.section] || question.section} />
       {standaloneImages[question.question_id] && <img className="question-illustration" src={standaloneImages[question.question_id]} alt="" />}
-      <QuestionAnswer question={question} text={text} answer={answer} onAnswer={onAnswer} />
+      <QuestionAnswer question={question} text={text} answer={answer} isRtl={isRtl} onAnswer={onAnswer} />
     </div>
   );
 }
@@ -96,7 +97,7 @@ function QuestionPrompt({ question, text, sectionTitle }: { question: Question; 
   );
 }
 
-function QuestionAnswer({ question, text, answer, onAnswer }: { question: Question; text: QuestionText; answer?: Answer; onAnswer: (value: AnswerValue) => void }) {
+function QuestionAnswer({ question, text, answer, isRtl = false, onAnswer }: { question: Question; text: QuestionText; answer?: Answer; isRtl?: boolean; onAnswer: (value: AnswerValue) => void }) {
   if (question.type === "multi_choice" && question.options && text.options) {
     const selected = typeof answer?.value === "string" ? answer.value : "";
     const images = optionImages[question.question_id];
@@ -111,6 +112,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
               checked={selected === option.option_id}
               label={text.options?.[option.option_id] || option.option_id}
               image={images[option.option_id]}
+              isRtl={isRtl}
               onChange={() => onAnswer(toggleSingleOption(selected, option.option_id))}
             />
           ))}
@@ -126,6 +128,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
             name={question.question_id}
             checked={selected === option.option_id}
             label={text.options?.[option.option_id] || option.option_id}
+            isRtl={isRtl}
             onChange={() => onAnswer(toggleSingleOption(selected, option.option_id))}
           />
         ))}
@@ -146,6 +149,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
             checked={selected.includes(option.option_id)}
             disabled={(Boolean(option.exclusive) && hasNonExclusive) || (!option.exclusive && hasExclusive)}
             label={text.options?.[option.option_id] || option.option_id}
+            isRtl={isRtl}
             onChange={() => onAnswer(toggleOption(selected, option.option_id, Boolean(option.exclusive)))}
           />
         ))}
@@ -163,7 +167,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
           const groupAnswer = value[group.group_id];
           const selected = typeof groupAnswer === "string" ? groupAnswer : "";
           return (
-            <section key={group.group_id} className="question-card">
+            <section key={group.group_id} className={`question-card ${isRtl ? "rtl-answer-card" : ""}`}>
               <h3>{text.groups?.[group.group_id]?.label || group.group_id}</h3>
               {images[group.group_id] && <img className="card-image" src={images[group.group_id]} alt="" />}
               <div className="answer-list compact">
@@ -173,6 +177,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
                     name={`${question.question_id}-${group.group_id}`}
                     checked={selected === option.option_id}
                     label={text.groups?.[group.group_id]?.options[option.option_id] || option.option_id}
+                    isRtl={isRtl}
                     onChange={() => onAnswer(setGroupAnswerValue(value, group.group_id, toggleSingleOption(selected, option.option_id)))}
                   />
                 ))}
@@ -192,7 +197,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
         {question.groups.map((group) => {
           const groupValue = Array.isArray(value[group.group_id]) ? (value[group.group_id] as string[]) : [];
           return (
-            <section key={group.group_id} className="question-card body-part-card">
+            <section key={group.group_id} className={`question-card body-part-card ${isRtl ? "rtl-answer-card" : ""}`}>
               <h3>{text.groups?.[group.group_id]?.label || group.group_id}</h3>
               <div className="answer-list compact">
                 {group.options.map((option) => (
@@ -200,6 +205,7 @@ function QuestionAnswer({ question, text, answer, onAnswer }: { question: Questi
                     key={option.option_id}
                     checked={groupValue.includes(option.option_id)}
                     label={text.groups?.[group.group_id]?.options[option.option_id] || option.option_id}
+                    isRtl={isRtl}
                     onChange={() => onAnswer(setGroupAnswerValue(value, group.group_id, toggleOption(groupValue, option.option_id, Boolean(option.exclusive))))}
                   />
                 ))}

@@ -1,9 +1,9 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
-import { languages } from "../../src/data/languages";
+import { isRtlLanguage, languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
-import { getActionButtonLabels, getAnalyzingButtonLabel, getQuestionText } from "../../src/data/translationText";
+import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -202,6 +202,64 @@ test("every language has a flag icon code for dropdown rendering", () => {
   }
 });
 
+test("language dropdown displays each language name in that language", () => {
+  const expectedLanguageNames: Record<string, string> = {
+    en: "English",
+    pa: "ਪੰਜਾਬੀ",
+    "zh-Hans": "普通话",
+    yue: "粵語",
+    fil: "Tagalog",
+    fr: "Français",
+    es: "Español",
+    ko: "한국어",
+    de: "Deutsch",
+    fa: "فارسی",
+    hi: "हिन्दी",
+    vi: "Tiếng Việt",
+    ru: "Русский",
+    ar: "العربية",
+    pt: "Português (Portugal)",
+    ja: "日本語",
+    it: "Italiano",
+    nl: "Nederlands",
+    pl: "Polski",
+    nan: "Bân-lâm-gú",
+    ur: "اردو",
+    gu: "ગુજરાતી",
+    ro: "Română",
+    uk: "Українська",
+    hu: "Magyar",
+    sr: "Српски",
+    ilo: "Ilokano",
+    hr: "Hrvatski",
+    prs: "دری",
+    ta: "தமிழ்",
+    el: "Ελληνικά",
+    cs: "Čeština",
+    "fa-x-nos": "فارسی (نامشخص)",
+    ml: "മലയാളം",
+    bn: "বাংলা",
+    tr: "Türkçe",
+    ceb: "Cebuano",
+    id: "Bahasa Indonesia",
+    af: "Afrikaans",
+    da: "Dansk"
+  };
+
+  for (const language of languages) {
+    assert.equal(language.name, expectedLanguageNames[language.code], `Unexpected native display name for ${language.code}`);
+  }
+});
+
+test("right-to-left languages are identified for answer control layout", () => {
+  assert.equal(isRtlLanguage("ar"), true);
+  assert.equal(isRtlLanguage("fa"), true);
+  assert.equal(isRtlLanguage("ur"), true);
+  assert.equal(isRtlLanguage("prs"), true);
+  assert.equal(isRtlLanguage("en"), false);
+  assert.equal(isRtlLanguage("pa"), false);
+});
+
 test("question text uses selected translations with English field fallback", () => {
   const text = getQuestionText(
     {
@@ -284,6 +342,107 @@ test("German, Persian, and Hindi translations have display text for every config
   assertTranslationCoverage("Hindi", translations.hi.questions);
 });
 
+test("Vietnamese translation has display text for every configured question option", () => {
+  assert.equal(translations.vi.app.description_title, "Mô tả");
+  assertTranslationCoverage("Vietnamese", translations.vi.questions);
+});
+
+test("Russian translation has display text for every configured question option", () => {
+  assert.equal(translations.ru.app.description_title, "Описание");
+  assertTranslationCoverage("Russian", translations.ru.questions);
+});
+
+test("Portuguese (Portugal) translation has display text for every configured question option", () => {
+  assert.equal(translations.pt.app.description_title, "Descrição");
+  assertTranslationCoverage("Portuguese (Portugal)", translations.pt.questions);
+});
+
+test("Japanese translation has display text for every configured question option", () => {
+  assert.equal(translations.ja.app.description_title, "説明");
+  assertTranslationCoverage("Japanese", translations.ja.questions);
+});
+
+test("Italian translation has display text for every configured question option", () => {
+  assert.equal(translations.it.app.description_title, "Descrizione");
+  assertTranslationCoverage("Italian", translations.it.questions);
+});
+
+test("Dutch translation has display text for every configured question option", () => {
+  assert.equal(translations.nl.app.description_title, "Beschrijving");
+  assertTranslationCoverage("Dutch", translations.nl.questions);
+});
+
+test("Polish translation has display text for every configured question option", () => {
+  assert.equal(translations.pl.app.description_title, "Opis");
+  assertTranslationCoverage("Polish", translations.pl.questions);
+});
+
+test("Min Nan, Urdu, and Gujarati translations have display text for every configured question option", () => {
+  assert.equal(translations.nan.app.description_title, "說明");
+  assert.equal(translations.ur.app.description_title, "تفصیل");
+  assert.equal(translations.gu.app.description_title, "વર્ણન");
+  assertTranslationCoverage("Min Nan", translations.nan.questions);
+  assertTranslationCoverage("Urdu", translations.ur.questions);
+  assertTranslationCoverage("Gujarati", translations.gu.questions);
+});
+
+test("Romanian translation has display text for every configured question option", () => {
+  assert.equal(translations.ro.app.description_title, "Descriere");
+  assertTranslationCoverage("Romanian", translations.ro.questions);
+});
+
+test("Ukrainian translation has display text for every configured question option", () => {
+  assert.equal(translations.uk.app.description_title, "Опис");
+  assertTranslationCoverage("Ukrainian", translations.uk.questions);
+});
+
+test("Hungarian, Serbian, and Ilocano translations have display text for every configured question option", () => {
+  assert.equal(translations.hu.app.description_title, "Leírás");
+  assert.equal(translations.sr.app.description_title, "Опис");
+  assert.equal(translations.ilo.app.description_title, "Deskripsion");
+  assertTranslationCoverage("Hungarian", translations.hu.questions);
+  assertTranslationCoverage("Serbian", translations.sr.questions);
+  assertTranslationCoverage("Ilocano", translations.ilo.questions);
+});
+
+test("Croatian, Dari, and Tamil translations have display text for every configured question option", () => {
+  assert.equal(translations.hr.app.description_title, "Opis");
+  assert.equal(translations.prs.app.description_title, "توضیح");
+  assert.equal(translations.ta.app.description_title, "விளக்கம்");
+  assertTranslationCoverage("Croatian", translations.hr.questions);
+  assertTranslationCoverage("Dari", translations.prs.questions);
+  assertTranslationCoverage("Tamil", translations.ta.questions);
+});
+
+test("Greek, Czech, and Persian n.o.s. translations have display text for every configured question option", () => {
+  assert.equal(translations.el.app.description_title, "Περιγραφή");
+  assert.equal(translations.cs.app.description_title, "Popis");
+  assert.equal(translations["fa-x-nos"].app.description_title, "توضیح");
+  assertTranslationCoverage("Greek", translations.el.questions);
+  assertTranslationCoverage("Czech", translations.cs.questions);
+  assertTranslationCoverage("Persian n.o.s.", translations["fa-x-nos"].questions);
+});
+
+test("Malayalam, Bengali, and Turkish translations have display text for every configured question option", () => {
+  assert.equal(translations.ml.app.description_title, "വിവരണം");
+  assert.equal(translations.bn.app.description_title, "বিবরণ");
+  assert.equal(translations.tr.app.description_title, "Açıklama");
+  assertTranslationCoverage("Malayalam", translations.ml.questions);
+  assertTranslationCoverage("Bengali", translations.bn.questions);
+  assertTranslationCoverage("Turkish", translations.tr.questions);
+});
+
+test("Cebuano, Indonesian, Afrikaans, and Danish translations have display text for every configured question option", () => {
+  assert.equal(translations.ceb.app.description_title, "Deskripsyon");
+  assert.equal(translations.id.app.description_title, "Deskripsi");
+  assert.equal(translations.af.app.description_title, "Beskrywing");
+  assert.equal(translations.da.app.description_title, "Beskrivelse");
+  assertTranslationCoverage("Cebuano", translations.ceb.questions);
+  assertTranslationCoverage("Indonesian", translations.id.questions);
+  assertTranslationCoverage("Afrikaans", translations.af.questions);
+  assertTranslationCoverage("Danish", translations.da.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -295,7 +454,141 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.de).continueLabel, "Weiter");
   assert.equal(getActionButtonLabels(translations.fa).continueLabel, "ادامه");
   assert.equal(getActionButtonLabels(translations.hi).continueLabel, "जारी रखें");
+  assert.equal(getActionButtonLabels(translations.vi).continueLabel, "Tiếp tục");
+  assert.equal(getActionButtonLabels(translations.ru).continueLabel, "Продолжить");
+  assert.equal(getActionButtonLabels(translations.pt).continueLabel, "Continuar");
+  assert.equal(getActionButtonLabels(translations.ja).continueLabel, "続行");
+  assert.equal(getActionButtonLabels(translations.it).continueLabel, "Continua");
+  assert.equal(getActionButtonLabels(translations.nl).continueLabel, "Doorgaan");
+  assert.equal(getActionButtonLabels(translations.pl).continueLabel, "Kontynuuj");
+  assert.equal(getActionButtonLabels(translations.nan).continueLabel, "繼續");
+  assert.equal(getActionButtonLabels(translations.ur).continueLabel, "جاری رکھیں");
+  assert.equal(getActionButtonLabels(translations.gu).continueLabel, "ચાલુ રાખો");
+  assert.equal(getActionButtonLabels(translations.ro).continueLabel, "Continua");
+  assert.equal(getActionButtonLabels(translations.uk).continueLabel, "Продовжити");
+  assert.equal(getActionButtonLabels(translations.hu).continueLabel, "Folytatás");
+  assert.equal(getActionButtonLabels(translations.sr).continueLabel, "Настави");
+  assert.equal(getActionButtonLabels(translations.ilo).continueLabel, "Itultuloy");
+  assert.equal(getActionButtonLabels(translations.hr).continueLabel, "Nastavi");
+  assert.equal(getActionButtonLabels(translations.prs).continueLabel, "ادامه");
+  assert.equal(getActionButtonLabels(translations.ta).continueLabel, "தொடரவும்");
+  assert.equal(getActionButtonLabels(translations.el).continueLabel, "Συνέχεια");
+  assert.equal(getActionButtonLabels(translations.cs).continueLabel, "Pokračovat");
+  assert.equal(getActionButtonLabels(translations["fa-x-nos"]).continueLabel, "ادامه");
+  assert.equal(getActionButtonLabels(translations.ml).continueLabel, "തുടരുക");
+  assert.equal(getActionButtonLabels(translations.bn).continueLabel, "চালিয়ে যান");
+  assert.equal(getActionButtonLabels(translations.tr).continueLabel, "Devam et");
+  assert.equal(getActionButtonLabels(translations.ceb).continueLabel, "Padayon");
+  assert.equal(getActionButtonLabels(translations.id).continueLabel, "Lanjutkan");
+  assert.equal(getActionButtonLabels(translations.af).continueLabel, "Gaan voort");
+  assert.equal(getActionButtonLabels(translations.da).continueLabel, "Fortsæt");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
+});
+
+test("ready translations provide localized AI loading and fallback labels", () => {
+  const requiredKeys = ["ai_loading_task_description", "ai_task_analysis_fallback_toast", "ai_question_pruning_fallback_toast", "ai_fallback_toast_dismiss"];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
+
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.en), "Analyzing your task description...");
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.es), "Analizando la descripción de su tarea...");
+});
+
+test("ready translations provide localized question progress labels", () => {
+  for (const language of languages.filter((item) => item.ready)) {
+    const template = translations[language.code].app.question_progress;
+    assert.ok(template, `Missing question progress label for ${language.code}`);
+    assert.ok(template.includes("{current}"), `Missing current placeholder for ${language.code}`);
+    assert.ok(template.includes("{total}"), `Missing total placeholder for ${language.code}`);
+
+    const label = getProgressLabel(translations[language.code], 2, 10);
+    assert.ok(label.includes("2"), `Missing current number in rendered label for ${language.code}`);
+    assert.ok(label.includes("10"), `Missing total number in rendered label for ${language.code}`);
+    assert.ok(!label.includes("{current}"), `Unresolved current placeholder for ${language.code}`);
+    assert.ok(!label.includes("{total}"), `Unresolved total placeholder for ${language.code}`);
+  }
+
+  assert.equal(getProgressLabel(translations.fr, 2, 10), "Question 2 sur 10");
+  assert.equal(getProgressLabel(translations.ar, 2, 10), "السؤال 2 من 10");
+  assert.equal(getProgressLabel(translations["zh-Hans"], 2, 10), "第 2 题，共 10 题");
+});
+
+test("ready translations provide localized score summary labels", () => {
+  const requiredKeys = [
+    "score_summary_title",
+    "score_overall_risk",
+    "score_download_report",
+    "score_not_available",
+    "score_out_of_4",
+    "score_risk_not_enough",
+    "score_risk_low",
+    "score_risk_possible",
+    "score_risk_likely",
+    "score_risk_known",
+    "score_factor_not_enough",
+    "score_factor_low",
+    "score_factor_possible",
+    "score_factor_likely",
+    "score_factor_known",
+    "score_psychosocial_note",
+    "score_subject_contact_stress",
+    "score_subject_force",
+    "score_subject_awkward_postures",
+    "score_subject_repetition",
+    "score_subject_environmental"
+  ];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
+});
+
+test("ready translations provide localized report wrap-up labels", () => {
+  const requiredKeys = [
+    "wrap_email_copy",
+    "wrap_review_results",
+    "wrap_submit_report",
+    "email_title",
+    "email_body",
+    "email_next_body",
+    "email_address_label",
+    "report_ready_title",
+    "report_card_title",
+    "report_date_label",
+    "report_task_label",
+    "report_overall_score_label",
+    "report_highest_risk",
+    "report_no_scored_categories",
+    "report_email_copy_requested",
+    "report_download_pdf",
+    "report_email_report",
+    "report_done",
+    "submit_title",
+    "submit_option_reuse",
+    "submit_option_restart",
+    "submit_option_no",
+    "submit_copy",
+    "submit_button",
+    "complete_title",
+    "complete_body",
+    "complete_next_steps_title",
+    "complete_next_step_review",
+    "complete_next_step_share",
+    "complete_next_step_visit",
+    "complete_start_new"
+  ];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
 });
 
 function assertTranslationCoverage(languageName: string, translatedQuestions: typeof translations.en.questions) {
