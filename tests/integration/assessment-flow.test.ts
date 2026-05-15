@@ -391,6 +391,29 @@ test("Romanian translation has display text for every configured question option
   assertTranslationCoverage("Romanian", translations.ro.questions);
 });
 
+test("Ukrainian translation has display text for every configured question option", () => {
+  assert.equal(translations.uk.app.description_title, "Опис");
+  assertTranslationCoverage("Ukrainian", translations.uk.questions);
+});
+
+test("Hungarian, Serbian, and Ilocano translations have display text for every configured question option", () => {
+  assert.equal(translations.hu.app.description_title, "Leírás");
+  assert.equal(translations.sr.app.description_title, "Опис");
+  assert.equal(translations.ilo.app.description_title, "Deskripsion");
+  assertTranslationCoverage("Hungarian", translations.hu.questions);
+  assertTranslationCoverage("Serbian", translations.sr.questions);
+  assertTranslationCoverage("Ilocano", translations.ilo.questions);
+});
+
+test("Croatian, Dari, and Tamil translations have display text for every configured question option", () => {
+  assert.equal(translations.hr.app.description_title, "Opis");
+  assert.equal(translations.prs.app.description_title, "توضیح");
+  assert.equal(translations.ta.app.description_title, "விளக்கம்");
+  assertTranslationCoverage("Croatian", translations.hr.questions);
+  assertTranslationCoverage("Dari", translations.prs.questions);
+  assertTranslationCoverage("Tamil", translations.ta.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -413,6 +436,13 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.ur).continueLabel, "جاری رکھیں");
   assert.equal(getActionButtonLabels(translations.gu).continueLabel, "ચાલુ રાખો");
   assert.equal(getActionButtonLabels(translations.ro).continueLabel, "Continua");
+  assert.equal(getActionButtonLabels(translations.uk).continueLabel, "Продовжити");
+  assert.equal(getActionButtonLabels(translations.hu).continueLabel, "Folytatás");
+  assert.equal(getActionButtonLabels(translations.sr).continueLabel, "Настави");
+  assert.equal(getActionButtonLabels(translations.ilo).continueLabel, "Itultuloy");
+  assert.equal(getActionButtonLabels(translations.hr).continueLabel, "Nastavi");
+  assert.equal(getActionButtonLabels(translations.prs).continueLabel, "ادامه");
+  assert.equal(getActionButtonLabels(translations.ta).continueLabel, "தொடரவும்");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
