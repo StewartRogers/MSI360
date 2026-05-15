@@ -365,6 +365,15 @@ test("Croatian, Dari, and Tamil translations have display text for every configu
   assertTranslationCoverage("Tamil", translations.ta.questions);
 });
 
+test("Greek, Czech, and Persian n.o.s. translations have display text for every configured question option", () => {
+  assert.equal(translations.el.app.description_title, "Περιγραφή");
+  assert.equal(translations.cs.app.description_title, "Popis");
+  assert.equal(translations["fa-x-nos"].app.description_title, "توضیح");
+  assertTranslationCoverage("Greek", translations.el.questions);
+  assertTranslationCoverage("Czech", translations.cs.questions);
+  assertTranslationCoverage("Persian n.o.s.", translations["fa-x-nos"].questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -394,6 +403,9 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.hr).continueLabel, "Nastavi");
   assert.equal(getActionButtonLabels(translations.prs).continueLabel, "ادامه");
   assert.equal(getActionButtonLabels(translations.ta).continueLabel, "தொடரவும்");
+  assert.equal(getActionButtonLabels(translations.el).continueLabel, "Συνέχεια");
+  assert.equal(getActionButtonLabels(translations.cs).continueLabel, "Pokračovat");
+  assert.equal(getActionButtonLabels(translations["fa-x-nos"]).continueLabel, "ادامه");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
 });
 
