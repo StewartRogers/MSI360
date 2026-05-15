@@ -3,6 +3,7 @@
 ## Development Instructions
 
 - Write clear, easy-to-read code that follows project best practices.
+- Include clear and concise comments, enough so that other developers can pick up this project at a different company after the handoff
 - Use descriptive variable, function, and class names that make intent obvious.
 - Read the README before making changes to understand the current project context.
 - Update the README after changes when behavior, setup, usage, or project expectations change.
