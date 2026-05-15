@@ -71,18 +71,7 @@ function IntroContent({ report }: { report: ReportData }) {
         </View>
       </NumberedSection>
 
-      <NumberedSection number="4" title="Risk categories assessed">
-        <View style={styles.categoryIntroGrid} wrap={false}>
-          {report.categories.map((category) => (
-            <View key={category.key} style={styles.categoryIntroCard}>
-              <Text style={styles.categoryIntroTitle}>{category.label}</Text>
-              <Text style={styles.categoryIntroText}>{category.description}</Text>
-            </View>
-          ))}
-        </View>
-      </NumberedSection>
-
-      <NumberedSection number="5" title="Using this report">
+      <NumberedSection number="4" title="Using this report">
         <View style={styles.usingBox} wrap={false}>
           <BulletList
             items={[
@@ -91,6 +80,17 @@ function IntroContent({ report }: { report: ReportData }) {
               "Risk reduction should focus on practical changes to the work itself whenever possible."
             ]}
           />
+        </View>
+      </NumberedSection>
+
+      <NumberedSection number="5" title="Risk categories assessed">
+        <View style={styles.categoryIntroGrid} wrap={false}>
+          {report.categories.map((category) => (
+            <View key={category.key} style={styles.categoryIntroCard}>
+              <Text style={styles.categoryIntroTitle}>{category.label}</Text>
+              <Text style={styles.categoryIntroText}>{category.description}</Text>
+            </View>
+          ))}
         </View>
       </NumberedSection>
     </View>
