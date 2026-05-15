@@ -82,24 +82,7 @@ function IntroContent({ report }: { report: ReportData }) {
         </View>
       </NumberedSection>
 
-      <NumberedSection number="5" title="How to read the report">
-        <View style={styles.readingBox} wrap={false}>
-          <View style={styles.readingRows}>
-            <DefinitionRow label="Score" text="A risk value based on the worker's answers." />
-            <DefinitionRow label="Risk level" text="A plain-language description of the score." />
-            <DefinitionRow label="Why it matters" text="A short explanation of the possible MSI concern." />
-            <DefinitionRow label="Suggested actions" text="Practical steps that may help reduce the risk." />
-          </View>
-          <View style={styles.infoCallout}>
-            <View style={styles.infoIconCircle}>
-              <Text style={styles.infoIconChar}>i</Text>
-            </View>
-            <Text style={styles.infoText}>Higher-risk areas{"\n"}should be reviewed first.</Text>
-          </View>
-        </View>
-      </NumberedSection>
-
-      <NumberedSection number="6" title="Using this report">
+      <NumberedSection number="5" title="Using this report">
         <View style={styles.usingBox} wrap={false}>
           <BulletList
             items={[
@@ -301,15 +284,6 @@ function AudienceCard({ icon, title, text }: { icon: string; title: string; text
         <Text style={styles.cardTitle}>{title}</Text>
         <Text style={styles.smallText}>{text}</Text>
       </View>
-    </View>
-  );
-}
-
-function DefinitionRow({ label, text }: { label: string; text: string }) {
-  return (
-    <View style={styles.definitionRow}>
-      <Text style={styles.definitionLabel}>{label}</Text>
-      <Text style={styles.definitionText}>{text}</Text>
     </View>
   );
 }
@@ -586,53 +560,6 @@ const styles = StyleSheet.create({
   categoryIntroText: {
     fontSize: 6.5,
     lineHeight: 1.25,
-    textAlign: "center"
-  },
-  readingBox: {
-    border: `1 solid ${colors.border}`,
-    borderRadius: 4,
-    padding: "16 24",
-    flexDirection: "row",
-    alignItems: "center"
-  },
-  readingRows: {
-    flex: 1
-  },
-  definitionRow: {
-    flexDirection: "row",
-    marginBottom: 8
-  },
-  definitionLabel: {
-    width: 110,
-    fontSize: 8.5,
-    fontWeight: "bold"
-  },
-  definitionText: {
-    flex: 1,
-    fontSize: 8.5
-  },
-  infoCallout: {
-    width: 140,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  infoIconCircle: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    border: `2 solid ${colors.orange}`,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 6
-  },
-  infoIconChar: {
-    color: colors.orange,
-    fontSize: 14,
-    fontWeight: "bold"
-  },
-  infoText: {
-    fontSize: 8.5,
-    lineHeight: 1.2,
     textAlign: "center"
   },
   usingBox: {
