@@ -8,7 +8,12 @@ const allowedTags = new Set(tagTaxonomy);
 const preAnswerConfidenceThreshold = 0.9;
 // Change this number to set how long app should wait for Gemini API call. Default = 15000ms
 const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 15000;
-const multilingualPromptGuidance = [
+const interpretTextPromptGuidance = [
+  "If the worker response is in English, interpret it directly using the same tag-selection behavior as an English task description.",
+  "For English responses, preserve concrete routing clues from the text such as desk, computer, keyboard, mouse, screen, lift, carry, tool, reach, bend, twist, kneel, cold, glare, or noise.",
+  "If the worker response is not English or mixes languages, internally translate or interpret it to English, then apply the same tag-selection behavior used for English responses."
+];
+const preAnswerPromptGuidance = [
   "The worker response may be written in any language or may mix languages.",
   "Interpret the original response semantically. You may internally translate or normalize it to English when helpful.",
   "Base decisions on the worker's intended meaning, not literal English keyword matching."
@@ -123,10 +128,10 @@ export function buildInterpretTextPrompt(question: Question, response: string): 
   return [
     "You support MSI360, a prototype musculoskeletal injury risk survey.",
     "Analyze the worker's text answer and return strict JSON only. Do not include markdown or commentary.",
-    ...multilingualPromptGuidance,
+    ...interpretTextPromptGuidance,
     "Return normalized_answer_en as a concise English interpretation of the original response.",
-    "Use only exact canonical tag IDs listed in allowed_add_tags for add_tags. If no tag clearly applies, return an empty add_tags array.",
-    "Do not invent, translate, localize, rename, or paraphrase tag IDs.",
+    "Use only tags listed in allowed_add_tags. If no tag clearly applies, return an empty add_tags array.",
+    "Do not invent, translate, localize, rename, or paraphrase tag IDs. Return exact tag IDs from allowed_add_tags.",
     "Do not invent scoring values. Only extract tags and missing details that help route follow-up MSI questions.",
     `Question id: ${question.question_id}`,
     `Purpose: ${instruction?.purpose ?? "interpret_text_answer"}`,
@@ -145,7 +150,7 @@ export function buildPreAnswerPrompt(candidateQuestions: Question[], response: s
     "You support MSI360, a prototype musculoskeletal injury risk survey.",
     "The worker already answered a free-text task description. Determine whether that text explicitly answers any candidate questions.",
     "Return strict JSON only. Do not include markdown or commentary.",
-    ...multilingualPromptGuidance,
+    ...preAnswerPromptGuidance,
     "The candidate question labels and option labels are provided in English, but the worker response may not be English.",
     "Only pre-answer a question when the answer is clearly stated by the worker response. Do not assume missing details.",
     "Use only the exact canonical question_id, group ids, and option ids shown in candidate_questions.",

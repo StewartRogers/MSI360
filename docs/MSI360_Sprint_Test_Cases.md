@@ -35,7 +35,7 @@ npm run test:automated
 | AT-11 | `tests/integration/assessment-flow.test.ts` | Integration test | Draft assessment answers are not scored until committed. | Score calculations ignore draft answers and change only after commit. |
 | AT-12 | `tests/integration/assessment-flow.test.ts` | Integration/data test | Every configured question has English display text for its options. | Each question, option, group, and grouped option has the English label needed for the UI/report. |
 | AT-13 | `tests/unit/ai.test.ts` | Unit test | `interpretTextAnswer` uses the local fallback and returns allowed routing tags when Gemini is not configured. | Fallback returns useful routing tags for heavy lifting/tool use and missing-detail prompts for object weight and duration. |
-| AT-14 | `tests/unit/ai.test.ts` | Unit test | `buildInterpretTextPrompt` instructs Gemini to handle multilingual text and canonical tags. | Prompt includes multilingual guidance, canonical tag instructions, and allowed tag IDs. |
+| AT-14 | `tests/unit/ai.test.ts` | Unit test | `buildInterpretTextPrompt` preserves English tag-selection behavior while supporting multilingual text and canonical tags. | Prompt tells Gemini to interpret English directly, interpret non-English into the same English tag-selection behavior, preserve concrete routing clues, and return allowed tag IDs. |
 | AT-15 | `tests/unit/ai.test.ts` | Unit test | `buildPreAnswerPrompt` instructs Gemini to handle multilingual text and canonical answer IDs. | Prompt includes multilingual guidance, canonical question/group/option ID rules, and evidence requirements. |
 | AT-16 | `tests/unit/ai.test.ts` | Unit test | `filterAllowedAddTags` removes unknown or translated tags and keeps canonical tags. | Only valid canonical tags allowed for the question are returned. |
 | AT-17 | `tests/unit/ai.test.ts` | Unit test | `validatePreAnswers` accepts high-confidence answers grounded in the worker text. | A valid high-confidence pre-answer with grounded evidence is accepted. |
@@ -76,6 +76,10 @@ npm run test:automated
 | AT-52 | `tests/unit/report-data.test.ts` | Unit test | Report data computes category priority counts from selected answer scores. | Scores of 4, 3, and 2 count as high, medium, and review priority respectively. |
 | AT-53 | `tests/unit/report-data.test.ts` | Unit test | Report data uses answer-driven suggested actions and clean low-risk fallback text. | Risk-driving answers produce relevant explanations/actions, and categories with no scored hazard use safe fallback guidance. |
 | AT-54 | `tests/unit/report-document.test.ts` | Bundle smoke test | React PDF report document can be bundled for browser rendering. | The report document and React PDF renderer bundle successfully for the browser target. |
+| AT-55 | `tests/unit/routing.test.ts` | Unit test | Office computer AI tags preserve the full desk-work routing path. | Office/computer, seated, static, mouse-intensive, and repetitive tags are retained and route to the expected 22-question office path. |
+| AT-56 | `tests/unit/routing.test.ts` | Unit test | Manual-handling AI tags route lifting, carrying, force, and repetition follow-ups. | Manual handling, lifting/lowering, carrying, and heavy-load tags are retained and relevant force/repetition questions appear. |
+| AT-57 | `tests/unit/routing.test.ts` | Unit test | Tool-use AI tags route grip, start-force, vibration, and posture follow-ups. | Tool-use, vibrating-tool, and power-grip tags are retained and relevant tool, posture, and repetition questions appear. |
+| AT-58 | `tests/unit/routing.test.ts` | Unit test | Environment AI tags route noise, glare, and cold follow-ups. | Outdoor, cold, glare, and noise tags are retained and the environmental follow-up questions appear. |
 
 ## Manual Test Cases
 

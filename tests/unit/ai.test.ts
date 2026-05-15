@@ -24,11 +24,12 @@ test("buildInterpretTextPrompt instructs Gemini to handle multilingual text and 
   const question = getQuestion("question-3");
   const prompt = buildInterpretTextPrompt(question, "Levanto cajas pesadas todos los dias.");
 
-  assert.ok(/may be written in any language/i.test(prompt));
-  assert.ok(/internally translate or normalize/i.test(prompt));
-  assert.ok(/intended meaning/i.test(prompt));
-  assert.ok(/exact canonical tag IDs/i.test(prompt));
-  assert.ok(/Do not invent, translate, localize, rename, or paraphrase tag IDs/i.test(prompt));
+  assert.ok(/If the worker response is in English, interpret it directly/i.test(prompt));
+  assert.ok(/preserve concrete routing clues/i.test(prompt));
+  assert.ok(/not English or mixes languages/i.test(prompt));
+  assert.ok(/apply the same tag-selection behavior used for English responses/i.test(prompt));
+  assert.ok(/Use only tags listed in allowed_add_tags/i.test(prompt));
+  assert.ok(/Return exact tag IDs from allowed_add_tags/i.test(prompt));
   assert.ok(/allowed_add_tags:/.test(prompt));
   assert.ok(/manual_handling/.test(prompt));
 });

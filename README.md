@@ -235,7 +235,7 @@ Gemini is used in:
 src/logic/ai.ts
 ```
 
-The app uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. The app sends the original untranslated text to Gemini and instructs Gemini to interpret the meaning directly, using internal English translation or normalization only if helpful.
+The app uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
 
 First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
 
