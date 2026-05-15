@@ -318,6 +318,12 @@ function formatAnswer(question: Question, value: unknown, aiOutput = undefined a
 }
 
 function getTaskSummary(answers: Answers, aiOutputs: AiOutputs) {
+<<<<<<< fix/change-font-size-for-summary
+=======
+  const normalizedTask = aiOutputs[questionIds.taskDescription]?.normalized_answer_en;
+  if (normalizedTask?.trim()) return normalizedTask.trim();
+
+>>>>>>> main
   const value = answers[questionIds.taskDescription]?.value;
   return getEnglishTextAnswer(value, aiOutputs[questionIds.taskDescription], "Work task");
 }
