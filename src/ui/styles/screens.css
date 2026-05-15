@@ -363,8 +363,14 @@
 .overall-score-card strong {
   display: block;
   color: #4b4541;
-  font-size: clamp(28px, 13vw, 72px);
+  font-size: clamp(16px, 13vw, 72px);
   line-height: 1.05;
+}
+
+.overall-score-card strong .score-out-of {
+  font-size: 0.5em;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 .overall-score-card span {
@@ -536,7 +542,7 @@
 }
 
 .report-psychosocial-note {
-  margin: -6px 0 16px;
+  margin: 4px 0 16px;
   max-width: none;
   text-align: left;
 }
