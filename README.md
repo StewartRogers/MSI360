@@ -322,7 +322,7 @@ The React PDF document and report data model live in:
 src/report/
 ```
 
-The PDF is generated in the browser with `@react-pdf/renderer` and keeps the existing Download PDF button flow. It includes an intro/about page, overview page, category score summary, category-specific detail pages, and a full English response-record appendix. The five scored categories are always shown in this order: Contact stress, Force, Awkward posture, Repetition, and Environmental factors.
+The PDF is generated in the browser with `@react-pdf/renderer` and keeps the existing Download PDF button flow. It includes an intro/about page, overview page, category score summary, category-specific detail pages, and a full English response-record appendix. The five scored categories are always shown in this order: Contact Stress, Force, Awkward Postures, Repetition, and Environmental Factors.
 
 The PDF intro page shows a 2-by-2 report context block with the generated date, responder context, job/task performed, and worker height. Responder context is derived from Q1 and Q2, for example `Supervisor, 1 to 5 years in role`; non-worker responder roles also receive a short note recommending review with a worker who performs the task.
 
