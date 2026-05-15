@@ -3,7 +3,7 @@ import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { getActionButtonLabels } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
-import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
+import { describeFactorRisk, describeRisk, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
 import type { ScoreResult, Translation } from "../../types";
 
 export function ScoreScreen({ result, progressStep, totalSteps, translations, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
@@ -17,7 +17,15 @@ export function ScoreScreen({ result, progressStep, totalSteps, translations, on
         <h2>Your MSI risk summary</h2>
         <div className="overall-score-card">
           <p>Overall MSI Risk</p>
-          <strong>{formatOverallScore(result.composite_score)}</strong>
+          <strong>
+            {result.composite_score === null ? (
+              "N/A"
+            ) : (
+              <>
+                {formatScoreValue(result.composite_score)}<small className="score-out-of"> out of </small>4
+              </>
+            )}
+          </strong>
           <span>{describeRisk(result.composite_score)}</span>
           {psychosocialMessage && <em className="psychosocial-note">{psychosocialMessage}</em>}
         </div>
