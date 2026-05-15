@@ -141,7 +141,7 @@ export default function App() {
     }
   }
 
-  function startReportAnalysis(nextAynswers: Answers, nextAiOutputs: AiOutputs) {
+  function startReportAnalysis(nextAnswers: Answers, nextAiOutputs: AiOutputs) {
     const hasOnboardingAnswers = [questionIds.role, questionIds.timeInRole, questionIds.taskDescription, questionIds.height].every((questionId) =>
       isQuestionAnswered(getQuestionById(questionId), nextAnswers[questionId])
     );
