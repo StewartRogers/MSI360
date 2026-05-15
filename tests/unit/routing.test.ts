@@ -5,7 +5,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions } from "../../src/data/catalog";
-import { getSelectedOptions, getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
+import { getSelectedOptions, getVisibleQuestions, recomputeTags } from "../../src/logic/questionnaire/questionRouting";
 import type { AiOutputs, Answers } from "../../src/types";
 
 test("base routing shows always-visible questions and hides conditional follow-ups", () => {

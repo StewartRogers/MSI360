@@ -140,19 +140,30 @@ src/
       yue.ts
       zhHans.ts
   logic/
+    ai/
+      fallbackToast.ts
+      geminiClient.ts
+      valueUtils.ts
+    questionnaire/
+      answerSelection.ts
+      aiTaskInterpretation.ts
+      assessmentFlow.ts
+      flow.ts
+      preAnswering.ts
+      questionRouting.ts
+    scoring/
+      scoreAssessment.ts
+      scorePresentation.ts
     ai.ts
-    aiFallbackToast.ts
-    answerSelection.ts
-    appFlow.ts
-    assessmentFlow.ts
-    report.ts
-    routing.ts
-    scoring.ts
-    scorePresentation.ts
   report/
+    BodyDiagramSvg.tsx
     ReportDocument.tsx
+    reportActions.ts
+    reportAnalysis.ts
     reportAssets.ts
     reportData.ts
+    reportDocumentComponents.tsx
+    reportDocumentStyles.ts
     reportGuidance.ts
   ui/
     components/
@@ -234,7 +245,13 @@ Gemini is used in:
 
 ```text
 src/logic/ai.ts
+src/logic/ai/
+src/logic/questionnaire/aiTaskInterpretation.ts
+src/logic/questionnaire/preAnswering.ts
+src/report/reportAnalysis.ts
 ```
+
+`src/logic/ai.ts` is the public facade used by the app and tests. Provider-level Gemini request code and AI response value utilities live under `src/logic/ai/`; domain-specific AI behavior lives with the feature it affects: task interpretation and pre-answering live with questionnaire flow logic, and report analysis lives with the PDF report code.
 
 The task-description flow uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
 
@@ -281,7 +298,8 @@ If either task-description Gemini call fails or times out after the worker submi
 Scoring is currently prototype-only and lives in:
 
 ```text
-src/logic/scoring.ts
+src/logic/scoring/scoreAssessment.ts
+src/logic/scoring/scorePresentation.ts
 ```
 
 Risk score mappings are attached to options in `src/data/catalog.ts`. They are intentionally isolated so the team can replace them later with the final grading map.
@@ -313,7 +331,7 @@ The psychosocial score averages whichever of those four questions were answered 
 Browser-side PDF download orchestration lives in:
 
 ```text
-src/logic/report.ts
+src/report/reportActions.ts
 ```
 
 The React PDF document and report data model live in:

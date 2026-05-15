@@ -1,5 +1,5 @@
-import { translations } from "../data/translations";
-import type { RiskFactor, ScoreResult, Translation } from "../types";
+import { translations } from "../../data/translations";
+import type { RiskFactor, ScoreResult, Translation } from "../../types";
 
 /**
  * One display token from an overall-score phrase.

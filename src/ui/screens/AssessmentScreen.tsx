@@ -3,8 +3,8 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { CheckboxRow, ImageRadioCard, RadioRow } from "../components/AnswerControls";
 import { getActionButtonLabels, getProgressLabel, getQuestionText } from "../../data/translationText";
-import { isRecord, splitParagraphs } from "../../logic/appFlow";
-import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/answerSelection";
+import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/questionnaire/answerSelection";
+import { isRecord, splitParagraphs } from "../../logic/questionnaire/flow";
 import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
 
 /**

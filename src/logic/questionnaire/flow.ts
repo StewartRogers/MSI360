@@ -1,8 +1,8 @@
-import { onboardingQuestionIds, questionIds } from "../app/questionAssets";
-import type { StepId } from "../app/types";
-import { questions, sectionOrder } from "../data/catalog";
-import { getVisibleQuestions } from "./routing";
-import type { AiPreAnswer, Answers } from "../types";
+import { onboardingQuestionIds, questionIds } from "../../app/questionAssets";
+import type { StepId } from "../../app/types";
+import { questions, sectionOrder } from "../../data/catalog";
+import type { AiPreAnswer, Answers } from "../../types";
+import { getVisibleQuestions } from "./questionRouting";
 
 /**
  * Calculates the visible progress step for the current screen.

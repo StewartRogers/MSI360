@@ -5,7 +5,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { buildReportData, getRiskBearingSelectionsMissingGuidance, reportCategoryOrder } from "../../src/report/reportData";
-import { scoreAssessment } from "../../src/logic/scoring";
+import { scoreAssessment } from "../../src/logic/scoring/scoreAssessment";
 import type { AiOutputs, Answers } from "../../src/types";
 
 test("report data always returns the five MSI categories in order with guidance coverage", () => {

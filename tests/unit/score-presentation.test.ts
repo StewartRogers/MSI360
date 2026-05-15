@@ -5,7 +5,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import React from "react";
 import { translations } from "../../src/data/translations";
-import { scoreAssessment } from "../../src/logic/scoring";
+import { scoreAssessment } from "../../src/logic/scoring/scoreAssessment";
 import {
   describeFactorRisk,
   describeRisk,
@@ -16,7 +16,7 @@ import {
   getFactorSummaries,
   getPsychosocialInfluenceMessage,
   scorePercent
-} from "../../src/logic/scorePresentation";
+} from "../../src/logic/scoring/scorePresentation";
 import { ScoreScreen } from "../../src/ui/screens/ResultScreens";
 import type { FactorScore, ScoreResult } from "../../src/types";
 

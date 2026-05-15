@@ -12,9 +12,9 @@ import { isRtlLanguage, languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
 import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
-import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
-import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
-import { scoreAssessment } from "../../src/logic/scoring";
+import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/questionnaire/assessmentFlow";
+import { getVisibleQuestions, recomputeTags } from "../../src/logic/questionnaire/questionRouting";
+import { scoreAssessment } from "../../src/logic/scoring/scoreAssessment";
 import type { AiOutputs, Answer, Answers } from "../../src/types";
 
 test("manual-handling task description routes to the main force and tool follow-up questions", async () => {

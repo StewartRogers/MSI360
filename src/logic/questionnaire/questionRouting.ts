@@ -1,5 +1,5 @@
-import { questions, tagTaxonomy } from "../data/catalog";
-import type { AiOutputs, Answer, Answers, Option, Question } from "../types";
+import { questions, tagTaxonomy } from "../../data/catalog";
+import type { AiOutputs, Answer, Answers, Option, Question } from "../../types";
 
 const allowedTags = new Set(tagTaxonomy);
 

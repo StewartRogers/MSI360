@@ -1,5 +1,5 @@
-import { getAppText } from "../data/translationText";
-import type { AiOutput, AiPreAnswerOutput, Translation } from "../types";
+import { getAppText } from "../../data/translationText";
+import type { AiOutput, AiPreAnswerOutput, Translation } from "../../types";
 
 /**
  * User-facing fallback notice categories.

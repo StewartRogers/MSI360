@@ -1,6 +1,6 @@
-import { questions, riskFactors } from "../data/catalog";
-import type { Answers, RiskFactor, ScoreResult } from "../types";
-import { getSelectedOptions } from "./routing";
+import { questions, riskFactors } from "../../data/catalog";
+import type { Answers, RiskFactor, ScoreResult } from "../../types";
+import { getSelectedOptions } from "../questionnaire/questionRouting";
 
 /**
  * Scores the committed assessment answers.
