@@ -46,7 +46,7 @@ npm run test:automated
 npm run test:unit
 ```
 
-The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, PDF report data derivation, a React PDF document bundle smoke check, and a few lightweight assessment-flow integration checks.
+The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, AI report-analysis prompt constraints, PDF report data derivation, a React PDF document bundle smoke check, and a few lightweight assessment-flow integration checks.
 
 The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
 
@@ -236,7 +236,7 @@ Gemini is used in:
 src/logic/ai.ts
 ```
 
-The app uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
+The task-description flow uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
 
 First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
 

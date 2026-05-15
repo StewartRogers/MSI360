@@ -40,12 +40,12 @@ function IntroContent({ report }: { report: ReportData }) {
       <View style={styles.metaGrid} wrap={false}>
         <View style={styles.metaGridRow}>
           <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
-          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.people} label="Responder context" value={report.responderContext} /></View>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.people} label="Responder context" value={report.responderContext} iconSize="large" /></View>
         </View>
         <View style={styles.metaGridDivider} />
         <View style={styles.metaGridRow}>
           <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task performed" value={report.taskSummary} /></View>
-          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} iconFit="contain" centerIcon /></View>
         </View>
       </View>
 
@@ -276,10 +276,31 @@ function AiGeneratedAnalysisBlock({ analysis }: { analysis: ReportAiGeneratedAna
   );
 }
 
-function MetaItem({ icon, label, value }: { icon: string; label: string; value: string }) {
+function MetaItem({
+  icon,
+  label,
+  value,
+  iconSize = "normal",
+  iconFit = "fill",
+  centerIcon = false
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  iconSize?: "normal" | "large";
+  iconFit?: "fill" | "contain";
+  centerIcon?: boolean;
+}) {
+  const iconStyle = iconFit === "contain" ? styles.metaIconContain : iconSize === "large" ? styles.metaIconLarge : styles.metaIcon;
   return (
     <View style={styles.metaItem}>
-      <Image src={icon} style={styles.metaIcon} />
+      {centerIcon ? (
+        <View style={styles.metaIconSlot}>
+          <Image src={icon} style={iconStyle} />
+        </View>
+      ) : (
+        <Image src={icon} style={iconStyle} />
+      )}
       <View style={styles.metaTextCol}>
         <Text style={styles.metaLabel}>{label}: <Text style={styles.metaValue}>{value}</Text></Text>
       </View>
@@ -471,6 +492,23 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
     marginRight: 6
+  },
+  metaIconLarge: {
+    width: 26,
+    height: 26,
+    marginRight: 8
+  },
+  metaIconContain: {
+    width: 20,
+    height: 20,
+    objectFit: "contain"
+  },
+  metaIconSlot: {
+    width: 26,
+    height: 24,
+    marginRight: 6,
+    alignItems: "center",
+    justifyContent: "center"
   },
   metaTextCol: {
     justifyContent: "center",
