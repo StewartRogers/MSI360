@@ -1,9 +1,10 @@
 import { AppHeader, WrapHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
+import { Fragment } from "react";
 import { getActionButtonLabels, getAppText, getProgressLabel } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
-import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
+import { describeFactorRisk, describeRisk, formatOverallScoreTokens, formatScore, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
 import type { ScoreResult, Translation } from "../../types";
 
 export function ScoreScreen({ result, progressStep, totalSteps, translations, onBack, onContinue }: { result: ScoreResult; progressStep: number; totalSteps: number; translations: Translation; onBack: () => void; onContinue: () => void }) {
@@ -17,7 +18,17 @@ export function ScoreScreen({ result, progressStep, totalSteps, translations, on
         <h2>{getAppText(translations, "score_summary_title", "Your MSI risk summary")}</h2>
         <div className="overall-score-card">
           <p>{getAppText(translations, "score_overall_risk", "Overall MSI Risk")}</p>
-          <strong>{formatOverallScore(result.composite_score, translations)}</strong>
+          <strong>
+            {formatOverallScoreTokens(result.composite_score, translations).map((token, index) =>
+              token.isScore ? (
+                <Fragment key={`${token.text}-${index}`}>{token.text}</Fragment>
+              ) : (
+                <small key={`${token.text}-${index}`} className="score-out-of">
+                  {token.text}
+                </small>
+              )
+            )}
+          </strong>
           <span>{describeRisk(result.composite_score, translations)}</span>
           {psychosocialMessage && <em className="psychosocial-note">{psychosocialMessage}</em>}
         </div>

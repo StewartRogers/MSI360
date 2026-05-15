@@ -1,6 +1,11 @@
 import { translations } from "../data/translations";
 import type { RiskFactor, ScoreResult, Translation } from "../types";
 
+export interface OverallScoreToken {
+  text: string;
+  isScore: boolean;
+}
+
 export function formatScore(score: number | null, t?: Translation) {
   return typeof score === "number" ? `${score.toFixed(1)} / 4` : getScoreText(t, "score_not_available", "N/A");
 }
@@ -8,6 +13,27 @@ export function formatScore(score: number | null, t?: Translation) {
 export function formatOverallScore(score: number | null, t?: Translation) {
   if (typeof score !== "number") return getScoreText(t, "score_not_available", "N/A");
   return getScoreText(t, "score_out_of_4", "{score} out of 4").replaceAll("{score}", score.toFixed(1));
+}
+
+export function formatOverallScoreTokens(score: number | null, t?: Translation): OverallScoreToken[] {
+  if (typeof score !== "number") return [{ text: getScoreText(t, "score_not_available", "N/A"), isScore: true }];
+
+  const scoreText = score.toFixed(1);
+  const template = getScoreText(t, "score_out_of_4", "{score} out of 4");
+  const scorePlaceholder = "{score}";
+  const tokens: OverallScoreToken[] = [];
+  let remaining = template;
+
+  while (remaining.includes(scorePlaceholder)) {
+    const placeholderIndex = remaining.indexOf(scorePlaceholder);
+    const prefix = remaining.slice(0, placeholderIndex);
+    if (prefix) tokens.push({ text: prefix, isScore: false });
+    tokens.push({ text: scoreText, isScore: true });
+    remaining = remaining.slice(placeholderIndex + scorePlaceholder.length);
+  }
+
+  if (remaining) tokens.push({ text: remaining, isScore: false });
+  return tokens.length ? tokens : [{ text: formatOverallScore(score, t), isScore: true }];
 }
 
 export function formatScoreValue(score: number | null, t?: Translation) {
