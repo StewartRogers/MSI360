@@ -1,6 +1,6 @@
-import { Document, Image, Line, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
+import { Document, Image, Line, Link, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
 import { reportAssets } from "./reportAssets";
-import type { ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import type { ReportAiGeneratedAnalysis, ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
 import { BodyDiagramSvg } from "./BodyDiagramSvg";
 
 const colors = {
@@ -37,13 +37,19 @@ function IntroContent({ report }: { report: ReportData }) {
     <View style={styles.pageContent}>
       <Text style={styles.introTitle}>MSI 360 Risk Score Report</Text>
 
-      <View style={styles.metaStrip} wrap={false}>
-        <View style={{ width: "20%" }}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
-        <View style={styles.metaDivider} />
-        <View style={{ width: "48%" }}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task performed" value={report.taskSummary} /></View>
-        <View style={styles.metaDivider} />
-        <View style={{ width: "30%" }}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} /></View>
+      <View style={styles.metaGrid} wrap={false}>
+        <View style={styles.metaGridRow}>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.calendar} label="Date" value={report.generatedDate} /></View>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.people} label="Responder context" value={report.responderContext} iconSize="large" /></View>
+        </View>
+        <View style={styles.metaGridDivider} />
+        <View style={styles.metaGridRow}>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.carrierBag} label="Job / Task performed" value={report.taskSummary} /></View>
+          <View style={styles.metaGridCell}><MetaItem icon={reportAssets.icons.worker} label="Worker height" value={report.workerHeight} iconFit="contain" centerIcon /></View>
+        </View>
       </View>
+
+      {report.responderContextNote && <Text style={styles.responderContextNote}>{report.responderContextNote}</Text>}
 
       <View style={styles.noticeBand} wrap={false}>
         <Image src={reportAssets.icons.shield} style={styles.noticeIcon} />
@@ -114,10 +120,13 @@ function OverviewContent({ report }: { report: ReportData }) {
         <BodyDiagramSvg symptoms={report.symptoms} />
       </View>
 
-      <View style={styles.noteBlock} wrap={false}>
-        <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
-        <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
-        {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+      <View style={report.aiGeneratedAnalysis ? styles.noteGrid : styles.noteBlock} wrap={false}>
+        <View style={report.aiGeneratedAnalysis ? styles.noteGridItem : undefined}>
+          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
+          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
+          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+        </View>
+        {report.aiGeneratedAnalysis && <AiGeneratedAnalysisBlock analysis={report.aiGeneratedAnalysis} />}
       </View>
 
       <Text style={styles.sectionHeading}>Overall MSI risk summary</Text>
@@ -251,10 +260,47 @@ function ResponseRecordContent({ report }: { report: ReportData }) {
   );
 }
 
-function MetaItem({ icon, label, value }: { icon: string; label: string; value: string }) {
+function AiGeneratedAnalysisBlock({ analysis }: { analysis: ReportAiGeneratedAnalysis }) {
+  return (
+    <View style={styles.aiAnalysisBlock}>
+      <Text style={styles.sectionHeading}>{analysis.title}</Text>
+      <Text style={styles.aiAnalysisDisclaimer}>{analysis.disclaimer}</Text>
+      <Text style={styles.paragraph}>{analysis.paragraph}</Text>
+      <Text style={styles.aiAnalysisSourcesLabel}>Sources:</Text>
+      {analysis.sources.map((source) => (
+        <Link key={source.url} src={source.url} style={styles.aiAnalysisSourceLink}>
+          {source.label}
+        </Link>
+      ))}
+    </View>
+  );
+}
+
+function MetaItem({
+  icon,
+  label,
+  value,
+  iconSize = "normal",
+  iconFit = "fill",
+  centerIcon = false
+}: {
+  icon: string;
+  label: string;
+  value: string;
+  iconSize?: "normal" | "large";
+  iconFit?: "fill" | "contain";
+  centerIcon?: boolean;
+}) {
+  const iconStyle = iconFit === "contain" ? styles.metaIconContain : iconSize === "large" ? styles.metaIconLarge : styles.metaIcon;
   return (
     <View style={styles.metaItem}>
-      <Image src={icon} style={styles.metaIcon} />
+      {centerIcon ? (
+        <View style={styles.metaIconSlot}>
+          <Image src={icon} style={iconStyle} />
+        </View>
+      ) : (
+        <Image src={icon} style={iconStyle} />
+      )}
       <View style={styles.metaTextCol}>
         <Text style={styles.metaLabel}>{label}: <Text style={styles.metaValue}>{value}</Text></Text>
       </View>
@@ -416,30 +462,53 @@ const styles = StyleSheet.create({
     color: colors.black,
     marginBottom: 16
   },
-  metaStrip: {
+  metaGrid: {
     border: `1 solid ${colors.border}`,
     borderRadius: 4,
     backgroundColor: colors.bgGray,
-    padding: "12 16",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    padding: "8 12",
     marginBottom: 12
+  },
+  metaGridRow: {
+    flexDirection: "row",
+    alignItems: "stretch"
+  },
+  metaGridCell: {
+    width: "50%",
+    paddingVertical: 4,
+    paddingRight: 12
+  },
+  metaGridDivider: {
+    height: 1,
+    backgroundColor: colors.border,
+    marginVertical: 4
   },
   metaItem: {
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 8
-  },
-  metaDivider: {
-    width: 1,
-    height: 24,
-    backgroundColor: colors.border
+    minHeight: 24
   },
   metaIcon: {
     width: 20,
     height: 20,
     marginRight: 6
+  },
+  metaIconLarge: {
+    width: 26,
+    height: 26,
+    marginRight: 8
+  },
+  metaIconContain: {
+    width: 20,
+    height: 20,
+    objectFit: "contain"
+  },
+  metaIconSlot: {
+    width: 26,
+    height: 24,
+    marginRight: 6,
+    alignItems: "center",
+    justifyContent: "center"
   },
   metaTextCol: {
     justifyContent: "center",
@@ -451,6 +520,16 @@ const styles = StyleSheet.create({
   },
   metaValue: {
     fontWeight: "normal"
+  },
+  responderContextNote: {
+    backgroundColor: "#fff7ed",
+    border: `1 solid ${colors.paleOrange}`,
+    borderRadius: 4,
+    color: colors.text,
+    fontSize: 8.5,
+    lineHeight: 1.25,
+    marginBottom: 12,
+    padding: "8 10"
   },
   noticeBand: {
     backgroundColor: colors.paleBlue,
@@ -632,6 +711,38 @@ const styles = StyleSheet.create({
   },
   noteBlock: {
     marginBottom: 20
+  },
+  noteGrid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20
+  },
+  noteGridItem: {
+    width: "48%"
+  },
+  aiAnalysisBlock: {
+    width: "48%",
+    borderLeft: `2 solid ${colors.paleBlue}`,
+    paddingLeft: 10
+  },
+  aiAnalysisDisclaimer: {
+    color: colors.muted,
+    fontSize: 7.5,
+    lineHeight: 1.25,
+    marginBottom: 6
+  },
+  aiAnalysisSourcesLabel: {
+    color: colors.muted,
+    fontSize: 7.5,
+    fontWeight: "bold",
+    marginBottom: 3
+  },
+  aiAnalysisSourceLink: {
+    color: "#0284c7",
+    fontSize: 7.5,
+    lineHeight: 1.3,
+    marginBottom: 2,
+    textDecoration: "none"
   },
   linkText: {
     color: "#0284c7",

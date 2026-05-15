@@ -1,9 +1,10 @@
 import { questionIds } from "../app/questionAssets";
 import { questions } from "../data/catalog";
+import { reportAnalysisReferenceLinks } from "../data/reportReferences";
 import { translations } from "../data/translations";
 import { recomputeTags } from "../logic/routing";
 import { describeFactorRisk, formatOverallScore, getPsychosocialInfluenceMessage } from "../logic/scorePresentation";
-import type { AiOutputs, Answer, Answers, Option, Question, RiskFactor, ScoreResult } from "../types";
+import type { AiOutputs, AiReportAnalysis, Answer, Answers, Option, Question, RiskFactor, ScoreResult } from "../types";
 import { categoryIconByFactor } from "./reportAssets";
 import { reportGuidanceBySelection, reportGuidanceKey, type ReportGuidance } from "./reportGuidance";
 
@@ -64,9 +65,18 @@ export interface ReportAnswerRecord {
   answers: string[];
 }
 
+export interface ReportAiGeneratedAnalysis {
+  title: string;
+  disclaimer: string;
+  paragraph: string;
+  sources: Array<{ label: string; url: string }>;
+}
+
 export interface ReportData {
   generatedAt: Date;
   generatedDate: string;
+  responderContext: string;
+  responderContextNote: string | null;
   taskSummary: string;
   workerHeight: string;
   activeTags: string[];
@@ -75,6 +85,7 @@ export interface ReportData {
     body: string;
     linkLabel?: string;
   };
+  aiGeneratedAnalysis: ReportAiGeneratedAnalysis | null;
   symptoms: ReportBodySymptoms;
   categories: ReportCategorySummary[];
   totalHazards: number;
@@ -93,6 +104,7 @@ export interface ReportData {
 
 interface BuildReportDataOptions {
   now?: Date;
+  reportAnalysis?: AiReportAnalysis | null;
 }
 
 const categoryMeta: Record<RiskFactor, { label: string; description: string; riskSubject: string }> = {
@@ -148,10 +160,13 @@ export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreRes
   return {
     generatedAt,
     generatedDate: formatReportDate(generatedAt),
+    responderContext: getResponderContext(answers),
+    responderContextNote: getResponderContextNote(answers),
     taskSummary: getTaskSummary(answers),
     workerHeight: getWorkerHeight(answers),
     activeTags,
     jobSpecificNote: getJobSpecificNote(activeTags),
+    aiGeneratedAnalysis: getAiGeneratedAnalysis(options.reportAnalysis || null),
     symptoms: getBodySymptoms(answers),
     categories,
     totalHazards: categories.reduce((sum, category) => sum + category.hazardCount, 0),
@@ -309,6 +324,29 @@ function getTaskSummary(answers: Answers) {
   return typeof value === "string" && value.trim() ? value.trim() : "Work task";
 }
 
+function getResponderContext(answers: Answers) {
+  const role = getResponderRole(answers);
+  const timeInRole = getTimeInRole(answers);
+  return timeInRole ? `${role}, ${timeInRole} in role` : role;
+}
+
+function getResponderContextNote(answers: Answers) {
+  const value = answers[questionIds.role]?.value;
+  if (typeof value !== "string" || value === "worker") return null;
+
+  return `Responder role: ${getResponderRole(answers)}. Review the findings with a worker who performs the task to confirm how the work is actually done.`;
+}
+
+function getResponderRole(answers: Answers) {
+  const value = answers[questionIds.role]?.value;
+  return typeof value === "string" ? getOptionLabel(questionIds.role, value) : "Not provided";
+}
+
+function getTimeInRole(answers: Answers) {
+  const value = answers[questionIds.timeInRole]?.value;
+  return typeof value === "string" ? getOptionLabel(questionIds.timeInRole, value) : null;
+}
+
 function getWorkerHeight(answers: Answers) {
   const value = answers[questionIds.height]?.value;
   return typeof value === "string" ? getOptionLabel(questionIds.height, value) : "Not provided";
@@ -344,6 +382,26 @@ function getJobSpecificNote(activeTags: string[]): ReportData["jobSpecificNote"]
   return {
     title: "Job-specific note",
     body: "Review the category-specific pages with the worker and focus first on the highest-priority risks identified in this report."
+  };
+}
+
+function getAiGeneratedAnalysis(reportAnalysis: AiReportAnalysis | null): ReportAiGeneratedAnalysis | null {
+  if (!reportAnalysis?.paragraph) return null;
+
+  return {
+    title: "AI-generated analysis",
+    disclaimer: "Created by AI using only responses from the first four questions.",
+    paragraph: reportAnalysis.paragraph,
+    sources: [
+      {
+        label: "Institute for Work & Health new-worker risk review",
+        url: reportAnalysisReferenceLinks.iwhNewWorkerRisk
+      },
+      {
+        label: "WorkSafeBC OHS Regulation Part 4",
+        url: reportAnalysisReferenceLinks.worksafeBcOhsRegulation
+      }
+    ]
   };
 }
 

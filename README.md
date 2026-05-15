@@ -46,7 +46,7 @@ npm run test:automated
 npm run test:unit
 ```
 
-The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, PDF report data derivation, a React PDF document bundle smoke check, and a few lightweight assessment-flow integration checks.
+The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, AI report-analysis prompt constraints, PDF report data derivation, a React PDF document bundle smoke check, and a few lightweight assessment-flow integration checks.
 
 The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
 
@@ -94,6 +94,7 @@ src/
     catalog.ts
     languages.ts
     questions.ts
+    reportReferences.ts
     sections.ts
     tags.ts
     translations/
@@ -235,7 +236,7 @@ Gemini is used in:
 src/logic/ai.ts
 ```
 
-The app uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
+The task-description flow uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
 
 First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
 
@@ -271,7 +272,9 @@ The client accepts only high-confidence pre-answers that exactly match catalog q
 
 When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until tag extraction and pre-answering complete. This prevents duplicate submissions and reassures the worker that their input is still being processed.
 
-If either Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses a 15-second Gemini request timeout; the automated test bundle uses a shorter 8-second timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button.
+After the first four onboarding questions are complete, the app starts a non-blocking Gemini request for a short report-analysis paragraph. This background response uses only Q1 role, Q2 time in role, Q3 task description, and Q4 height; it does not use category scores or later assessment answers. If the response arrives before the worker downloads the PDF, the report includes it beside the job-specific note with an AI disclaimer and source links. If Gemini is unavailable or the response is not ready, PDF generation continues without blocking. This report-analysis request uses a 60-second timeout because it runs in the background.
+
+If either task-description Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses a 15-second Gemini request timeout; the automated test bundle uses a shorter 8-second timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button. The background report-analysis request fails silently so it does not interrupt the responder.
 
 ## Scoring
 
@@ -320,6 +323,10 @@ src/report/
 ```
 
 The PDF is generated in the browser with `@react-pdf/renderer` and keeps the existing Download PDF button flow. It includes an intro/about page, overview page, category score summary, category-specific detail pages, and a full English response-record appendix. The five scored categories are always shown in this order: Contact stress, Force, Awkward posture, Repetition, and Environmental factors.
+
+The PDF intro page shows a 2-by-2 report context block with the generated date, responder context, job/task performed, and worker height. Responder context is derived from Q1 and Q2, for example `Supervisor, 1 to 5 years in role`; non-worker responder roles also receive a short note recommending review with a worker who performs the task.
+
+When available, the overview page shows an AI-generated analysis block beside the job-specific note. This analysis is generated asynchronously from only Q1 through Q4 and includes a fixed disclaimer plus links to the Institute for Work & Health new-worker risk review and WorkSafeBC OHS Regulation Part 4.
 
 Report icons are centralized in `src/report/reportAssets.ts` and reference files under `public/icons/`; the hierarchy-of-controls image is loaded from `public/images/hierarchy-of-controls.png`. The current body diagram is a replaceable React PDF vector placeholder with symptom callouts, so a final body asset can be swapped in later without changing report data logic.
 

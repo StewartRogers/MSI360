@@ -101,6 +101,11 @@ export interface AiPreAnswerOutput {
   notes: string;
 }
 
+export interface AiReportAnalysis {
+  paragraph: string;
+  provider: string;
+}
+
 export interface FactorScore {
   score: number | null;
   applicable_questions: number;
