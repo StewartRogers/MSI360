@@ -73,6 +73,26 @@ test("report data includes AI-generated analysis when the background response is
   assert.ok(report.aiGeneratedAnalysis.sources.some((source) => source.label.includes("WorkSafeBC OHS Regulation Part 4")));
 });
 
+test("report data uses the Gemini English task summary when the original task text is translated", () => {
+  const answers: Answers = {
+    "question-3": { type: "text", value: "Levanto repetidamente cajas pesadas y uso un taladro." }
+  };
+  const aiOutputs: AiOutputs = {
+    "question-3": {
+      normalized_answer_en: "I repeatedly lift heavy boxes and use a drill.",
+      add_tags: ["manual_handling", "lifting_lowering", "heavy_loads", "tool_use"],
+      missing_details: [],
+      confidence: 0.92,
+      notes: "test",
+      provider: "gemini"
+    }
+  };
+
+  const report = buildReportData(answers, aiOutputs, scoreAssessment(answers));
+
+  assert.equal(report.taskSummary, "I repeatedly lift heavy boxes and use a drill.");
+});
+
 test("report data computes category priority counts from selected answer scores", () => {
   const answers: Answers = {
     "question-11": { type: "multi_choice", value: "30_min_to_1_hour" },

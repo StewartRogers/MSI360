@@ -162,7 +162,7 @@ export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreRes
     generatedDate: formatReportDate(generatedAt),
     responderContext: getResponderContext(answers),
     responderContextNote: getResponderContextNote(answers),
-    taskSummary: getTaskSummary(answers),
+    taskSummary: getTaskSummary(answers, aiOutputs),
     workerHeight: getWorkerHeight(answers),
     activeTags,
     jobSpecificNote: getJobSpecificNote(activeTags),
@@ -319,7 +319,10 @@ function formatAnswer(question: Question, value: unknown, aiOutput = undefined a
   });
 }
 
-function getTaskSummary(answers: Answers) {
+function getTaskSummary(answers: Answers, aiOutputs: AiOutputs) {
+  const normalizedTask = aiOutputs[questionIds.taskDescription]?.normalized_answer_en;
+  if (normalizedTask?.trim()) return normalizedTask.trim();
+
   const value = answers[questionIds.taskDescription]?.value;
   return typeof value === "string" && value.trim() ? value.trim() : "Work task";
 }
