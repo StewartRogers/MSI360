@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { questions, sectionOrder } from "../../src/data/catalog";
 import { isRtlLanguage, languages } from "../../src/data/languages";
 import { translations } from "../../src/data/translations";
-import { getActionButtonLabels, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
+import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../src/data/translationText";
 import { interpretTextAnswer } from "../../src/logic/ai";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "../../src/logic/assessmentFlow";
 import { getVisibleQuestions, recomputeTags } from "../../src/logic/routing";
@@ -414,6 +414,35 @@ test("Croatian, Dari, and Tamil translations have display text for every configu
   assertTranslationCoverage("Tamil", translations.ta.questions);
 });
 
+test("Greek, Czech, and Persian n.o.s. translations have display text for every configured question option", () => {
+  assert.equal(translations.el.app.description_title, "Περιγραφή");
+  assert.equal(translations.cs.app.description_title, "Popis");
+  assert.equal(translations["fa-x-nos"].app.description_title, "توضیح");
+  assertTranslationCoverage("Greek", translations.el.questions);
+  assertTranslationCoverage("Czech", translations.cs.questions);
+  assertTranslationCoverage("Persian n.o.s.", translations["fa-x-nos"].questions);
+});
+
+test("Malayalam, Bengali, and Turkish translations have display text for every configured question option", () => {
+  assert.equal(translations.ml.app.description_title, "വിവരണം");
+  assert.equal(translations.bn.app.description_title, "বিবরণ");
+  assert.equal(translations.tr.app.description_title, "Açıklama");
+  assertTranslationCoverage("Malayalam", translations.ml.questions);
+  assertTranslationCoverage("Bengali", translations.bn.questions);
+  assertTranslationCoverage("Turkish", translations.tr.questions);
+});
+
+test("Cebuano, Indonesian, Afrikaans, and Danish translations have display text for every configured question option", () => {
+  assert.equal(translations.ceb.app.description_title, "Deskripsyon");
+  assert.equal(translations.id.app.description_title, "Deskripsi");
+  assert.equal(translations.af.app.description_title, "Beskrywing");
+  assert.equal(translations.da.app.description_title, "Beskrivelse");
+  assertTranslationCoverage("Cebuano", translations.ceb.questions);
+  assertTranslationCoverage("Indonesian", translations.id.questions);
+  assertTranslationCoverage("Afrikaans", translations.af.questions);
+  assertTranslationCoverage("Danish", translations.da.questions);
+});
+
 test("ready translations provide localized shared action button labels", () => {
   assert.deepEqual(getActionButtonLabels(translations.en), { continueLabel: "Continue", backLabel: "Back", busyLabel: "Processing" });
   assert.equal(getActionButtonLabels(translations.fr).continueLabel, "Continuer");
@@ -443,7 +472,30 @@ test("ready translations provide localized shared action button labels", () => {
   assert.equal(getActionButtonLabels(translations.hr).continueLabel, "Nastavi");
   assert.equal(getActionButtonLabels(translations.prs).continueLabel, "ادامه");
   assert.equal(getActionButtonLabels(translations.ta).continueLabel, "தொடரவும்");
+  assert.equal(getActionButtonLabels(translations.el).continueLabel, "Συνέχεια");
+  assert.equal(getActionButtonLabels(translations.cs).continueLabel, "Pokračovat");
+  assert.equal(getActionButtonLabels(translations["fa-x-nos"]).continueLabel, "ادامه");
+  assert.equal(getActionButtonLabels(translations.ml).continueLabel, "തുടരുക");
+  assert.equal(getActionButtonLabels(translations.bn).continueLabel, "চালিয়ে যান");
+  assert.equal(getActionButtonLabels(translations.tr).continueLabel, "Devam et");
+  assert.equal(getActionButtonLabels(translations.ceb).continueLabel, "Padayon");
+  assert.equal(getActionButtonLabels(translations.id).continueLabel, "Lanjutkan");
+  assert.equal(getActionButtonLabels(translations.af).continueLabel, "Gaan voort");
+  assert.equal(getActionButtonLabels(translations.da).continueLabel, "Fortsæt");
   assert.equal(getAnalyzingButtonLabel(translations.ar), "جار التحليل");
+});
+
+test("ready translations provide localized AI loading and fallback labels", () => {
+  const requiredKeys = ["ai_loading_task_description", "ai_task_analysis_fallback_toast", "ai_question_pruning_fallback_toast", "ai_fallback_toast_dismiss"];
+
+  for (const language of languages.filter((item) => item.ready)) {
+    for (const key of requiredKeys) {
+      assert.ok(translations[language.code].app[key], `Missing ${key} for ${language.code}`);
+    }
+  }
+
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.en), "Analyzing your task description...");
+  assert.equal(getAiLoadingTaskDescriptionLabel(translations.es), "Analizando la descripción de su tarea...");
 });
 
 test("ready translations provide localized question progress labels", () => {

@@ -4,8 +4,9 @@ import type { StepId } from "./app/types";
 import { languages, questions } from "./data/catalog";
 import { isRtlLanguage } from "./data/languages";
 import { translations } from "./data/translations";
+import { getAppText } from "./data/translationText";
 import { interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
-import { aiFallbackToastMessages, getAiFallbackToastKinds, type AiFallbackToastKind } from "./logic/aiFallbackToast";
+import { getAiFallbackToastKinds, getAiFallbackToastMessage, type AiFallbackToastKind } from "./logic/aiFallbackToast";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/assessmentFlow";
 import { getPreAnswerCandidateQuestions, getProgressStep, getQuestionById, getSortedVisibleQuestions, getTaskSummary, toAnswers, withoutKeys } from "./logic/appFlow";
 import { recomputeTags } from "./logic/routing";
@@ -13,7 +14,7 @@ import { scoreAssessment } from "./logic/scoring";
 import { AssessmentQuestionScreen } from "./ui/screens/AssessmentScreen";
 import { ChoiceScreen, DescriptionScreen, IntroScreen, LanguageScreen, TextScreen } from "./ui/screens/OnboardingScreens";
 import { CompleteScreen, EmailScreen, ReportReadyScreen, ScoreScreen, SubmitScreen } from "./ui/screens/ResultScreens";
-import type { AiOutputs, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
+import type { AiOutputs, Answers, AnswerValue, Question, QuestionType, ScoreResult, Translation } from "./types";
 
 export { getActionButtonState } from "./ui/components/ActionButtons";
 
@@ -113,7 +114,7 @@ export default function App() {
           const nextAutoAnsweredQuestionIds = preAnswerOutput.auto_answers.map((answer) => answer.question_id);
           const nextAnswers = { ...answersWithoutPreviousAutoAnswers, ...autoAnswers };
           const fallbackToastKinds = getAiFallbackToastKinds(output, preAnswerOutput);
-          if (fallbackToastKinds.length) queueAiFallbackToasts(fallbackToastKinds);
+          if (fallbackToastKinds.length) queueAiFallbackToasts(fallbackToastKinds, t);
 
           setAnswers(nextAnswers);
           setAiOutputs(nextAiOutputs);
@@ -132,12 +133,12 @@ export default function App() {
     }
   }
 
-  function queueAiFallbackToasts(kinds: AiFallbackToastKind[]) {
+  function queueAiFallbackToasts(kinds: AiFallbackToastKind[], activeTranslations = t) {
     setToastQueue((queuedToasts) => [
       ...queuedToasts,
       ...kinds.map((kind) => ({
         id: nextToastId.current++,
-        message: aiFallbackToastMessages[kind]
+        message: getAiFallbackToastMessage(activeTranslations, kind)
       }))
     ]);
   }
@@ -349,18 +350,23 @@ export default function App() {
 
       {step === "complete" && <CompleteScreen translations={t} isRtl={isRtl} onStartNew={startNewAssessment} />}
 
-      <AiFallbackToast toast={activeToast} onDismiss={() => setActiveToast(null)} />
+      <AiFallbackToast toast={activeToast} translations={t} onDismiss={() => setActiveToast(null)} />
     </main>
   );
 }
 
-function AiFallbackToast({ toast, onDismiss }: { toast: AiFallbackToast | null; onDismiss: () => void }) {
+function AiFallbackToast({ toast, translations: activeTranslations, onDismiss }: { toast: AiFallbackToast | null; translations: Translation; onDismiss: () => void }) {
   if (!toast) return null;
 
   return (
     <div className="ai-fallback-toast" role="status" aria-live="polite">
       <span>{toast.message}</span>
-      <button type="button" className="ai-fallback-toast-close" aria-label="Dismiss AI fallback notice" onClick={onDismiss}>
+      <button
+        type="button"
+        className="ai-fallback-toast-close"
+        aria-label={getAppText(activeTranslations, "ai_fallback_toast_dismiss", "Dismiss AI fallback notice")}
+        onClick={onDismiss}
+      >
         X
       </button>
     </div>

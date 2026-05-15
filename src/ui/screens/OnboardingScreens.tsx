@@ -4,7 +4,7 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
-import { getActionButtonLabels, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/answerSelection";
 import type { Answer, Language, Translation } from "../../types";
 
@@ -220,7 +220,7 @@ export function TextScreen(props: {
           {props.isLoading ? (
             <div className="loading-status" role="status" aria-live="polite">
               <span className="loading-spinner" aria-hidden="true" />
-              <span>Analyzing your task description...</span>
+              <span>{getAiLoadingTaskDescriptionLabel(props.translations)}</span>
             </div>
           ) : (
             props.status && <p className="small-status">{props.status}</p>
