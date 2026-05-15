@@ -6,11 +6,11 @@ import { isRtlLanguage } from "./data/languages";
 import { translations } from "./data/translations";
 import { getAppText } from "./data/translationText";
 import { generateReportAnalysis, interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
-import { getAiFallbackToastKinds, getAiFallbackToastMessage, type AiFallbackToastKind } from "./logic/aiFallbackToast";
-import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/assessmentFlow";
-import { getPreAnswerCandidateQuestions, getProgressStep, getQuestionById, getSortedVisibleQuestions, getTaskSummary, toAnswers, withoutKeys } from "./logic/appFlow";
-import { recomputeTags } from "./logic/routing";
-import { scoreAssessment } from "./logic/scoring";
+import { getAiFallbackToastKinds, getAiFallbackToastMessage, type AiFallbackToastKind } from "./logic/ai/fallbackToast";
+import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/questionnaire/assessmentFlow";
+import { getPreAnswerCandidateQuestions, getProgressStep, getQuestionById, getSortedVisibleQuestions, getTaskSummary, toAnswers, withoutKeys } from "./logic/questionnaire/flow";
+import { recomputeTags } from "./logic/questionnaire/questionRouting";
+import { scoreAssessment } from "./logic/scoring/scoreAssessment";
 import { AssessmentQuestionScreen } from "./ui/screens/AssessmentScreen";
 import { ChoiceScreen, DescriptionScreen, IntroScreen, LanguageScreen, TextScreen } from "./ui/screens/OnboardingScreens";
 import { CompleteScreen, EmailScreen, ReportReadyScreen, ScoreScreen, SubmitScreen } from "./ui/screens/ResultScreens";
@@ -284,7 +284,7 @@ export default function App() {
   async function handleDownloadReport() {
     const nextResult = scoreResult || scoreAssessment(answers);
     setScoreResult(nextResult);
-    const { downloadReport } = await import("./logic/report");
+    const { downloadReport } = await import("./report/reportActions");
     await downloadReport(answers, aiOutputs, nextResult, reportAnalysis);
   }
 

@@ -1,7 +1,7 @@
 import { pdf } from "@react-pdf/renderer";
 import { createElement } from "react";
-import { ReportDocument } from "../report/ReportDocument";
-import { buildReportData } from "../report/reportData";
+import { ReportDocument } from "./ReportDocument";
+import { buildReportData } from "./reportData";
 import type { AiOutputs, AiReportAnalysis, Answers, ScoreResult } from "../types";
 
 /**

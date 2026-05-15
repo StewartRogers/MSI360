@@ -5,7 +5,7 @@ import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
 import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../data/translationText";
-import { toggleSingleOption } from "../../logic/answerSelection";
+import { toggleSingleOption } from "../../logic/questionnaire/answerSelection";
 import type { Answer, Language, Translation } from "../../types";
 
 /**

@@ -3,8 +3,8 @@ import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { Fragment } from "react";
 import { getActionButtonLabels, getAppText, getProgressLabel } from "../../data/translationText";
-import { toggleSingleOption } from "../../logic/answerSelection";
-import { describeFactorRisk, describeRisk, formatOverallScoreTokens, formatScore, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scorePresentation";
+import { toggleSingleOption } from "../../logic/questionnaire/answerSelection";
+import { describeFactorRisk, describeRisk, formatOverallScoreTokens, formatScore, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../logic/scoring/scorePresentation";
 import type { ScoreResult, Translation } from "../../types";
 
 /**
@@ -103,7 +103,7 @@ export function EmailScreen({ value, translations, isRtl = false, onChange, onBa
  * Final report download screen.
  *
  * Summarizes the completed assessment and exposes PDF download, email-edit, and
- * done actions. The actual PDF generation is handled by `logic/report.ts`.
+ * done actions. The report domain module handles the actual PDF generation.
  */
 export function ReportReadyScreen({
   result,

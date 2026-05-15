@@ -1,4 +1,4 @@
-import type { Answer, Answers, AnswerValue, Question, QuestionType } from "../types";
+import type { Answer, Answers, AnswerValue, Question, QuestionType } from "../../types";
 
 /**
  * Applies a committed answer to the canonical answer map.

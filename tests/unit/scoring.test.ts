@@ -4,7 +4,7 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { getPsychosocialMultiplier, scoreAssessment } from "../../src/logic/scoring";
+import { getPsychosocialMultiplier, scoreAssessment } from "../../src/logic/scoring/scoreAssessment";
 import type { Answers } from "../../src/types";
 
 test("scoreAssessment returns unscored results when no answers are present", () => {

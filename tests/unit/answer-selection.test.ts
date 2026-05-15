@@ -4,7 +4,7 @@
  */
 import test from "node:test";
 import assert from "node:assert/strict";
-import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../src/logic/answerSelection";
+import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../src/logic/questionnaire/answerSelection";
 
 test("single-choice answers toggle on and off", () => {
   assert.equal(toggleSingleOption("", "yes"), "yes");
