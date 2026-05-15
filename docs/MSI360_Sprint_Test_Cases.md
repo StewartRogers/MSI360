@@ -76,6 +76,7 @@ npm run test:automated
 | AT-52 | `tests/unit/report-data.test.ts` | Unit test | Report data computes category priority counts from selected answer scores. | Scores of 4, 3, and 2 count as high, medium, and review priority respectively. |
 | AT-53 | `tests/unit/report-data.test.ts` | Unit test | Report data uses answer-driven suggested actions and clean low-risk fallback text. | Risk-driving answers produce relevant explanations/actions, and categories with no scored hazard use safe fallback guidance. |
 | AT-54 | `tests/unit/report-document.test.ts` | Bundle smoke test | React PDF report document can be bundled for browser rendering. | The report document and React PDF renderer bundle successfully for the browser target. |
+| AT-55 | `tests/integration/assessment-flow.test.ts` | Integration/data test | Language dropdown displays each language name in that language. | Every configured language label uses the expected native-language display name. |
 
 ## Manual Test Cases
 
@@ -83,7 +84,7 @@ Each team member will spend one hour per week running manual tests from this che
 
 | ID | Area | Test Type | Steps | Expected Result |
 | --- | --- | --- | --- | --- |
-| MT-01 | Intro and language | Acceptance test | Open the app, select Start, choose a language, and continue. | Language selection works and the next required question appears. |
+| MT-01 | Intro and language | Acceptance test | Open the app, select Start, choose a language, and continue. | Language names appear in their own language, selection works, and the next required question appears. |
 | MT-02 | Required answers | Acceptance test | Try to continue past role, time in role, task description, height, and assessment questions without answering. | Continue button is disabled until the required answer is provided. |
 | MT-03 | Low-risk office scenario | Exploratory/acceptance test | Enter an office computer task and answer low-risk options through the report screen. | User reaches report-ready screen with no blocking errors. |
 | MT-04 | High-risk lifting scenario | Exploratory/acceptance test | Enter a repeated heavy lifting task and answer higher-risk force/posture/repetition options. | Relevant follow-up questions appear and the score summary reflects higher risk. |

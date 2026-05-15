@@ -202,6 +202,55 @@ test("every language has a flag icon code for dropdown rendering", () => {
   }
 });
 
+test("language dropdown displays each language name in that language", () => {
+  const expectedLanguageNames: Record<string, string> = {
+    en: "English",
+    pa: "ਪੰਜਾਬੀ",
+    "zh-Hans": "普通话",
+    yue: "粵語",
+    fil: "Tagalog",
+    fr: "Français",
+    es: "Español",
+    ko: "한국어",
+    de: "Deutsch",
+    fa: "فارسی",
+    hi: "हिन्दी",
+    vi: "Tiếng Việt",
+    ru: "Русский",
+    ar: "العربية",
+    pt: "Português (Portugal)",
+    ja: "日本語",
+    it: "Italiano",
+    nl: "Nederlands",
+    pl: "Polski",
+    nan: "Bân-lâm-gú",
+    ur: "اردو",
+    gu: "ગુજરાતી",
+    ro: "Română",
+    uk: "Українська",
+    hu: "Magyar",
+    sr: "Српски",
+    ilo: "Ilokano",
+    hr: "Hrvatski",
+    prs: "دری",
+    ta: "தமிழ்",
+    el: "Ελληνικά",
+    cs: "Čeština",
+    "fa-x-nos": "فارسی",
+    ml: "മലയാളം",
+    bn: "বাংলা",
+    tr: "Türkçe",
+    ceb: "Cebuano",
+    id: "Bahasa Indonesia",
+    af: "Afrikaans",
+    da: "Dansk"
+  };
+
+  for (const language of languages) {
+    assert.equal(language.name, expectedLanguageNames[language.code], `Unexpected native display name for ${language.code}`);
+  }
+});
+
 test("right-to-left languages are identified for answer control layout", () => {
   assert.equal(isRtlLanguage("ar"), true);
   assert.equal(isRtlLanguage("fa"), true);
