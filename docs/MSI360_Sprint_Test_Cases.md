@@ -83,6 +83,7 @@ npm run test:automated
 | AT-59 | `tests/unit/ai.test.ts` | Unit test | `buildReportAnalysisPrompt` limits Gemini report analysis to the first four onboarding questions and required sources. | Prompt excludes later answers, avoids category-score references, includes Q1-Q4 context, and includes Institute for Work & Health plus WorkSafeBC OHS Regulation Part 4 source guidance. |
 | AT-60 | `tests/unit/ai.test.ts` | Unit test | `validateReportAnalysisOutput` accepts only a clean AI report-analysis paragraph. | Valid paragraphs are normalized and tagged as Gemini output, while empty or malformed outputs are rejected. |
 | AT-61 | `tests/unit/report-data.test.ts` | Unit test | Report data includes available AI-generated analysis with disclaimer and source links. | Background AI analysis is wrapped with the fixed Q1-Q4 disclaimer and Institute for Work & Health plus WorkSafeBC source links before PDF rendering. |
+| AT-55 | `tests/integration/assessment-flow.test.ts` | Integration/data test | Language dropdown displays each language name in that language. | Every configured language label uses the expected native-language display name. |
 
 ## Manual Test Cases
 
@@ -90,7 +91,7 @@ Each team member will spend one hour per week running manual tests from this che
 
 | ID | Area | Test Type | Steps | Expected Result |
 | --- | --- | --- | --- | --- |
-| MT-01 | Intro and language | Acceptance test | Open the app, select Start, choose a language, and continue. | Language selection works and the next required question appears. |
+| MT-01 | Intro and language | Acceptance test | Open the app, select Start, choose a language, and continue. | Language names appear in their own language, selection works, and the next required question appears. |
 | MT-02 | Required answers | Acceptance test | Try to continue past role, time in role, task description, height, and assessment questions without answering. | Continue button is disabled until the required answer is provided. |
 | MT-03 | Low-risk office scenario | Exploratory/acceptance test | Enter an office computer task and answer low-risk options through the report screen. | User reaches report-ready screen with no blocking errors. |
 | MT-04 | High-risk lifting scenario | Exploratory/acceptance test | Enter a repeated heavy lifting task and answer higher-risk force/posture/repetition options. | Relevant follow-up questions appear and the score summary reflects higher risk. |
