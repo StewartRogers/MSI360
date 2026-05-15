@@ -36,13 +36,13 @@ export const languages: Language[] = [
   { code: "el", name: "Greek", flag: "🇬🇷", flagCode: "gr", ready: true },
   { code: "cs", name: "Czech", flag: "🇨🇿", flagCode: "cz", ready: true },
   { code: "fa-x-nos", name: "Persian (Farsi), n.o.s.", flag: "🇮🇷", flagCode: "ir", ready: true },
-  { code: "ml", name: "Malayalam", flag: "🇮🇳", flagCode: "in", ready: false },
-  { code: "bn", name: "Bengali", flag: "🇧🇩", flagCode: "bd", ready: false },
-  { code: "tr", name: "Turkish", flag: "🇹🇷", flagCode: "tr", ready: false },
-  { code: "ceb", name: "Cebuano", flag: "🇵🇭", flagCode: "ph", ready: false },
-  { code: "id", name: "Indonesian", flag: "🇮🇩", flagCode: "id", ready: false },
-  { code: "af", name: "Afrikaans", flag: "🇿🇦", flagCode: "za", ready: false },
-  { code: "da", name: "Danish", flag: "🇩🇰", flagCode: "dk", ready: false }
+  { code: "ml", name: "Malayalam", flag: "🇮🇳", flagCode: "in", ready: true },
+  { code: "bn", name: "Bengali", flag: "🇧🇩", flagCode: "bd", ready: true },
+  { code: "tr", name: "Turkish", flag: "🇹🇷", flagCode: "tr", ready: true },
+  { code: "ceb", name: "Cebuano", flag: "🇵🇭", flagCode: "ph", ready: true },
+  { code: "id", name: "Indonesian", flag: "🇮🇩", flagCode: "id", ready: true },
+  { code: "af", name: "Afrikaans", flag: "🇿🇦", flagCode: "za", ready: true },
+  { code: "da", name: "Danish", flag: "🇩🇰", flagCode: "dk", ready: true }
 ];
 
 export function isRtlLanguage(code: string) {
