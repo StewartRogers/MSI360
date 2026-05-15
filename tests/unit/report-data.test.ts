@@ -56,6 +56,23 @@ test("report data maps responder context, task, worker height, symptoms, and job
   assert.ok(report.jobSpecificNote.body.includes("office"));
 });
 
+test("report data includes AI-generated analysis when the background response is available", () => {
+  const report = buildReportData({}, {}, scoreAssessment({}), {
+    reportAnalysis: {
+      paragraph: "Lower tenure and task setup should be reviewed before relying on the score summary.",
+      provider: "gemini"
+    }
+  });
+
+  assert.ok(report.aiGeneratedAnalysis);
+  assert.equal(report.aiGeneratedAnalysis.title, "AI-generated analysis");
+  assert.equal(report.aiGeneratedAnalysis.disclaimer, "Created by AI using only responses from the first four questions.");
+  assert.equal(report.aiGeneratedAnalysis.paragraph, "Lower tenure and task setup should be reviewed before relying on the score summary.");
+  assert.equal(report.aiGeneratedAnalysis.sources.length, 2);
+  assert.ok(report.aiGeneratedAnalysis.sources.some((source) => source.label.includes("Institute for Work & Health")));
+  assert.ok(report.aiGeneratedAnalysis.sources.some((source) => source.label.includes("WorkSafeBC OHS Regulation Part 4")));
+});
+
 test("report data computes category priority counts from selected answer scores", () => {
   const answers: Answers = {
     "question-11": { type: "multi_choice", value: "30_min_to_1_hour" },

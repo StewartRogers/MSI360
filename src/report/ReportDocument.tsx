@@ -1,6 +1,6 @@
-import { Document, Image, Line, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
+import { Document, Image, Line, Link, Page, Path, Rect, StyleSheet, Svg, Text, View } from "@react-pdf/renderer";
 import { reportAssets } from "./reportAssets";
-import type { ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
+import type { ReportAiGeneratedAnalysis, ReportBodySymptomArea, ReportBodySymptoms, ReportCategorySummary, ReportData, ReviewPriority } from "./reportData";
 import { BodyDiagramSvg } from "./BodyDiagramSvg";
 
 const colors = {
@@ -120,10 +120,13 @@ function OverviewContent({ report }: { report: ReportData }) {
         <BodyDiagramSvg symptoms={report.symptoms} />
       </View>
 
-      <View style={styles.noteBlock} wrap={false}>
-        <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
-        <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
-        {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+      <View style={report.aiGeneratedAnalysis ? styles.noteGrid : styles.noteBlock} wrap={false}>
+        <View style={report.aiGeneratedAnalysis ? styles.noteGridItem : undefined}>
+          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
+          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
+          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+        </View>
+        {report.aiGeneratedAnalysis && <AiGeneratedAnalysisBlock analysis={report.aiGeneratedAnalysis} />}
       </View>
 
       <Text style={styles.sectionHeading}>Overall MSI risk summary</Text>
@@ -252,6 +255,22 @@ function ResponseRecordContent({ report }: { report: ReportData }) {
             </Text>
           ))}
         </View>
+      ))}
+    </View>
+  );
+}
+
+function AiGeneratedAnalysisBlock({ analysis }: { analysis: ReportAiGeneratedAnalysis }) {
+  return (
+    <View style={styles.aiAnalysisBlock}>
+      <Text style={styles.sectionHeading}>{analysis.title}</Text>
+      <Text style={styles.aiAnalysisDisclaimer}>{analysis.disclaimer}</Text>
+      <Text style={styles.paragraph}>{analysis.paragraph}</Text>
+      <Text style={styles.aiAnalysisSourcesLabel}>Sources:</Text>
+      {analysis.sources.map((source) => (
+        <Link key={source.url} src={source.url} style={styles.aiAnalysisSourceLink}>
+          {source.label}
+        </Link>
       ))}
     </View>
   );
@@ -654,6 +673,38 @@ const styles = StyleSheet.create({
   },
   noteBlock: {
     marginBottom: 20
+  },
+  noteGrid: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20
+  },
+  noteGridItem: {
+    width: "48%"
+  },
+  aiAnalysisBlock: {
+    width: "48%",
+    borderLeft: `2 solid ${colors.paleBlue}`,
+    paddingLeft: 10
+  },
+  aiAnalysisDisclaimer: {
+    color: colors.muted,
+    fontSize: 7.5,
+    lineHeight: 1.25,
+    marginBottom: 6
+  },
+  aiAnalysisSourcesLabel: {
+    color: colors.muted,
+    fontSize: 7.5,
+    fontWeight: "bold",
+    marginBottom: 3
+  },
+  aiAnalysisSourceLink: {
+    color: "#0284c7",
+    fontSize: 7.5,
+    lineHeight: 1.3,
+    marginBottom: 2,
+    textDecoration: "none"
   },
   linkText: {
     color: "#0284c7",

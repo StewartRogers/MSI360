@@ -1,7 +1,16 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { questions } from "../../src/data/catalog";
-import { buildInterpretTextPrompt, buildPreAnswerPrompt, filterAllowedAddTags, interpretTextAnswer, preAnswerQuestions, validatePreAnswers } from "../../src/logic/ai";
+import {
+  buildInterpretTextPrompt,
+  buildPreAnswerPrompt,
+  buildReportAnalysisPrompt,
+  filterAllowedAddTags,
+  interpretTextAnswer,
+  preAnswerQuestions,
+  validatePreAnswers,
+  validateReportAnalysisOutput
+} from "../../src/logic/ai";
 
 test("interpretTextAnswer uses the local fallback and returns allowed routing tags when Gemini is not configured", async () => {
   const question = questions.find((item) => item.question_id === "question-3");
@@ -44,6 +53,47 @@ test("buildPreAnswerPrompt instructs Gemini to handle multilingual text and cano
   assert.ok(/Do not invent, translate, localize, rename, or paraphrase question IDs/i.test(prompt));
   assert.ok(/Evidence must be an exact phrase from the original worker response/i.test(prompt));
   assert.ok(/mostly_sit/.test(prompt));
+});
+
+test("buildReportAnalysisPrompt limits Gemini analysis to first four questions and required sources", () => {
+  const prompt = buildReportAnalysisPrompt(
+    {
+      "question-1": { type: "multi_choice", value: "worker" },
+      "question-2": { type: "multi_choice", value: "less_than_year" },
+      "question-3": { type: "text", value: "I lift boxes at a low shelf all day." },
+      "question-4": { type: "multi_choice", value: "under_5_4" },
+      "question-17": { type: "multi_choice", value: "more_than_18_lb" }
+    },
+    {
+      "question-3": {
+        normalized_answer_en: "I lift boxes at a low shelf all day.",
+        add_tags: ["manual_handling"],
+        missing_details: [],
+        confidence: 0.9,
+        notes: "test",
+        provider: "test"
+      }
+    }
+  );
+
+  assert.ok(/Use only the onboarding_context JSON/i.test(prompt));
+  assert.ok(/question-1, question-2, question-3, and question-4/i.test(prompt));
+  assert.ok(/Do not mention category scores/i.test(prompt));
+  assert.ok(/Created by AI/i.test(prompt) === false);
+  assert.ok(/Institute for Work & Health/i.test(prompt));
+  assert.ok(/WorkSafeBC OHS Regulation Part 4/i.test(prompt));
+  assert.ok(/height_far_from_average":true/.test(prompt));
+  assert.ok(!/question-17/.test(prompt));
+});
+
+test("validateReportAnalysisOutput accepts a clean paragraph and rejects invalid output", () => {
+  const output = validateReportAnalysisOutput({ paragraph: "  Review the task context and training needs.  " });
+
+  assert.ok(output);
+  assert.equal(output.paragraph, "Review the task context and training needs.");
+  assert.equal(output.provider, "gemini");
+  assert.equal(validateReportAnalysisOutput({ paragraph: "" }), null);
+  assert.equal(validateReportAnalysisOutput({ message: "missing paragraph" }), null);
 });
 
 test("filterAllowedAddTags removes unknown or translated tags and keeps canonical tags", () => {

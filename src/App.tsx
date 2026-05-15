@@ -3,7 +3,7 @@ import { onboardingQuestionIds, questionIds } from "./app/questionAssets";
 import type { StepId } from "./app/types";
 import { languages, questions } from "./data/catalog";
 import { translations } from "./data/translations";
-import { interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
+import { generateReportAnalysis, interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
 import { aiFallbackToastMessages, getAiFallbackToastKinds, type AiFallbackToastKind } from "./logic/aiFallbackToast";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/assessmentFlow";
 import { getPreAnswerCandidateQuestions, getProgressStep, getQuestionById, getSortedVisibleQuestions, getTaskSummary, toAnswers, withoutKeys } from "./logic/appFlow";
@@ -12,7 +12,7 @@ import { scoreAssessment } from "./logic/scoring";
 import { AssessmentQuestionScreen } from "./ui/screens/AssessmentScreen";
 import { ChoiceScreen, DescriptionScreen, IntroScreen, LanguageScreen, TextScreen } from "./ui/screens/OnboardingScreens";
 import { CompleteScreen, EmailScreen, ReportReadyScreen, ScoreScreen, SubmitScreen } from "./ui/screens/ResultScreens";
-import type { AiOutputs, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
+import type { AiOutputs, AiReportAnalysis, Answers, AnswerValue, Question, QuestionType, ScoreResult } from "./types";
 
 export { getActionButtonState } from "./ui/components/ActionButtons";
 
@@ -35,9 +35,11 @@ export default function App() {
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
   const [autoAnsweredQuestionIds, setAutoAnsweredQuestionIds] = useState<string[]>([]);
   const [draftAssessmentAnswers, setDraftAssessmentAnswers] = useState<Answers>({});
+  const [reportAnalysis, setReportAnalysis] = useState<AiReportAnalysis | null>(null);
   const [toastQueue, setToastQueue] = useState<AiFallbackToast[]>([]);
   const [activeToast, setActiveToast] = useState<AiFallbackToast | null>(null);
   const nextToastId = useRef(1);
+  const reportAnalysisRequestId = useRef(0);
 
   useEffect(() => {
     if (activeToast || !toastQueue.length) return;
@@ -73,6 +75,7 @@ export default function App() {
 
   function updateAnswer(questionId: string, type: QuestionType, value: AnswerValue) {
     const isTaskDescriptionUpdate = questionId === questionIds.taskDescription;
+    const shouldResetReportAnalysis = onboardingQuestionIds.has(questionId);
     const nextAiOutputs = isTaskDescriptionUpdate ? withoutKeys(aiOutputs, [questionIds.taskDescription]) : aiOutputs;
     const nextAutoAnsweredQuestionIds = isTaskDescriptionUpdate ? [] : autoAnsweredQuestionIds.filter((id) => id !== questionId);
     const baseAnswers = isTaskDescriptionUpdate ? withoutKeys(answers, autoAnsweredQuestionIds) : answers;
@@ -83,6 +86,10 @@ export default function App() {
     setAiOutputs(nextAiOutputs);
     setAutoAnsweredQuestionIds(nextAutoAnsweredQuestionIds);
     if (isTaskDescriptionUpdate) setDraftAssessmentAnswers({});
+    if (shouldResetReportAnalysis) {
+      reportAnalysisRequestId.current += 1;
+      setReportAnalysis(null);
+    }
     setActiveTags(nextTags);
     setScoreResult(null);
   }
@@ -125,9 +132,23 @@ export default function App() {
       return setStep("height");
     }
     if (step === "height") {
+      startReportAnalysis(answers, aiOutputs);
       setAssessmentIndex(0);
       return setStep("assessment");
     }
+  }
+
+  function startReportAnalysis(nextAnswers: Answers, nextAiOutputs: AiOutputs) {
+    const hasOnboardingAnswers = [questionIds.role, questionIds.timeInRole, questionIds.taskDescription, questionIds.height].every((questionId) =>
+      isQuestionAnswered(getQuestionById(questionId), nextAnswers[questionId])
+    );
+    if (!hasOnboardingAnswers) return;
+
+    const requestId = reportAnalysisRequestId.current + 1;
+    reportAnalysisRequestId.current = requestId;
+    void generateReportAnalysis(nextAnswers, nextAiOutputs).then((analysis) => {
+      if (reportAnalysisRequestId.current === requestId) setReportAnalysis(analysis);
+    });
   }
 
   function queueAiFallbackToasts(kinds: AiFallbackToastKind[]) {
@@ -204,7 +225,7 @@ export default function App() {
     const nextResult = scoreResult || scoreAssessment(answers);
     setScoreResult(nextResult);
     const { downloadReport } = await import("./logic/report");
-    await downloadReport(answers, aiOutputs, nextResult);
+    await downloadReport(answers, aiOutputs, nextResult, reportAnalysis);
   }
 
   function startNewAssessment() {
@@ -219,6 +240,8 @@ export default function App() {
     setNextAssessmentChoice("");
     setAutoAnsweredQuestionIds([]);
     setDraftAssessmentAnswers({});
+    setReportAnalysis(null);
+    reportAnalysisRequestId.current += 1;
     setToastQueue([]);
     setActiveToast(null);
     setStep("intro");
