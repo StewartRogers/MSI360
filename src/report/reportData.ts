@@ -162,7 +162,7 @@ export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreRes
     generatedDate: formatReportDate(generatedAt),
     responderContext: getResponderContext(answers),
     responderContextNote: getResponderContextNote(answers),
-    taskSummary: getTaskSummary(answers),
+    taskSummary: getTaskSummary(answers, aiOutputs),
     workerHeight: getWorkerHeight(answers),
     activeTags,
     jobSpecificNote: getJobSpecificNote(activeTags),
@@ -301,9 +301,7 @@ function getSelectedReportOptions(question: Question, answer: Answer): Array<{ o
 
 function formatAnswer(question: Question, value: unknown, aiOutput = undefined as AiOutputs[string] | undefined): string[] {
   if (question.type === "text") {
-    const lines = [`Answer: ${String(value || "")}`];
-    if (aiOutput?.normalized_answer_en && aiOutput.normalized_answer_en !== value) lines.push(`English interpretation: ${aiOutput.normalized_answer_en}`);
-    return lines;
+    return [`Answer: ${getEnglishTextAnswer(value, aiOutput, "No answer")}`];
   }
 
   if (question.options) {
@@ -319,9 +317,17 @@ function formatAnswer(question: Question, value: unknown, aiOutput = undefined a
   });
 }
 
-function getTaskSummary(answers: Answers) {
+function getTaskSummary(answers: Answers, aiOutputs: AiOutputs) {
   const value = answers[questionIds.taskDescription]?.value;
-  return typeof value === "string" && value.trim() ? value.trim() : "Work task";
+  return getEnglishTextAnswer(value, aiOutputs[questionIds.taskDescription], "Work task");
+}
+
+function getEnglishTextAnswer(value: unknown, aiOutput: AiOutputs[string] | undefined, fallback: string) {
+  const normalizedAnswer = aiOutput?.normalized_answer_en.trim();
+  if (normalizedAnswer) return normalizedAnswer;
+
+  const rawAnswer = typeof value === "string" ? value.trim() : "";
+  return rawAnswer || fallback;
 }
 
 function getResponderContext(answers: Answers) {

@@ -118,6 +118,7 @@ npm run test:automated
 | AT-94 | `tests/integration/assessment-flow.test.ts` | Translation coverage test | Chinese (Traditional) and Tagalog translations have display text for every configured question option. | Traditional Chinese and Tagalog question labels, option labels, grouped labels, and description titles are complete. |
 | AT-95 | `tests/integration/assessment-flow.test.ts` | Translation coverage test | German, Persian, and Hindi translations have display text for every configured question option. | German, Persian, and Hindi question labels, option labels, grouped labels, and description titles are complete. |
 | AT-96 | `tests/integration/assessment-flow.test.ts` | Localization test | Ready translations provide localized shared action button labels. | Continue, Back, Processing, and Analyzing labels resolve from ready translations. |
+| AT-97 | `tests/unit/report-data.test.ts` | Unit test | Report data uses English-normalized task text for PDF fields. | The PDF task summary and response-record answer use the AI English interpretation instead of raw non-English worker text when available. |
 
 ## Manual Test Cases
 
