@@ -301,9 +301,7 @@ function getSelectedReportOptions(question: Question, answer: Answer): Array<{ o
 
 function formatAnswer(question: Question, value: unknown, aiOutput = undefined as AiOutputs[string] | undefined): string[] {
   if (question.type === "text") {
-    const lines = [`Answer: ${String(value || "")}`];
-    if (aiOutput?.normalized_answer_en && aiOutput.normalized_answer_en !== value) lines.push(`English interpretation: ${aiOutput.normalized_answer_en}`);
-    return lines;
+    return [`Answer: ${getEnglishTextAnswer(value, aiOutput, "No answer")}`];
   }
 
   if (question.options) {
@@ -320,11 +318,22 @@ function formatAnswer(question: Question, value: unknown, aiOutput = undefined a
 }
 
 function getTaskSummary(answers: Answers, aiOutputs: AiOutputs) {
+<<<<<<< fix/change-font-size-for-summary
+=======
   const normalizedTask = aiOutputs[questionIds.taskDescription]?.normalized_answer_en;
   if (normalizedTask?.trim()) return normalizedTask.trim();
 
+>>>>>>> main
   const value = answers[questionIds.taskDescription]?.value;
-  return typeof value === "string" && value.trim() ? value.trim() : "Work task";
+  return getEnglishTextAnswer(value, aiOutputs[questionIds.taskDescription], "Work task");
+}
+
+function getEnglishTextAnswer(value: unknown, aiOutput: AiOutputs[string] | undefined, fallback: string) {
+  const normalizedAnswer = aiOutput?.normalized_answer_en.trim();
+  if (normalizedAnswer) return normalizedAnswer;
+
+  const rawAnswer = typeof value === "string" ? value.trim() : "";
+  return rawAnswer || fallback;
 }
 
 function getResponderContext(answers: Answers) {

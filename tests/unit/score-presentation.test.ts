@@ -3,7 +3,17 @@ import assert from "node:assert/strict";
 import React from "react";
 import { translations } from "../../src/data/translations";
 import { scoreAssessment } from "../../src/logic/scoring";
-import { describeFactorRisk, describeRisk, formatOverallScore, formatScore, formatScoreValue, getFactorSummaries, getPsychosocialInfluenceMessage, scorePercent } from "../../src/logic/scorePresentation";
+import {
+  describeFactorRisk,
+  describeRisk,
+  formatOverallScore,
+  formatOverallScoreTokens,
+  formatScore,
+  formatScoreValue,
+  getFactorSummaries,
+  getPsychosocialInfluenceMessage,
+  scorePercent
+} from "../../src/logic/scorePresentation";
 import { ScoreScreen } from "../../src/ui/screens/ResultScreens";
 import type { FactorScore, ScoreResult } from "../../src/types";
 
@@ -41,25 +51,34 @@ test("score presentation helpers use selected translations", () => {
   });
 
   assert.equal(formatOverallScore(3.7, translations.fr), "3.7 sur 4");
+  assert.deepEqual(formatOverallScoreTokens(3.7, translations.ko), [
+    { text: "4점 만점에 ", isScore: false },
+    { text: "3.7", isScore: true }
+  ]);
+  assert.deepEqual(formatOverallScoreTokens(3.7, translations.fr), [
+    { text: "3.7", isScore: true },
+    { text: " sur 4", isScore: false }
+  ]);
   assert.equal(describeRisk(3.5, translations.es), "Riesgo conocido");
   assert.equal(describeFactorRisk(1.5, "la répétition", translations.fr), "Risque possible d'inconfort lié à la répétition.");
   assert.equal(getFactorSummaries(result, translations.ja)[1].label, "力の使用");
 });
 
 test("score screen renders the localized overall score instead of hardcoded English", () => {
-  const text = collectText(
-    ScoreScreen({
-      result: getScoreResult(3.7),
-      progressStep: 5,
-      totalSteps: 5,
-      translations: translations.ja,
-      onBack: () => undefined,
-      onContinue: () => undefined
-    })
-  );
+  const tree = ScoreScreen({
+    result: getScoreResult(3.7),
+    progressStep: 5,
+    totalSteps: 5,
+    translations: translations.ko,
+    onBack: () => undefined,
+    onContinue: () => undefined
+  });
+  const text = collectText(tree);
 
-  assert.ok(text.includes("4点中3.7"));
+  assert.ok(text.includes("4점 만점에 3.7"));
   assert.ok(!text.includes("out of"));
+  assert.deepEqual(collectSmallTextByClass(tree, "score-out-of"), ["4점 만점에 "]);
+  assert.deepEqual(collectSpanTextInsideStrong(tree), []);
 });
 
 test("factor risk interpretations match score thresholds", () => {
@@ -132,4 +151,25 @@ function collectText(node: React.ReactNode): string {
   if (Array.isArray(node)) return node.map(collectText).join("");
   if (React.isValidElement<{ children?: React.ReactNode }>(node)) return collectText(node.props.children);
   return "";
+}
+
+function collectSmallTextByClass(node: React.ReactNode, className: string): string[] {
+  if (node === null || node === undefined || typeof node === "boolean" || typeof node === "string" || typeof node === "number") return [];
+  if (Array.isArray(node)) return node.flatMap((child) => collectSmallTextByClass(child, className));
+  if (!React.isValidElement<{ children?: React.ReactNode; className?: string }>(node)) return [];
+
+  const childMatches = collectSmallTextByClass(node.props.children, className);
+  if (node.type === "small" && node.props.className === className) return [collectText(node.props.children), ...childMatches];
+  return childMatches;
+}
+
+function collectSpanTextInsideStrong(node: React.ReactNode, insideStrong = false): string[] {
+  if (node === null || node === undefined || typeof node === "boolean" || typeof node === "string" || typeof node === "number") return [];
+  if (Array.isArray(node)) return node.flatMap((child) => collectSpanTextInsideStrong(child, insideStrong));
+  if (!React.isValidElement<{ children?: React.ReactNode }>(node)) return [];
+
+  const nextInsideStrong = insideStrong || node.type === "strong";
+  const childMatches = collectSpanTextInsideStrong(node.props.children, nextInsideStrong);
+  if (nextInsideStrong && node.type === "span") return [collectText(node.props.children), ...childMatches];
+  return childMatches;
 }

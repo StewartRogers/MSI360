@@ -56,6 +56,29 @@ test("report data maps responder context, task, worker height, symptoms, and job
   assert.ok(report.jobSpecificNote.body.includes("office"));
 });
 
+test("report data uses English-normalized task text for PDF fields", () => {
+  const answers: Answers = {
+    "question-3": { type: "text", value: "Levanto cajas pesadas todo el día." }
+  };
+  const aiOutputs: AiOutputs = {
+    "question-3": {
+      normalized_answer_en: "I lift heavy boxes all day.",
+      add_tags: ["manual_handling", "lifting_lowering"],
+      missing_details: [],
+      confidence: 0.94,
+      notes: "test",
+      provider: "gemini"
+    }
+  };
+
+  const report = buildReportData(answers, aiOutputs, scoreAssessment(answers), { now: new Date("2026-05-02T12:00:00Z") });
+  const taskRecord = report.answerRecords.find((record) => record.questionId === "question-3");
+
+  assert.equal(report.taskSummary, "I lift heavy boxes all day.");
+  assert.ok(taskRecord);
+  assert.deepEqual(taskRecord.answers, ["Answer: I lift heavy boxes all day."]);
+});
+
 test("report data includes AI-generated analysis when the background response is available", () => {
   const report = buildReportData({}, {}, scoreAssessment({}), {
     reportAnalysis: {
