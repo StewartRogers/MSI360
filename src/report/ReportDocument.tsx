@@ -89,7 +89,7 @@ function IntroContent({ report }: { report: ReportData }) {
         </View>
       </NumberedSection>
 
-      <NumberedSection number="5" title="Risk categories assessed">
+      <NumberedSection number="5" title="MSI risk factors associated with physical demands of work activities.">
         <View style={styles.categoryIntroGrid} wrap={false}>
           {report.categories.map((category) => (
             <View key={category.key} style={styles.categoryIntroCard}>
