@@ -89,7 +89,7 @@ function IntroContent({ report }: { report: ReportData }) {
         </View>
       </NumberedSection>
 
-      <NumberedSection number="5" title="Risk categories assessed">
+      <NumberedSection number="5" title="MSI risk factors associated with the physical demands of work activities">
         <View style={styles.categoryIntroGrid} wrap={false}>
           {report.categories.map((category) => (
             <View key={category.key} style={styles.categoryIntroCard}>
@@ -108,28 +108,9 @@ function OverviewContent({ report }: { report: ReportData }) {
     <View style={styles.pageContent}>
       <View style={{ marginTop: 32 }} />
       <Text style={styles.pageHeading}>Overview of Results</Text>
-      <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}Detailed category score pages and the full response record appear later in the report.</Text>
+      <Text style={styles.pageIntro}>This page summarizes reported symptoms, overall MSI risk counts, and practical guidance for reducing risk.{"\n"}The following pages present specific MSI Risk Scores, plain-language explanations, and suggested actions. The full list of questions and answers is provided at the end of the report as a response record.</Text>
 
-      <Text style={styles.sectionHeading}>Current symptoms</Text>
-      <SymptomsAlert symptoms={report.symptoms} />
-      <View style={styles.symptomDiagramRow} wrap={false}>
-        <View style={{ flex: 1, paddingTop: 10 }}>
-          <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
-          <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
-        </View>
-        <BodyDiagramSvg symptoms={report.symptoms} />
-      </View>
-
-      <View style={report.aiGeneratedAnalysis ? styles.noteGrid : styles.noteBlock} wrap={false}>
-        <View style={report.aiGeneratedAnalysis ? styles.noteGridItem : undefined}>
-          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
-          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
-          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
-        </View>
-        {report.aiGeneratedAnalysis && <AiGeneratedAnalysisBlock analysis={report.aiGeneratedAnalysis} />}
-      </View>
-
-      <Text style={styles.sectionHeading}>Overall MSI risk summary</Text>
+      <Text style={styles.sectionHeading}>Overall MSI Risk Score Summary</Text>
       <View style={styles.overallSummary} wrap={false}>
         <View style={styles.bigMetric}>
           <View style={styles.shieldIconWrapper}>
@@ -151,13 +132,31 @@ function OverviewContent({ report }: { report: ReportData }) {
         <Text style={styles.infoLine}>Higher-priority risks should be reviewed first. This report remains a starting point for discussion and action.</Text>
       </View>
 
+      <View style={report.aiGeneratedAnalysis ? styles.noteGrid : styles.noteBlock} wrap={false}>
+        <View style={report.aiGeneratedAnalysis ? styles.noteGridItem : undefined}>
+          <Text style={styles.sectionHeading}>{report.jobSpecificNote.title}</Text>
+          <Text style={styles.paragraph}>{report.jobSpecificNote.body}</Text>
+          {report.jobSpecificNote.linkLabel && <Text style={styles.linkText}>{report.jobSpecificNote.linkLabel}</Text>}
+        </View>
+        {report.aiGeneratedAnalysis && <AiGeneratedAnalysisBlock analysis={report.aiGeneratedAnalysis} />}
+      </View>
+
+      <Text style={styles.sectionHeading}>Current symptoms</Text>
+      <SymptomsAlert symptoms={report.symptoms} />
+      <View style={styles.symptomDiagramRow} wrap={false}>
+        <View style={{ flex: 1, paddingTop: 10 }}>
+          <SymptomList title="Reported on both sides of the body" items={report.symptoms.bothSides} />
+          <SymptomList title="Reported on one side of the body" items={report.symptoms.oneSide} />
+        </View>
+        <BodyDiagramSvg symptoms={report.symptoms} />
+      </View>
+
       <View style={styles.controlsRow} wrap={false}>
         <View style={styles.controlsText}>
           <Text style={styles.sectionHeading}>How to approach reducing risks</Text>
           <Text style={styles.paragraph}>
-            Risk reduction should begin with the most effective controls first. Where possible, remove or reduce the hazard at the source before relying on personal protective equipment.
+            Risk reduction should begin with the most effective controls first. Where possible, remove or reduce the hazard at the source before relying on administrative controls.
           </Text>
-          <Text style={styles.paragraph}>The following pages present category-specific MSI scores, plain-language explanations, and suggested actions. The full list of questions and answers is provided at the end of the report as a response record.</Text>
         </View>
         <Image src={reportAssets.images.hierarchyOfControls} style={styles.hierarchyImage} />
       </View>
