@@ -32,6 +32,19 @@ export async function preAnswerQuestions(candidateQuestions: Question[], respons
   }));
 }
 
+/**
+ * Returns the no-preanswer fallback used when task analysis already proved the
+ * Gemini path unavailable. This avoids making the worker wait through a second
+ * request timeout before normal follow-up questions are shown.
+ */
+export function createPreAnswerSkippedAfterTaskFallback(): AiPreAnswerOutput {
+  return {
+    auto_answers: [],
+    provider: "client-no-preanswer",
+    notes: "Gemini pre-answering unavailable; no questions were hidden because task analysis already used local fallback."
+  };
+}
+
 async function preAnswerWithGemini(candidateQuestions: Question[], response: string, existingAnswers: Answers): Promise<AiPreAnswerOutput> {
   const apiUrl = getGeminiApiUrl();
   if (!apiUrl) {

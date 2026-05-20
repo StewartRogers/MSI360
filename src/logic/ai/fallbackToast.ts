@@ -31,6 +31,20 @@ export function getAiFallbackToastMessage(t: Translation, kind: AiFallbackToastK
 }
 
 /**
+ * Identifies task-analysis fallbacks caused by an attempted Gemini request.
+ */
+export function isTaskAnalysisRequestFallback(taskOutput: Pick<AiOutput, "provider" | "notes">) {
+  return taskOutput.provider === "client-keyword-fallback" && taskOutput.notes.startsWith("Gemini unavailable");
+}
+
+/**
+ * Identifies pre-answer fallbacks caused by an attempted or skipped Gemini path.
+ */
+export function isQuestionPruningRequestFallback(preAnswerOutput: Pick<AiPreAnswerOutput, "provider" | "notes">) {
+  return preAnswerOutput.provider === "client-no-preanswer" && preAnswerOutput.notes.startsWith("Gemini pre-answering unavailable");
+}
+
+/**
  * Determines which fallback toasts should be shown after the task-description
  * AI passes finish.
  *
@@ -40,11 +54,7 @@ export function getAiFallbackToastMessage(t: Translation, kind: AiFallbackToastK
  */
 export function getAiFallbackToastKinds(taskOutput: Pick<AiOutput, "provider" | "notes">, preAnswerOutput: Pick<AiPreAnswerOutput, "provider" | "notes">): AiFallbackToastKind[] {
   const fallbackToastKinds: AiFallbackToastKind[] = [];
-  if (taskOutput.provider === "client-keyword-fallback" && taskOutput.notes.startsWith("Gemini unavailable")) {
-    fallbackToastKinds.push("task-analysis");
-  }
-  if (preAnswerOutput.provider === "client-no-preanswer" && preAnswerOutput.notes.startsWith("Gemini pre-answering unavailable")) {
-    fallbackToastKinds.push("question-pruning");
-  }
+  if (isTaskAnalysisRequestFallback(taskOutput)) fallbackToastKinds.push("task-analysis");
+  if (isQuestionPruningRequestFallback(preAnswerOutput)) fallbackToastKinds.push("question-pruning");
   return fallbackToastKinds;
 }

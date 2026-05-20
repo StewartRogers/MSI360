@@ -5,8 +5,8 @@ import { languages, questions } from "./data/catalog";
 import { isRtlLanguage } from "./data/languages";
 import { translations } from "./data/translations";
 import { getAppText } from "./data/translationText";
-import { generateReportAnalysis, interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
-import { getAiFallbackToastKinds, getAiFallbackToastMessage, type AiFallbackToastKind } from "./logic/ai/fallbackToast";
+import { createPreAnswerSkippedAfterTaskFallback, generateReportAnalysis, interpretTextAnswer, preAnswerQuestions } from "./logic/ai";
+import { getAiFallbackToastKinds, getAiFallbackToastMessage, isTaskAnalysisRequestFallback, type AiFallbackToastKind } from "./logic/ai/fallbackToast";
 import { applyAnswer, applyDraftAnswer, findNextAssessmentIndexAfterCommit, getAssessmentQuestions, getDisplayedAssessmentAnswer, isQuestionAnswered } from "./logic/questionnaire/assessmentFlow";
 import { getPreAnswerCandidateQuestions, getProgressStep, getQuestionById, getSortedVisibleQuestions, getTaskSummary, toAnswers, withoutKeys } from "./logic/questionnaire/flow";
 import { recomputeTags } from "./logic/questionnaire/questionRouting";
@@ -144,8 +144,14 @@ export default function App() {
           const nextAiOutputs = { ...aiOutputs, [questionIds.taskDescription]: output };
           const answersWithoutPreviousAutoAnswers = withoutKeys(answers, autoAnsweredQuestionIds);
           const routedTags = recomputeTags(answersWithoutPreviousAutoAnswers, nextAiOutputs);
+          setAiOutputs(nextAiOutputs);
+          setActiveTags(routedTags);
+          if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
+
           const candidateQuestions = getPreAnswerCandidateQuestions(routedTags, answersWithoutPreviousAutoAnswers);
-          const preAnswerOutput = await preAnswerQuestions(candidateQuestions, response, answersWithoutPreviousAutoAnswers);
+          const preAnswerOutput = isTaskAnalysisRequestFallback(output)
+            ? createPreAnswerSkippedAfterTaskFallback()
+            : await preAnswerQuestions(candidateQuestions, response, answersWithoutPreviousAutoAnswers);
           const autoAnswers = toAnswers(preAnswerOutput.auto_answers);
           const nextAutoAnsweredQuestionIds = preAnswerOutput.auto_answers.map((answer) => answer.question_id);
           const nextAnswers = { ...answersWithoutPreviousAutoAnswers, ...autoAnswers };
@@ -156,7 +162,6 @@ export default function App() {
           setAiOutputs(nextAiOutputs);
           setAutoAnsweredQuestionIds(nextAutoAnsweredQuestionIds);
           setActiveTags(recomputeTags(nextAnswers, nextAiOutputs));
-          if (output.missing_details.length) setStatus(`ErgoCheck may ask about: ${output.missing_details.join(", ")}.`);
         } finally {
           setIsInterpretingTaskDescription(false);
         }
@@ -185,9 +190,13 @@ export default function App() {
 
     const requestId = reportAnalysisRequestId.current + 1;
     reportAnalysisRequestId.current = requestId;
-    void generateReportAnalysis(nextAnswers, nextAiOutputs).then((analysis) => {
-      if (reportAnalysisRequestId.current === requestId) setReportAnalysis(analysis);
-    });
+    void generateReportAnalysis(nextAnswers, nextAiOutputs)
+      .then((analysis) => {
+        if (reportAnalysisRequestId.current === requestId) setReportAnalysis(analysis);
+      })
+      .catch(() => {
+        // Report analysis is optional; PDF generation continues without it.
+      });
   }
 
   /**

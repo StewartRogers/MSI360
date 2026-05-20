@@ -5,6 +5,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { translations } from "../../src/data/translations";
 import { getAiLoadingTaskDescriptionLabel } from "../../src/data/translationText";
+import { createPreAnswerSkippedAfterTaskFallback } from "../../src/logic/ai";
 import { getActionButtonState } from "../../src/ui/components/ActionButtons";
 import { getAiFallbackToastKinds, getAiFallbackToastMessage } from "../../src/logic/ai/fallbackToast";
 
@@ -60,6 +61,16 @@ test("AI fallback toast trigger ignores configured-off Gemini paths", () => {
       { provider: "client-no-preanswer", notes: "No Gemini API key configured; no questions were pre-answered." }
     ),
     []
+  );
+});
+
+test("AI fallback toast trigger reports skipped pre-answering after task-analysis request fallback", () => {
+  assert.deepEqual(
+    getAiFallbackToastKinds(
+      { provider: "client-keyword-fallback", notes: "Gemini unavailable, used local fallback. Gemini task analysis response timed out" },
+      createPreAnswerSkippedAfterTaskFallback()
+    ),
+    ["task-analysis", "question-pruning"]
   );
 });
 

@@ -119,6 +119,7 @@ npm run test:automated
 | AT-95 | `tests/integration/assessment-flow.test.ts` | Translation coverage test | German, Persian, and Hindi translations have display text for every configured question option. | German, Persian, and Hindi question labels, option labels, grouped labels, and description titles are complete. |
 | AT-96 | `tests/integration/assessment-flow.test.ts` | Localization test | Ready translations provide localized shared action button labels. | Continue, Back, Processing, and Analyzing labels resolve from ready translations. |
 | AT-97 | `tests/unit/report-data.test.ts` | Unit test | Report data uses English-normalized task text for PDF fields. | The PDF task summary and response-record answer use the AI English interpretation instead of raw non-English worker text when available. |
+| AT-98 | `tests/unit/loading-state.test.ts` | Unit test | AI fallback toast trigger reports skipped pre-answering after task-analysis request fallback. | When task analysis falls back after a Gemini request failure, the skipped pre-answer fallback reports both task-analysis and question-pruning notices. |
 
 ## Manual Test Cases
 
