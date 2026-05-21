@@ -1,12 +1,10 @@
 import { questionIds } from "../app/questionAssets";
+import { reportAnalysisMaxCharacters, reportAnalysisRequestTimeoutMs, reportAnalysisTemperature, reportAnalysisWordRange } from "../config/aiConfig";
 import { reportAnalysisReferenceLinks } from "../data/reportReferences";
 import { translations } from "../data/translations";
 import { getGeminiApiUrl, parseGeminiJson, postGeminiPrompt } from "../logic/ai/geminiClient";
 import { isRecord } from "../logic/ai/valueUtils";
 import type { AiOutput, AiReportAnalysis, Answers } from "../types";
-
-const reportAnalysisRequestTimeoutMs = 60000;
-const reportAnalysisMaxCharacters = 750;
 
 /**
  * Generates optional report-background analysis for the PDF.
@@ -23,7 +21,7 @@ async function generateReportAnalysisWithGemini(answers: Answers, aiOutputs: Rec
   if (!apiUrl) return null;
 
   const prompt = buildReportAnalysisPrompt(answers, aiOutputs);
-  const result = await postGeminiPrompt(apiUrl, prompt, 0.2, "Gemini report analysis response timed out", reportAnalysisRequestTimeoutMs);
+  const result = await postGeminiPrompt(apiUrl, prompt, reportAnalysisTemperature, "Gemini report analysis response timed out", reportAnalysisRequestTimeoutMs);
 
   if (!result.ok) {
     throw new Error(`Gemini report analysis request failed with ${result.status}`);
@@ -62,7 +60,7 @@ export function buildReportAnalysisPrompt(answers: Answers, aiOutputs: Record<st
     "Always refer responders to WorkSafeBC OHS Regulation Part 4 because it requires MSI risk identification, assessment, control, education/training, evaluation, and consultation where applicable.",
     "For question-3: use the task description only to identify general conditions that could worsen MSI likelihood, such as force, repetition, duration, posture, workstation layout, handled objects, environment, recovery time, or task variability.",
     "For question-4: if the role is worker and height_far_from_average is true, include one employer-facing sentence about checking working heights, reaches, seating, tools, and workspace adjustability/accommodation.",
-    "Keep the paragraph between 80 and 115 words.",
+    `Keep the paragraph between ${reportAnalysisWordRange.minimum} and ${reportAnalysisWordRange.maximum} words.`,
     `IWH source label to cite in prose: Institute for Work & Health new-worker risk review (${reportAnalysisReferenceLinks.iwhNewWorkerRisk})`,
     `WorkSafeBC source label to cite in prose: WorkSafeBC OHS Regulation Part 4 (${reportAnalysisReferenceLinks.worksafeBcOhsRegulation})`,
     `onboarding_context: ${JSON.stringify(onboardingContext)}`

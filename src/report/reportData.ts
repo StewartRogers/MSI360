@@ -1,4 +1,5 @@
 import { questionIds } from "../app/questionAssets";
+import { reportRiskDriverThresholds } from "../config/scoringConfig";
 import { questions } from "../data/catalog";
 import { reportAnalysisReferenceLinks } from "../data/reportReferences";
 import { translations } from "../data/translations";
@@ -230,8 +231,8 @@ export function buildReportData(answers: Answers, aiOutputs: AiOutputs, scoreRes
 /**
  * Extracts all answer selections that should drive report guidance.
  *
- * Only selected options with risk scores of 2 or higher are included, and each
- * must have a matching `ReportGuidance` entry before it appears in the PDF.
+ * Only selected options meeting the review threshold are included, and each must
+ * have a matching `ReportGuidance` entry before it appears in the PDF.
  */
 export function getRiskDrivers(answers: Answers): ReportRiskDriver[] {
   return questions.flatMap((question) => {
@@ -239,7 +240,7 @@ export function getRiskDrivers(answers: Answers): ReportRiskDriver[] {
     if (!answer) return [];
     return getSelectedReportOptions(question, answer).flatMap((selection) => {
       return Object.entries(selection.option.risk_scores).flatMap(([factor, score]) => {
-        if (typeof score !== "number" || score < 2) return [];
+        if (typeof score !== "number" || score < reportRiskDriverThresholds.review) return [];
         const guidance = reportGuidanceBySelection[reportGuidanceKey(question.question_id, selection.option.option_id, selection.groupId)];
         if (!guidance) return [];
         return [
@@ -481,8 +482,8 @@ function getAiGeneratedAnalysis(reportAnalysis: AiReportAnalysis | null): Report
 }
 
 function getDriverPriority(score: number): Exclude<ReviewPriority, "low"> {
-  if (score >= 4) return "high";
-  if (score >= 3) return "medium";
+  if (score >= reportRiskDriverThresholds.high) return "high";
+  if (score >= reportRiskDriverThresholds.medium) return "medium";
   return "review";
 }
 
@@ -546,7 +547,7 @@ export function getRiskBearingSelectionsMissingGuidance() {
       : (question.groups || []).flatMap((group) => group.options.map((option) => ({ option, groupId: group.group_id })));
 
     return optionEntries.flatMap(({ option, groupId }: { option: Option; groupId?: string }) => {
-      const hasRiskDriver = Object.values(option.risk_scores).some((score) => typeof score === "number" && score >= 2);
+      const hasRiskDriver = Object.values(option.risk_scores).some((score) => typeof score === "number" && score >= reportRiskDriverThresholds.review);
       const key = reportGuidanceKey(question.question_id, option.option_id, groupId);
       return hasRiskDriver && !reportGuidanceBySelection[key] ? [key] : [];
     });

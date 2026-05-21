@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { onboardingQuestionIds, questionIds } from "./app/questionAssets";
 import type { StepId } from "./app/types";
+import { aiFallbackToastDurationMs } from "./config/uiConfig";
 import { languages, questions } from "./data/catalog";
 import { isRtlLanguage } from "./data/languages";
 import { translations } from "./data/translations";
@@ -67,7 +68,7 @@ export default function App() {
 
   useEffect(() => {
     if (!activeToast) return;
-    const timerId = window.setTimeout(() => setActiveToast(null), 4200);
+    const timerId = window.setTimeout(() => setActiveToast(null), aiFallbackToastDurationMs);
     return () => window.clearTimeout(timerId);
   }, [activeToast]);
 

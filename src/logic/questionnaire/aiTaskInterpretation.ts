@@ -1,3 +1,4 @@
+import { taskFallbackProvider, taskInterpretationTemperature } from "../../config/aiConfig";
 import { tagTaxonomy } from "../../data/catalog";
 import type { AiOutput, Question } from "../../types";
 import { getGeminiApiUrl, parseGeminiJson, postGeminiPrompt } from "../ai/geminiClient";
@@ -21,7 +22,7 @@ const interpretTextPromptGuidance = [
 export async function interpretTextAnswer(question: Question, response: string): Promise<AiOutput> {
   const output = await interpretWithGemini(question, response).catch((error) => ({
     ...interpretTaskDescriptionFallback(response),
-    provider: "client-keyword-fallback",
+    provider: taskFallbackProvider,
     notes: `Gemini unavailable, used local fallback. ${error instanceof Error ? error.message : ""}`.trim()
   }));
 
@@ -36,13 +37,13 @@ async function interpretWithGemini(question: Question, response: string): Promis
   if (!apiUrl) {
     return {
       ...interpretTaskDescriptionFallback(response),
-      provider: "client-keyword-fallback",
+      provider: taskFallbackProvider,
       notes: "No Gemini API key configured; used local fallback."
     };
   }
 
   const prompt = buildInterpretTextPrompt(question, response);
-  const result = await postGeminiPrompt(apiUrl, prompt, 0.1, "Gemini task analysis response timed out");
+  const result = await postGeminiPrompt(apiUrl, prompt, taskInterpretationTemperature, "Gemini task analysis response timed out");
 
   if (!result.ok) {
     throw new Error(`Gemini request failed with ${result.status}`);

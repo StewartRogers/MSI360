@@ -1,3 +1,4 @@
+import { taskFallbackConfidence, taskFallbackMissingDetails } from "../../config/aiConfig";
 import { tagTaxonomy } from "../../data/tags";
 import type { AiOutput } from "../../types";
 
@@ -409,7 +410,7 @@ function buildMissingDetails(originalText: string, normalizedText: string, tags:
   const needsLoadDetail =
     hasAnyTag(tags, ["lifting_lowering", "carrying", "pushing_pulling", "heavy_loads", "awkward_loads", "no_handles", "lack_of_mechanical_aids"]) ||
     (tags.includes("manual_handling") && hasLoadCue(normalizedText));
-  if (needsLoadDetail && !hasWeightDetail(originalText)) details.push("Approximate object weight");
+  if (needsLoadDetail && !hasWeightDetail(originalText)) details.push(taskFallbackMissingDetails.objectWeight);
 
   const needsDurationDetail = hasAnyTag(tags, [
     "repetitive_movements",
@@ -425,10 +426,10 @@ function buildMissingDetails(originalText: string, normalizedText: string, tags:
     "fast_work_rate",
     "inadequate_recovery_time"
   ]);
-  if (needsDurationDetail && !hasFrequencyOrDurationDetail(originalText)) details.push("Frequency or duration");
+  if (needsDurationDetail && !hasFrequencyOrDurationDetail(originalText)) details.push(taskFallbackMissingDetails.frequencyOrDuration);
 
   if (matchedRules.length > 0 && matchedRules.every((rule) => rule.specificity === "occupation")) {
-    details.push("Task details that affect posture, force, tools, and work pace");
+    details.push(taskFallbackMissingDetails.taskSpecifics);
   }
 
   return [...new Set(details)];
@@ -451,8 +452,8 @@ function hasFrequencyOrDurationDetail(text: string) {
 }
 
 function getFallbackConfidence(tags: string[], matchedRules: FallbackRule[]) {
-  if (!tags.length) return 0.35;
-  return matchedRules.some((rule) => rule.specificity === "task") ? 0.65 : 0.55;
+  if (!tags.length) return taskFallbackConfidence.none;
+  return matchedRules.some((rule) => rule.specificity === "task") ? taskFallbackConfidence.taskCue : taskFallbackConfidence.occupationOnly;
 }
 
 function getFallbackNotes(tags: string[], matchedRules: FallbackRule[]) {

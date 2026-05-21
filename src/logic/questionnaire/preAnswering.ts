@@ -1,9 +1,9 @@
+import { noPreAnswerProvider, preAnswerConfidenceThreshold, preAnswerTemperature } from "../../config/aiConfig";
 import { translations } from "../../data/translations";
 import type { AiPreAnswer, AiPreAnswerCandidate, AiPreAnswerOutput, AnswerValue, Answers, Question } from "../../types";
 import { getGeminiApiUrl, parseGeminiJson, postGeminiPrompt } from "../ai/geminiClient";
 import { clamp, isRecord } from "../ai/valueUtils";
 
-const preAnswerConfidenceThreshold = 0.9;
 const preAnswerPromptGuidance = [
   "The worker response may be written in any language or may mix languages.",
   "Interpret the original response semantically. You may internally translate or normalize it to English when helpful.",
@@ -20,14 +20,14 @@ export async function preAnswerQuestions(candidateQuestions: Question[], respons
   if (!candidateQuestions.length || !response.trim()) {
     return {
       auto_answers: [],
-      provider: "client-no-preanswer",
+      provider: noPreAnswerProvider,
       notes: "No eligible questions or worker response were available for pre-answering."
     };
   }
 
   return preAnswerWithGemini(candidateQuestions, response, existingAnswers).catch((error) => ({
     auto_answers: [],
-    provider: "client-no-preanswer",
+    provider: noPreAnswerProvider,
     notes: `Gemini pre-answering unavailable; no questions were hidden. ${error instanceof Error ? error.message : ""}`.trim()
   }));
 }
@@ -40,7 +40,7 @@ export async function preAnswerQuestions(candidateQuestions: Question[], respons
 export function createPreAnswerSkippedAfterTaskFallback(): AiPreAnswerOutput {
   return {
     auto_answers: [],
-    provider: "client-no-preanswer",
+    provider: noPreAnswerProvider,
     notes: "Gemini pre-answering unavailable; no questions were hidden because task analysis already used local fallback."
   };
 }
@@ -50,13 +50,13 @@ async function preAnswerWithGemini(candidateQuestions: Question[], response: str
   if (!apiUrl) {
     return {
       auto_answers: [],
-      provider: "client-no-preanswer",
+      provider: noPreAnswerProvider,
       notes: "No Gemini API key configured; no questions were pre-answered."
     };
   }
 
   const prompt = buildPreAnswerPrompt(candidateQuestions, response);
-  const result = await postGeminiPrompt(apiUrl, prompt, 0, "Gemini pre-answering response timed out");
+  const result = await postGeminiPrompt(apiUrl, prompt, preAnswerTemperature, "Gemini pre-answering response timed out");
 
   if (!result.ok) {
     throw new Error(`Gemini pre-answer request failed with ${result.status}`);

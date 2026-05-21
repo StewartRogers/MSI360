@@ -1,3 +1,4 @@
+import { noPreAnswerProvider, taskFallbackProvider } from "../../config/aiConfig";
 import { getAppText } from "../../data/translationText";
 import type { AiOutput, AiPreAnswerOutput, Translation } from "../../types";
 
@@ -34,14 +35,14 @@ export function getAiFallbackToastMessage(t: Translation, kind: AiFallbackToastK
  * Identifies task-analysis fallbacks caused by an attempted Gemini request.
  */
 export function isTaskAnalysisRequestFallback(taskOutput: Pick<AiOutput, "provider" | "notes">) {
-  return taskOutput.provider === "client-keyword-fallback" && taskOutput.notes.startsWith("Gemini unavailable");
+  return taskOutput.provider === taskFallbackProvider && taskOutput.notes.startsWith("Gemini unavailable");
 }
 
 /**
  * Identifies pre-answer fallbacks caused by an attempted or skipped Gemini path.
  */
 export function isQuestionPruningRequestFallback(preAnswerOutput: Pick<AiPreAnswerOutput, "provider" | "notes">) {
-  return preAnswerOutput.provider === "client-no-preanswer" && preAnswerOutput.notes.startsWith("Gemini pre-answering unavailable");
+  return preAnswerOutput.provider === noPreAnswerProvider && preAnswerOutput.notes.startsWith("Gemini pre-answering unavailable");
 }
 
 /**

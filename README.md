@@ -90,6 +90,10 @@ src/
   app/
     questionAssets.ts
     types.ts
+  config/
+    aiConfig.ts
+    scoringConfig.ts
+    uiConfig.ts
   data/
     catalog.ts
     languages.ts
@@ -240,6 +244,20 @@ During the assessment flow, option selections are treated as draft answers until
 
 Current symptom/discomfort questions are kept for routing and report context, but they do not contribute to scored risk factors. The scored risk factors are contact stress, force, awkward posture, repetition, and environmental factors.
 
+## Configurable Prototype Constants
+
+Frequently tuned development and testing values are centralized in:
+
+```text
+src/config/aiConfig.ts
+src/config/scoringConfig.ts
+src/config/uiConfig.ts
+```
+
+`aiConfig.ts` owns Gemini defaults, request timeouts, prompt temperatures, pre-answer confidence thresholds, report-analysis length limits, fallback provider IDs, and local fallback confidence/missing-detail text. `scoringConfig.ts` owns score bands, psychosocial multipliers, score caps/rounding, scoring version text, and report risk-driver thresholds. `uiConfig.ts` owns small UI timing values such as fallback toast duration.
+
+Question structure, option risk-score mappings, routing tags, and fallback matching rules intentionally remain in their domain files (`src/data/questions.ts`, `src/data/tags.ts`, and `src/logic/questionnaire/taskFallbackRules.ts`) because those are catalog/domain logic rather than general tuning knobs.
+
 ## Gemini Integration
 
 Gemini is used in:
@@ -292,7 +310,7 @@ When the worker continues past the free-text task description, the app shows an 
 
 After the first four onboarding questions are complete, the app starts a non-blocking Gemini request for a short report-analysis paragraph. This background response uses only Q1 role, Q2 time in role, Q3 task description, and Q4 height; it does not use category scores or later assessment answers. If the response arrives before the worker downloads the PDF, the report includes it beside the job-specific note with an AI disclaimer and source links. If Gemini is unavailable or the response is not ready, PDF generation continues without blocking. This report-analysis request uses a 60-second timeout because it runs in the background.
 
-If either task-description Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses a 15-second Gemini request timeout; the automated test bundle uses a shorter 8-second timeout. When task analysis falls back because a Gemini request failed, the app commits the local routing fallback and skips the optional pre-answer request instead of making the worker wait through a second likely timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button. The background report-analysis request fails silently so it does not interrupt the responder.
+If either task-description Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses the task Gemini request timeout from `src/config/aiConfig.ts`, currently 10 seconds; the automated test bundle may override it with `__MSI360_TEST_GEMINI_TIMEOUT_MS__`. When task analysis falls back because a Gemini request failed, the app commits the local routing fallback and skips the optional pre-answer request instead of making the worker wait through a second likely timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button. The background report-analysis request fails silently so it does not interrupt the responder.
 
 ## Scoring
 
@@ -303,7 +321,7 @@ src/logic/scoring/scoreAssessment.ts
 src/logic/scoring/scorePresentation.ts
 ```
 
-Risk score mappings are attached to options in `src/data/catalog.ts`. They are intentionally isolated so the team can replace them later with the final grading map.
+Risk score mappings are attached to options in `src/data/catalog.ts`. They are intentionally isolated so the team can replace them later with the final grading map. Score interpretation thresholds, psychosocial multipliers, score cap/rounding, and report risk-driver thresholds live in `src/config/scoringConfig.ts`.
 
 Current aggregation:
 

@@ -1,3 +1,12 @@
+import {
+  psychosocialMultipliers,
+  psychosocialMultiplierThresholds,
+  scoreRiskThresholds,
+  scoreRoundingFactor,
+  scoreScaleMaximum,
+  scoringAggregationDescription,
+  scoringVersion
+} from "../../config/scoringConfig";
 import { questions, riskFactors } from "../../data/catalog";
 import type { Answers, RiskFactor, ScoreResult } from "../../types";
 import { getSelectedOptions } from "../questionnaire/questionRouting";
@@ -57,11 +66,11 @@ export function scoreAssessment(answers: Answers): ScoreResult {
   const baseCompositeScore = allValues.length ? round(avg(allValues)) : null;
   const psychosocialScore = psychosocialQuestionScores.length ? round(avg(psychosocialQuestionScores)) : null;
   const psychosocialMultiplier = getPsychosocialMultiplier(psychosocialScore);
-  const compositeScore = baseCompositeScore === null ? null : round(Math.min(4, baseCompositeScore * psychosocialMultiplier));
+  const compositeScore = baseCompositeScore === null ? null : round(Math.min(scoreScaleMaximum, baseCompositeScore * psychosocialMultiplier));
 
   return {
-    scoring_version: "client-prototype-v2",
-    aggregation: "Max selected option score per question, averaged by factor; psychosocial modifier applied to the final composite score only",
+    scoring_version: scoringVersion,
+    aggregation: scoringAggregationDescription,
     factors,
     grouped_scores: {
       physical: physicalValues.length ? round(avg(physicalValues)) : null,
@@ -88,7 +97,7 @@ function avg(values: number[]) {
 }
 
 function round(value: number) {
-  return Math.round(value * 10) / 10;
+  return Math.round(value * scoreRoundingFactor) / scoreRoundingFactor;
 }
 
 /**
@@ -98,15 +107,15 @@ function round(value: number) {
  * production use.
  */
 export function getPsychosocialMultiplier(score: number | null) {
-  if (score === null || score < 1.5) return 1;
-  if (score < 2.4) return 1.3;
-  return 1.6;
+  if (score === null || score < psychosocialMultiplierThresholds.moderateInfluence) return psychosocialMultipliers.none;
+  if (score < psychosocialMultiplierThresholds.highInfluence) return psychosocialMultipliers.moderate;
+  return psychosocialMultipliers.high;
 }
 
 function describeScore(score: number | null) {
   if (score === null) return "N/A";
-  if (score < 1.5) return "Low";
-  if (score < 2.4) return "Possible risk";
-  if (score < 3.5) return "Likely risk";
+  if (score < scoreRiskThresholds.possibleRisk) return "Low";
+  if (score < scoreRiskThresholds.likelyRisk) return "Possible risk";
+  if (score < scoreRiskThresholds.knownRisk) return "Likely risk";
   return "Known risk";
 }

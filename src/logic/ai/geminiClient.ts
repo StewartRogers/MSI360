@@ -1,14 +1,10 @@
-declare const __MSI360_TEST_GEMINI_TIMEOUT_MS__: number | undefined;
-
-// Keep task-routing requests short enough that the prototype can fall back
-// without blocking the assessment flow.
-const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 10000;
+import { defaultGeminiModel, geminiRequestTimeoutMs } from "../../config/aiConfig";
 
 export function getGeminiApiUrl(): string | null {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
   if (!apiKey) return null;
 
-  const model = import.meta.env.VITE_GEMINI_MODEL || "gemini-2.5-flash";
+  const model = import.meta.env.VITE_GEMINI_MODEL || defaultGeminiModel;
   return `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
 }
 

@@ -1,3 +1,4 @@
+import { scoreRiskThresholds, scoreScaleMaximum } from "../../config/scoringConfig";
 import { translations } from "../../data/translations";
 import type { RiskFactor, ScoreResult, Translation } from "../../types";
 
@@ -16,7 +17,7 @@ export interface OverallScoreToken {
  * Formats a category score using the compact screen/report label.
  */
 export function formatScore(score: number | null, t?: Translation) {
-  return typeof score === "number" ? `${score.toFixed(1)} / 4` : getScoreText(t, "score_not_available", "N/A");
+  return typeof score === "number" ? `${score.toFixed(1)} / ${scoreScaleMaximum}` : getScoreText(t, "score_not_available", "N/A");
 }
 
 /**
@@ -63,7 +64,7 @@ export function formatScoreValue(score: number | null, t?: Translation) {
  * Converts the 0-4 score scale to a percentage for progress-track width.
  */
 export function scorePercent(score: number | null) {
-  return typeof score === "number" ? Math.min(100, Math.max(0, (score / 4) * 100)) : 0;
+  return typeof score === "number" ? Math.min(100, Math.max(0, (score / scoreScaleMaximum) * 100)) : 0;
 }
 
 /**
@@ -71,9 +72,9 @@ export function scorePercent(score: number | null) {
  */
 export function describeRisk(score: number | null, t?: Translation) {
   if (score === null) return getScoreText(t, "score_risk_not_enough", "Not enough data");
-  if (score < 1.5) return getScoreText(t, "score_risk_low", "Low risk");
-  if (score < 2.4) return getScoreText(t, "score_risk_possible", "Possible risk");
-  if (score < 3.5) return getScoreText(t, "score_risk_likely", "Likely risk");
+  if (score < scoreRiskThresholds.possibleRisk) return getScoreText(t, "score_risk_low", "Low risk");
+  if (score < scoreRiskThresholds.likelyRisk) return getScoreText(t, "score_risk_possible", "Possible risk");
+  if (score < scoreRiskThresholds.knownRisk) return getScoreText(t, "score_risk_likely", "Likely risk");
   return getScoreText(t, "score_risk_known", "Known risk");
 }
 
@@ -82,9 +83,9 @@ export function describeRisk(score: number | null, t?: Translation) {
  */
 export function describeFactorRisk(score: number | null, factorSubject: string, t?: Translation) {
   if (score === null) return interpolateScoreText(t, "score_factor_not_enough", "Not enough data to interpret {factor}.", factorSubject);
-  if (score < 1.5) return interpolateScoreText(t, "score_factor_low", "Currently low risk associated with {factor}.", factorSubject);
-  if (score < 2.4) return interpolateScoreText(t, "score_factor_possible", "Possible risk of discomfort from {factor}.", factorSubject);
-  if (score < 3.5) return interpolateScoreText(t, "score_factor_likely", "Likely risk of discomfort from {factor}.", factorSubject);
+  if (score < scoreRiskThresholds.possibleRisk) return interpolateScoreText(t, "score_factor_low", "Currently low risk associated with {factor}.", factorSubject);
+  if (score < scoreRiskThresholds.likelyRisk) return interpolateScoreText(t, "score_factor_possible", "Possible risk of discomfort from {factor}.", factorSubject);
+  if (score < scoreRiskThresholds.knownRisk) return interpolateScoreText(t, "score_factor_likely", "Likely risk of discomfort from {factor}.", factorSubject);
   return getScoreText(t, "score_factor_known", "Known risk of pain and/or injury.");
 }
 
