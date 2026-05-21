@@ -151,6 +151,7 @@ src/
       flow.ts
       preAnswering.ts
       questionRouting.ts
+      taskFallbackRules.ts
     scoring/
       scoreAssessment.ts
       scorePresentation.ts
@@ -267,7 +268,7 @@ First, it sends the worker's text task description to Gemini, asks for strict JS
 }
 ```
 
-Only predefined tags from `tagTaxonomy` are accepted. Gemini must return exact canonical tag IDs, never translated tag labels. If Gemini is unavailable or the key is missing, the app falls back to local keyword-based interpretation, which is currently English-focused.
+Only predefined tags from `tagTaxonomy` are accepted. Gemini must return exact canonical tag IDs, never translated tag labels. If Gemini is unavailable or the key is missing, the app falls back to local English-only rule-based interpretation. The local fallback maps common English task descriptions and job settings, such as office computer work, warehouse handling, healthcare transfers, tool use, cleaning, construction, landscaping, driving/equipment, manufacturing, retail, inspection, and environmental exposures, to broad routing tags without scoring or auto-answering questions. Multilingual task interpretation remains a Gemini responsibility in this version.
 
 Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text. Even when the worker response is not English, pre-answer values must use the exact canonical question IDs, option IDs, and group IDs from the catalog:
 

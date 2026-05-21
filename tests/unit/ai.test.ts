@@ -16,6 +16,8 @@ import {
   validatePreAnswers,
   validateReportAnalysisOutput
 } from "../../src/logic/ai";
+import { getVisibleQuestions, recomputeTags } from "../../src/logic/questionnaire/questionRouting";
+import type { AiOutputs, Answers } from "../../src/types";
 
 test("interpretTextAnswer uses the local fallback and returns allowed routing tags when Gemini is not configured", async () => {
   const question = questions.find((item) => item.question_id === "question-3");
@@ -34,22 +36,121 @@ test("interpretTextAnswer uses the local fallback and returns allowed routing ta
   assert.ok(output.missing_details.includes("Frequency or duration"));
 });
 
-test("equivalent English and translated task descriptions return the same routing tags", async () => {
-  const question = getQuestion("question-3");
-  const english = await interpretTextAnswer(question, "I repeatedly lift heavy boxes and use a drill.");
-  const spanish = await interpretTextAnswer(question, "Levanto repetidamente cajas pesadas y uso un taladro.");
-
-  assert.deepEqual(sortTags(spanish.add_tags), sortTags(english.add_tags));
+test("English fallback routes common job and task descriptions to existing tags", async () => {
+  await assertFallbackTags("I work from home as a software developer.", [
+    "office_computer",
+    "seated_work",
+    "static_postures",
+    "repetitive_movements",
+    "mouse_intensive"
+  ]);
+  await assertFallbackTags("Warehouse worker stocking shelves and moving boxes all shift.", ["manual_handling", "standing_work", "walking_moving", "carrying"]);
+  await assertFallbackTags("Nurse transfers patients from beds to wheelchairs.", ["manual_handling", "standing_work", "walking_moving", "lifting_lowering", "pushing_pulling"]);
+  await assertFallbackTags("Maintenance mechanic uses an impact wrench and grinder.", ["tool_use", "vibrating_tools", "standing_work", "walking_moving"]);
+  await assertFallbackTags("Janitor mops, scrubs floors, and vacuums.", ["standing_work", "walking_moving", "repetitive_movements", "bending_trunk", "tool_use", "low_work"]);
+  await assertFallbackTags("Construction installer drills overhead into a ceiling.", ["tool_use", "standing_work", "walking_moving", "overhead_work"]);
+  await assertFallbackTags("Landscaper mows outside on uneven ground.", ["outdoor_work", "walking_moving", "tool_use", "manual_handling", "repetitive_movements", "uneven_surfaces"]);
+  await assertFallbackTags("Delivery driver uses a truck and forklift.", ["seated_work", "static_postures", "tool_use"]);
+  await assertFallbackTags("Manufacturing worker sorts parts on an assembly line.", ["standing_work", "static_postures", "repetitive_movements", "tool_use"]);
+  await assertFallbackTags("Retail cashier scans items and reaches across the counter.", ["standing_work", "walking_moving", "repetitive_movements", "reaching_forward"]);
+  await assertFallbackTags("Quality control inspector checks small print under poor lighting.", ["fine_visual_work", "poor_lighting"]);
+  await assertFallbackTags("Outdoor work in a cold, loud area with sun glare.", ["outdoor_work", "cold_environment", "noise_exposure", "glare_exposure"]);
 });
 
-test("translated task descriptions with Spanish units and frequency do not request missing details", async () => {
+test("English fallback handles combined prompt details across routing categories", async () => {
+  const cases: Array<{ description: string; expectedTags: string[] }> = [
+    {
+      description: "I answer phone calls at a call center using a headset, laptop, mouse, and two monitors all day.",
+      expectedTags: ["office_computer", "telephone_intensive", "laptop_tablet_use", "mouse_intensive", "dual_monitors", "static_postures"]
+    },
+    {
+      description: "I lift 30 lb bulky boxes without handles and there is no hoist or lift assist.",
+      expectedTags: ["manual_handling", "lifting_lowering", "carrying", "heavy_loads", "awkward_loads", "no_handles", "lack_of_mechanical_aids"]
+    },
+    {
+      description: "I push a cart and pull a pallet jack over gravel and uneven surfaces.",
+      expectedTags: ["pushing_pulling", "uneven_surfaces"]
+    },
+    {
+      description: "I use tweezers to pinch small parts during fine assembly.",
+      expectedTags: ["pinch_grip", "repetitive_movements"]
+    },
+    {
+      description: "I squeeze a trigger with a power grip while my wrist is bent.",
+      expectedTags: ["power_grip", "wrist_bending"]
+    },
+    {
+      description: "I use my palm as a hammer against a hard edge on the counter.",
+      expectedTags: ["body_as_tool", "sharp_edges"]
+    },
+    {
+      description: "I bend, twist, reach with extended arms, and work below knee height.",
+      expectedTags: ["bending_trunk", "twisting", "reaching_forward", "low_work"]
+    },
+    {
+      description: "I stand all day on my feet doing the same task with quotas, overtime, and not enough breaks.",
+      expectedTags: ["standing_work", "walking_moving", "static_postures", "low_task_variability", "fast_work_rate", "overtime", "inadequate_recovery_time"]
+    },
+    {
+      description: "I work in a freezer with dim lighting, loud noise, glare, and rough ground.",
+      expectedTags: ["cold_environment", "poor_lighting", "noise_exposure", "glare_exposure", "uneven_surfaces"]
+    },
+    {
+      description: "I solder small parts under a microscope and inspect fine detail.",
+      expectedTags: ["fine_visual_work", "pinch_grip"]
+    },
+    {
+      description: "I use a jackhammer, grinder, and chainsaw outside.",
+      expectedTags: ["tool_use", "vibrating_tools", "outdoor_work"]
+    },
+    {
+      description: "I crouch and kneel on floors while repairing equipment.",
+      expectedTags: ["low_work", "kneeling_squatting", "tool_use"]
+    }
+  ];
+
+  for (const item of cases) {
+    await assertFallbackTags(item.description, item.expectedTags);
+  }
+});
+
+test("English fallback keeps vague occupations broad and avoids obsolete tags", async () => {
+  const output = await interpretTextAnswer(getQuestion("question-3"), "I am a warehouse worker.");
+
+  assert.ok(output.add_tags.includes("manual_handling"));
+  assert.ok(output.add_tags.includes("standing_work"));
+  assert.ok(output.add_tags.includes("walking_moving"));
+  assert.equal(output.add_tags.includes("heavy_loads"), false);
+  assert.equal(output.add_tags.includes("desk_based"), false);
+  assert.equal(output.add_tags.includes("screen_work"), false);
+  assert.equal(output.add_tags.includes("kneeling_floor_work"), false);
+  assert.ok(output.missing_details.includes("Task details that affect posture, force, tools, and work pace"));
+});
+
+test("English fallback routes software developer task descriptions to office follow-up questions", async () => {
+  const question = getQuestion("question-3");
+  const answers: Answers = {
+    "question-3": { type: "text", value: "I work from home as a software developer." }
+  };
+  const aiOutput = await interpretTextAnswer(question, String(answers["question-3"].value));
+  const aiOutputs: AiOutputs = { "question-3": aiOutput };
+  const tags = recomputeTags(answers, aiOutputs);
+  const visibleIds = getVisibleQuestions(tags).map((item) => item.question_id);
+
+  assert.ok(visibleIds.includes("question-7"));
+  assert.ok(visibleIds.includes("question-11"));
+  assert.ok(visibleIds.includes("question-23"));
+  assert.ok(visibleIds.includes("question-29"));
+});
+
+test("local fallback is English-only while Gemini prompt keeps multilingual guidance", async () => {
   const question = getQuestion("question-3");
   const output = await interpretTextAnswer(question, "Levanto repetidamente cajas pesadas de 20 kilos cada hora y uso un taladro.");
+  const prompt = buildInterpretTextPrompt(question, "Levanto cajas pesadas todos los dias.");
 
-  assert.ok(output.add_tags.includes("lifting_lowering"));
-  assert.ok(output.add_tags.includes("repetitive_movements"));
-  assert.equal(output.missing_details.includes("Approximate object weight"), false);
-  assert.equal(output.missing_details.includes("Frequency or duration"), false);
+  assert.deepEqual(output.add_tags, []);
+  assert.ok(/not English or mixes languages/i.test(prompt));
+  assert.ok(/apply the same tag-selection behavior used for English responses/i.test(prompt));
 });
 
 test("buildInterpretTextPrompt instructs Gemini to handle multilingual text and canonical tags", () => {
@@ -271,6 +372,10 @@ function getQuestion(questionId: string) {
   return question;
 }
 
-function sortTags(tags: string[]) {
-  return [...tags].sort((a, b) => a.localeCompare(b));
+async function assertFallbackTags(description: string, expectedTags: string[]) {
+  const output = await interpretTextAnswer(getQuestion("question-3"), description);
+
+  for (const tag of expectedTags) {
+    assert.ok(output.add_tags.includes(tag), `${description} should include ${tag}; received ${output.add_tags.join(", ")}`);
+  }
 }
