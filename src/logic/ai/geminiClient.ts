@@ -2,7 +2,7 @@ declare const __MSI360_TEST_GEMINI_TIMEOUT_MS__: number | undefined;
 
 // Keep task-routing requests short enough that the prototype can fall back
 // without blocking the assessment flow.
-const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 15000;
+const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 10000;
 
 export function getGeminiApiUrl(): string | null {
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
