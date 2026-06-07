@@ -1,281 +1,265 @@
 # MSI360
 
-MSI360 is a client-only React/TypeScript prototype for a mobile-first musculoskeletal injury risk review. It renders questions from local TypeScript data, keeps answers in browser memory, uses Gemini to interpret free-text task descriptions when configured, scores answers from replaceable catalog mappings, and generates an English PDF report in the browser.
+MSI360 is a **client-only React/TypeScript prototype** for a mobile-first musculoskeletal injury (MSI) risk assessment tool. It renders questions from local TypeScript data, keeps answers in browser memory, and uses the Gemini API for intelligent text-answer interpretation and pre-filling of follow-up questions. The app generates a comprehensive PDF report in the browser with risk scores, category analyses, and actionable guidance.
 
-There is no backend and no database in this version.
+**There is no backend and no database in this version.** All processing happens client-side.
 
-## Tech Stack
+## Quick Start
 
-- React
-- TypeScript
-- Vite
-- `@react-pdf/renderer` for browser-side PDF generation
-- Gemini API for text-answer interpretation
-- Azure Translator planned for later user-response/report translation work
+### Prerequisites
+- Node.js 20+
+- npm
 
-## Setup
+### Development
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open:
+Open: `http://127.0.0.1:5173/`
 
-```text
-http://127.0.0.1:5173/
-```
-
-Build:
+### Production Build
 
 ```bash
 npm run build
 ```
 
-Run the full local quality gate:
+### Testing
 
+Run the full test suite (typecheck + automated tests):
 ```bash
 npm test
 ```
 
-Individual test commands:
-
+Individual commands:
 ```bash
-npm run typecheck
-npm run test:automated
-npm run test:unit
+npm run typecheck           # TypeScript type checking
+npm run test:automated     # Automated unit and integration tests
 ```
 
-The automated tests use Node's built-in test runner with an esbuild bundle step. Current automated coverage focuses on the important client logic: routing tags, visible questions, selected-option extraction, scoring aggregation, Gemini-unavailable fallback behavior, AI report-analysis prompt constraints, PDF report data derivation, a React PDF document bundle smoke check, and a few lightweight assessment-flow integration checks.
+## Tech Stack
 
-The maintained list of automated and manual sprint test cases lives in `docs/MSI360_Sprint_Test_Cases.md`. Update that file whenever automated tests are added, removed, renamed, or materially changed.
+| Technology | Purpose |
+|---|---|
+| **React 18** | UI framework |
+| **TypeScript 5** | Type-safe code |
+| **Vite 8** | Fast build tool and dev server |
+| **@react-pdf/renderer** | Browser-side PDF generation |
+| **Gemini API** | AI text interpretation and pre-answering |
+| **Azure Translator** | Planned for future language translation |
 
-## Score Presentation
+## Project Overview
 
-The on-screen MSI risk summary displays the overall composite score as `X.X out of 4`. Category-specific scores retain the compact `X.X / 4` format.
+### Architecture
+
+MSI360 follows a component-driven architecture with clear separation of concerns:
+
+- **`src/App.tsx`** — Root component managing the assessment flow state machine and AI coordination
+- **`src/ui/screens/`** — Screen-level components (onboarding, assessment, results)
+- **`src/ui/components/`** — Reusable UI components (buttons, controls, headers)
+- **`src/logic/`** — Core business logic (scoring, routing, AI integration)
+- **`src/data/`** — Static question catalog, translations, and configuration
+- **`src/report/`** — PDF generation and report data modeling
+- **`src/config/`** — Tunable prototype constants
+
+### Assessment Flow
+
+The assessment uses a **single-page progressive flow**:
+
+1. **Intro** → **Language Selection** → **Role** → **Time in Role** → **Task Description**
+2. AI interpretation runs after task description
+3. **Height** → **Dynamic Assessment Questions** (routed by tags and previous answers)
+4. **Score Summary** → **Email Entry** → **Report Download** → **Submit** → **Complete**
 
 ## Environment Variables
 
-Create `.env.local` in this repo root:
+Create `.env.local` in the repository root:
 
 ```env
 VITE_GEMINI_API_KEY=your_gemini_key_here
 VITE_GEMINI_MODEL=gemini-3.1-flash-lite-preview
 
-# Planned for later. Not currently wired into the app.
+# Planned for later (not currently integrated)
 VITE_AZURE_TRANSLATOR_KEY=your_azure_translator_key_here
 VITE_AZURE_TRANSLATOR_REGION=canadacentral
 VITE_AZURE_TRANSLATOR_ENDPOINT=https://api.cognitive.microsofttranslator.com
 ```
 
-Important: this is a client-only app, so every `VITE_` variable is visible in the browser. Use prototype/test keys only, restrict the keys where possible, and do not commit `.env.local`.
+⚠️ **Important:** This is a client-only app, so all `VITE_` variables are visible in the browser. Use prototype/test keys only, restrict API access where possible, and **never commit `.env.local`**.
 
 ## Project Structure
 
-```text
-AGENTS.md
+```
+AGENTS.md                              # Development guidelines
+README.md                              # This file
+package.json                           # Dependencies and scripts
+tsconfig.json                          # TypeScript configuration
+vite.config.ts                         # Vite build configuration
+index.html                             # HTML entry point
+
 docs/
-  MSI360_Sprint_Test_Cases.md
+  MSI360_Sprint_Test_Cases.md         # Automated and manual test coverage
+
 public/
-  icons/
-    ...
+  icons/                              # SVG and image icons
   images/
-    ...
   worksafebc-logo.png
+
 scripts/
-  run-tests.mjs
+  run-tests.mjs                       # Test runner with esbuild
+
 src/
-  App.tsx
-  main.tsx
+  App.tsx                             # Root component and state coordinator
+  main.tsx                            # React entry point
+  types.ts                            # Global TypeScript types
+  vite-env.d.ts                       # Vite environment types
+  
   app/
-    questionAssets.ts
-    types.ts
+    questionAssets.ts                 # Onboarding and assessment question IDs
+    types.ts                          # App-domain types
+  
   config/
-    aiConfig.ts
-    scoringConfig.ts
-    uiConfig.ts
+    aiConfig.ts                       # Gemini API defaults, timeouts, thresholds
+    scoringConfig.ts                  # Score interpretation thresholds
+    uiConfig.ts                       # UI constants (toast duration, etc.)
+  
   data/
-    catalog.ts
-    languages.ts
-    questions.ts
-    reportReferences.ts
-    sections.ts
-    tags.ts
+    catalog.ts                        # Question structure, options, risk scores
+    languages.ts                      # Supported languages and RTL metadata
+    questions.ts                      # Question definitions (deprecated in favor of catalog)
+    reportReferences.ts               # Report generation reference data
+    sections.ts                       # Assessment section groupings
+    tags.ts                           # Routing tags and taxonomy
     translations/
-      index.ts
-      af.ts
-      ar.ts
-      bn.ts
-      ceb.ts
-      cs.ts
-      da.ts
-      de.ts
-      el.ts
-      en.ts
-      es.ts
-      fa.ts
-      faNos.ts
-      fil.ts
-      fr.ts
-      gu.ts
-      hi.ts
-      hr.ts
-      hu.ts
-      id.ts
-      ilo.ts
-      it.ts
-      ja.ts
-      ko.ts
-      ml.ts
-      nan.ts
-      nl.ts
-      pa.ts
-      pl.ts
-      prs.ts
-      pt.ts
-      ro.ts
-      ru.ts
-      sr.ts
-      ta.ts
-      tr.ts
-      uk.ts
-      ur.ts
-      vi.ts
-      yue.ts
-      zhHans.ts
+      index.ts                        # Translation index
+      en.ts                           # English (primary language)
+      [other languages].ts            # Additional language translations
+  
   logic/
+    ai.ts                             # Public AI facade
     ai/
-      fallbackToast.ts
-      geminiClient.ts
-      valueUtils.ts
+      fallbackToast.ts               # AI fallback notice logic
+      geminiClient.ts                # Gemini API request handling
+      valueUtils.ts                  # AI response parsing utilities
+    
     questionnaire/
-      answerSelection.ts
-      aiTaskInterpretation.ts
-      assessmentFlow.ts
-      flow.ts
-      preAnswering.ts
-      questionRouting.ts
-      taskFallbackRules.ts
+      aiTaskInterpretation.ts        # Task description → tags + missing details
+      answerSelection.ts             # Answer commit and draft logic
+      assessmentFlow.ts              # Assessment progression and routing
+      flow.ts                        # Question visibility and progress
+      preAnswering.ts                # Pre-fill suggestions from AI
+      questionRouting.ts             # Tag-based routing logic
+      taskFallbackRules.ts           # Fallback tag rules without AI
+    
     scoring/
-      scoreAssessment.ts
-      scorePresentation.ts
-    ai.ts
+      scoreAssessment.ts             # Risk score calculation
+      scorePresentation.ts           # Score display formatting
+  
   report/
-    BodyDiagramSvg.tsx
-    ReportDocument.tsx
-    reportActions.ts
-    reportAnalysis.ts
-    reportAssets.ts
-    reportData.ts
-    reportDocumentComponents.tsx
-    reportDocumentStyles.ts
-    reportGuidance.ts
+    BodyDiagramSvg.tsx              # Body diagram SVG component
+    ReportDocument.tsx              # React PDF document structure
+    reportActions.ts                # PDF download orchestration
+    reportAnalysis.ts               # AI-generated analysis block
+    reportAssets.ts                 # Report icons and assets
+    reportData.ts                   # Report data model
+    reportDocumentComponents.tsx    # PDF layout components
+    reportDocumentStyles.ts         # PDF styling
+    reportGuidance.ts               # Risk guidance and actions
+  
   ui/
-    components/
-      ActionButtons.tsx
-      AnswerControls.tsx
-      AppHeader.tsx
-    screens/
-      AssessmentScreen.tsx
-      OnboardingScreens.tsx
-      ResultScreens.tsx
-    styles.css
+    styles.css                      # Global styles
     styles/
-      base.css
-      components.css
-      screens.css
-  types.ts
-  vite-env.d.ts
+      base.css                      # Base element styles
+      components.css                # Component styles
+      screens.css                   # Screen layout styles
+    components/
+      ActionButtons.tsx             # Next/Back/Continue buttons
+      AnswerControls.tsx            # Answer input controls
+      AppHeader.tsx                 # App header with progress
+    screens/
+      AssessmentScreen.tsx          # Main assessment question screen
+      OnboardingScreens.tsx         # Intro, language, role, task description
+      ResultScreens.tsx             # Score, email, report, submit, complete
+
+types/
+  node-test.d.ts                     # Node test runner types
+
 tests/
   integration/
-    assessment-flow.test.ts
+    assessment-flow.test.ts         # End-to-end assessment logic
   unit/
-    ai.test.ts
-    answer-selection.test.ts
-    loading-state.test.ts
-    report-data.test.ts
-    report-document.test.ts
-    routing.test.ts
-    score-presentation.test.ts
-    scoring.test.ts
-types/
-  node-test.d.ts
-index.html
-package.json
-tsconfig.json
-vite.config.ts
+    ai.test.ts                      # AI response parsing
+    answer-selection.test.ts        # Answer commit logic
+    loading-state.test.ts           # Loading state handling
+    report-data.test.ts             # Report data generation
+    report-document.test.ts         # PDF structure
+    routing.test.ts                 # Tag-based routing
+    score-presentation.test.ts      # Score display formatting
+    scoring.test.ts                 # Risk calculation
 ```
 
-## Question Data
+## Question Data & Localization
 
-Structural question data lives in:
+### Question Structure
 
-```text
-src/data/catalog.ts
-```
+Question definitions live in `src/data/catalog.ts` and include:
 
-This file owns:
-
-- question IDs
-- question type
-- section
-- display-condition tags
-- option IDs
-- grouped option structure
-- placeholder risk score mappings
+- Question IDs (mirrored from source doc: `question-1` through `question-42`)
+- Question type (`multi_choice` or `text`)
+- Section assignment
+- Display condition tags (when to show the question)
+- Option IDs and grouped structure
+- Placeholder risk score mappings for each option
 - AI instructions for text questions
 
-Question IDs mirror the source questionnaire labels and use straight numeric IDs from `question-1` through `question-42`. Keep these IDs aligned with the source document when question order or labels change.
+Question IDs stay synchronized with the source questionnaire. When question order or labels change, update both the catalog and this documentation.
 
-Question text lives in language-specific files:
+### Question Text & Translations
 
-```text
-src/data/translations/*.ts
-```
+Language-specific content lives in `src/data/translations/*.ts`:
 
-Ready non-English files export hard-coded localized app text, section labels, and question text. `getQuestionText` still falls back to English for missing fields, but languages marked ready should keep full translation coverage for app labels, questions, options, and grouped options. Add new languages by:
+- `en.ts` is the primary reference language
+- Other language files export hard-coded localized text for app labels, section names, and questions
+- `getQuestionText()` falls back to English for missing fields, but ready languages should be complete
 
-1. Creating a new file in `src/data/translations/`.
-2. Exporting a `Translation`.
-3. Adding it to `src/data/translations/index.ts`.
-4. Adding the language to `languages` in `src/data/languages.ts`, using the language's native display name for the selector label.
+#### Adding a New Language
 
-During the assessment flow, option selections are treated as draft answers until the worker clicks Continue. Routing tags and follow-up questions are recomputed only after that commit, so choosing an option does not unexpectedly move the worker to another question.
+1. Create `src/data/translations/[lang-code].ts`
+2. Export a `Translation` object matching the English structure
+3. Add the language to `src/data/translations/index.ts`
+4. Add it to `languages` in `src/data/languages.ts` with the native display name
 
-Current symptom/discomfort questions are kept for routing and report context, but they do not contribute to scored risk factors. The scored risk factors are contact stress, force, awkward posture, repetition, and environmental factors.
+### Assessment Flow & Draft Answers
 
-## Configurable Prototype Constants
+During the assessment, option selections are treated as **draft answers** until the worker clicks Continue. Routing tags and follow-up questions recompute only after that commit, preventing in-progress selections from triggering unwanted rerouting.
 
-Frequently tuned development and testing values are centralized in:
+### Scored vs. Context-Only Factors
 
-```text
-src/config/aiConfig.ts
-src/config/scoringConfig.ts
-src/config/uiConfig.ts
-```
-
-`aiConfig.ts` owns Gemini defaults, request timeouts, prompt temperatures, pre-answer confidence thresholds, report-analysis length limits, fallback provider IDs, and local fallback confidence/missing-detail text. `scoringConfig.ts` owns score bands, psychosocial multipliers, score caps/rounding, scoring version text, and report risk-driver thresholds. `uiConfig.ts` owns small UI timing values such as fallback toast duration.
-
-Question structure, option risk-score mappings, routing tags, and fallback matching rules intentionally remain in their domain files (`src/data/questions.ts`, `src/data/tags.ts`, and `src/logic/questionnaire/taskFallbackRules.ts`) because those are catalog/domain logic rather than general tuning knobs.
+- **Current symptom/discomfort questions** (Q5, Q6) are kept for routing and report context but do **not** contribute to risk scores
+- **Scored risk factors**: contact stress, force, awkward posture, static posture, repetition, vibration, cold, and psychosocial modifiers
 
 ## Gemini Integration
 
-Gemini is used in:
+Gemini is used in four places:
 
-```text
-src/logic/ai.ts
-src/logic/ai/
-src/logic/questionnaire/aiTaskInterpretation.ts
-src/logic/questionnaire/preAnswering.ts
-src/report/reportAnalysis.ts
-```
+| Location | Purpose |
+|---|---|
+| `src/logic/ai.ts` | Public AI facade |
+| `src/logic/ai/geminiClient.ts` | Gemini API requests |
+| `src/logic/questionnaire/aiTaskInterpretation.ts` | Task description → routing tags |
+| `src/logic/questionnaire/preAnswering.ts` | Pre-fill answer suggestions |
+| `src/report/reportAnalysis.ts` | Report analysis block |
 
-`src/logic/ai.ts` is the public facade used by the app and tests. Provider-level Gemini request code and AI response value utilities live under `src/logic/ai/`; domain-specific AI behavior lives with the feature it affects: task interpretation and pre-answering live with questionnaire flow logic, and report analysis lives with the PDF report code.
+### Task Description Workflow
 
-The task-description flow uses Gemini in two conservative passes after the worker enters the free-text task description. Workers may enter this task description in any language or in mixed languages. English task descriptions are interpreted directly so concrete routing clues are preserved. Non-English or mixed-language descriptions are internally interpreted in English, then routed using the same tag-selection behavior as English descriptions.
+After the worker enters a free-text task description (any language or mixed), Gemini processes it in two conservative passes:
 
-First, it sends the worker's text task description to Gemini, asks for strict JSON, and expects routing tags:
+#### Pass 1: Tag Extraction
 
+Sends: worker's task description
+
+Returns:
 ```json
 {
   "normalized_answer_en": "string",
@@ -286,10 +270,15 @@ First, it sends the worker's text task description to Gemini, asks for strict JS
 }
 ```
 
-Only predefined tags from `tagTaxonomy` are accepted. Gemini must return exact canonical tag IDs, never translated tag labels. If Gemini is unavailable or the key is missing, the app falls back to local English-only rule-based interpretation. The local fallback maps common English task descriptions and job settings, such as office computer work, warehouse handling, healthcare transfers, tool use, cleaning, construction, landscaping, driving/equipment, manufacturing, retail, inspection, and environmental exposures, to broad routing tags without scoring or auto-answering questions. Multilingual task interpretation remains a Gemini responsibility in this version.
+- Only predefined tags from `tagTaxonomy` are accepted (exact canonical IDs, never translated labels)
+- High-confidence tags route to relevant follow-up questions
+- On API failure or missing key: app uses local fallback rules from `taskFallbackRules.ts`
 
-Second, when Gemini is configured, the app sends the worker's original task description plus the currently eligible follow-up questions and valid option IDs. Gemini may suggest questions that are already answered by the worker's text. Even when the worker response is not English, pre-answer values must use the exact canonical question IDs, option IDs, and group IDs from the catalog:
+#### Pass 2: Pre-Answer Suggestions
 
+Sends: worker's original description + eligible follow-up questions + valid option IDs
+
+Returns:
 ```json
 {
   "auto_answers": [
@@ -304,77 +293,200 @@ Second, when Gemini is configured, the app sends the worker's original task desc
 }
 ```
 
-The client accepts only high-confidence pre-answers that exactly match catalog question IDs, option IDs, and group IDs, include evidence grounded in the worker's text, and do not overwrite user-entered answers. Accepted pre-answers are stored in the normal answer state, hidden from the assessment flow, and included in scoring and PDF reporting. If Gemini is unavailable, malformed, or not confident enough, no questions are hidden.
+- Client accepts only high-confidence matches (≥ threshold from `aiConfig.ts`)
+- Suggestions must exactly match catalog question IDs, option IDs, and group IDs
+- Evidence must be grounded in the worker's text
+- Pre-answers never overwrite user-entered onboarding answers
 
-When the worker continues past the free-text task description, the app shows an analyzing spinner and disables the navigation buttons until tag extraction and pre-answering complete. This prevents duplicate submissions and reassures the worker that their input is still being processed.
+#### UI Feedback
 
-After the first four onboarding questions are complete, the app starts a non-blocking Gemini request for a short report-analysis paragraph. This background response uses only Q1 role, Q2 time in role, Q3 task description, and Q4 height; it does not use category scores or later assessment answers. If the response arrives before the worker downloads the PDF, the report includes it beside the job-specific note with an AI disclaimer and source links. If Gemini is unavailable or the response is not ready, PDF generation continues without blocking. This report-analysis request uses a 60-second timeout because it runs in the background.
+- After task submission: spinner and disabled nav buttons until both passes complete
+- If either call fails/times out: app continues with fallback behavior and shows a semi-transparent toast notice
+- Report analysis runs in the background after Q4 (height) and completes independently
 
-If either task-description Gemini call fails or times out after the worker submits the task description, the app continues with its existing fallback behavior and shows a brief semi-transparent red toast at the bottom of the screen. The production app uses the task Gemini request timeout from `src/config/aiConfig.ts`, currently 10 seconds; the automated test bundle may override it with `__MSI360_TEST_GEMINI_TIMEOUT_MS__`. When task analysis falls back because a Gemini request failed, the app commits the local routing fallback and skips the optional pre-answer request instead of making the worker wait through a second likely timeout. Task-analysis failures and question-pruning/pre-answering failures use different messages; when both happen, the notices appear one after the other and can be dismissed with the X button. The background report-analysis request fails silently so it does not interrupt the responder.
+## Scoring System
 
-## Scoring
+### Score Calculation
 
-Scoring is currently prototype-only and lives in:
+Risk scores are calculated in `src/logic/scoring/scoreAssessment.ts`:
 
-```text
-src/logic/scoring/scoreAssessment.ts
-src/logic/scoring/scorePresentation.ts
+1. **Per-question:** Max selected option score (if multiple options, take the highest)
+2. **Per-risk-factor:** Average of question scores within that factor
+3. **Base composite:** Average of all applicable risk factors
+4. **Psychosocial adjustment:** Average of Q7, Q8, Q41, Q42 (if answered in conditional flow)
+   - Multiplier applied to base composite, capped at 4
+5. **Final score:** Base composite × psychosocial multiplier (or ≤ 4)
+
+### Risk Factor Interpretation
+
+Thresholds (in `src/config/scoringConfig.ts`):
+
+| Averaged Factor Score | Interpretation |
+|---|---|
+| < 1.5 | Currently low risk associated with that factor |
+| 1.5–2.4 | Possible risk of discomfort from that factor |
+| 2.4–3.5 | Likely risk of discomfort from that factor |
+| ≥ 3.5 | Known risk of pain and/or injury |
+
+### Psychosocial Multiplier (Hidden Modifier)
+
+Not a standalone report category, but a hidden score modifier:
+
+- **Q7/Q8 mappings:** great extent = 1, some extent = 2, rarely = 3, not at all = 4
+- **Q41/Q42 mappings:** never = 1, rarely = 2, sometimes = 3, frequently = 4
+- **Calculation:** Average of whichever four questions were answered; if none answered, multiplier = 1
+- **Logic:** Scores below 1.5 multiply the base composite; scores above 1.5 suppress the modifier
+
+### Score Display Format
+
+- **Overall composite:** Displayed as `X.X out of 4` (with "out of 4" text)
+- **Category scores:** Compact `X.X / 4` format (slash with no surrounding text)
+
+## PDF Report Generation
+
+### Architecture
+
+- **Orchestration:** `src/report/reportActions.ts` (browser-side download)
+- **Document model:** `src/report/ReportDocument.tsx` (React PDF structure)
+- **Data model:** `src/report/reportData.ts` and `src/report/reportAnalysis.ts`
+- **Components:** `src/report/reportDocumentComponents.tsx` (layout & styling)
+- **Styling:** `src/report/reportDocumentStyles.ts` (PDF-specific CSS)
+- **Guidance:** `src/report/reportGuidance.ts` (risk explanations & actions)
+
+### Report Sections
+
+1. **Intro Page** — Report context (date, responder, job/task, height) from Q1–Q4
+2. **Overview Page** — AI-generated analysis (if available) + worker's job-specific notes
+3. **Category Scores** — Visual summary by risk factor
+4. **Category Details** — Risk interpretation and suggested actions for scores ≥ 2
+5. **Response Record** — Full English question text + selected answers (unshortened)
+
+### Report Context Block
+
+Derived from Q1 (role) and Q2 (time in role):
+- Example: "Warehouse worker for 2 years" or "Nursing aide for 6–12 months"
+
+### AI-Generated Analysis Block
+
+- Runs asynchronously after Q4 (height)
+- Uses only Q1–Q4 data (role, time, task, height)
+- Includes fixed disclaimer about prototype status
+- Optional; PDF downloads without it if Gemini is unavailable or fails
+
+### Category Risk Guidance
+
+Derived from selected answers contributing ≥ 2 to a category score:
+
+- Scores of 4 = high priority (red)
+- Scores of 3 = medium priority (orange)
+- Scores of 2 = emerging risk (yellow)
+
+Guidance references `src/report/reportGuidance.ts` and includes:
+- Plain-language risk description
+- Suggested workplace controls and modifications
+- Links to ergonomic resources
+
+### Report Assets
+
+- Icons are centralized in `src/report/reportAssets.ts`
+- Icon files: `public/icons/`
+- Hierarchy-of-controls diagram: `public/images/hierarchy-of-controls.png`
+- Logo: `public/worksafebc-logo.png`
+
+### Response Record Appendix
+
+- Uses full English question text from `src/data/translations/en.ts`
+- Do **not** abbreviate question text in this detailed section
+
+## Configuration & Tuning
+
+Frequently adjusted prototype constants are centralized:
+
+### `src/config/aiConfig.ts`
+
+- Gemini model name and request timeout
+- Prompt temperatures and sampling parameters
+- Pre-answer confidence threshold (default ≥ 0.8)
+- Report-analysis length limits
+- Fallback provider IDs and confidence levels
+
+### `src/config/scoringConfig.ts`
+
+- Risk factor interpretation thresholds
+- Psychosocial multiplier logic
+- Default score values
+
+### `src/config/uiConfig.ts`
+
+- AI fallback toast visibility duration
+- Progress bar step calculations
+
+**Note:** Question structure, option risk mappings, routing tags, and fallback rules intentionally remain in their domain files (`src/data/`, `src/logic/questionnaire/`) for easier maintenance and testing.
+
+## Testing
+
+### Test Organization
+
+Tests live in `src/tests/` and use Node's built-in test runner with esbuild bundling:
+
+| Test File | Focus |
+|---|---|
+| `routing.test.ts` | Tag-based routing logic |
+| `answer-selection.test.ts` | Answer commit and draft logic |
+| `assessment-flow.test.ts` | End-to-end assessment progression |
+| `scoring.test.ts` | Risk calculation |
+| `score-presentation.test.ts` | Score display formatting |
+| `ai.test.ts` | Gemini response parsing |
+| `report-data.test.ts` | Report data generation |
+| `report-document.test.ts` | PDF structure integrity |
+| `loading-state.test.ts` | Loading and async state handling |
+
+### Test Coverage Focus
+
+Current automated tests emphasize:
+- Routing tag computation
+- Visible question filtering
+- Selected option score application
+- Answer draft/commit separation
+- Score aggregation and interpretation
+
+### Running Tests
+
+```bash
+npm test                  # Full test suite
+npm run typecheck         # TypeScript type check
+npm run test:automated    # Automated tests only
 ```
 
-Risk score mappings are attached to options in `src/data/catalog.ts`. They are intentionally isolated so the team can replace them later with the final grading map. Score interpretation thresholds, psychosocial multipliers, score cap/rounding, and report risk-driver thresholds live in `src/config/scoringConfig.ts`.
+### Maintaining Test Coverage
 
-Current aggregation:
+The maintained list of automated and manual sprint test cases lives in **`docs/MSI360_Sprint_Test_Cases.md`**.
 
-- max selected option score per question
-- average by risk factor
-- average applicable factors for base composite score
-- average answered psychosocial values from Q7, Q8, Q41, and Q42
-- apply the psychosocial multiplier to the base composite score only, capped at 4
+**Update that file whenever automated tests are added, removed, renamed, or materially change.**
 
-Risk factor interpretation text uses the averaged factor score:
+## Development Guidelines
 
-- less than 1.5: currently low risk associated with that factor
-- 1.5 to less than 2.4: possible risk of discomfort from that factor
-- 2.4 to less than 3.5: likely risk of discomfort from that factor
-- 3.5 or higher: known risk of pain and/or injury
+See **`AGENTS.md`** for detailed development practices:
 
-Psychosocial scoring is a hidden modifier, not a standalone report category. The current placeholder mappings are:
+- Write clear, easy-to-read code following project best practices
+- Include thorough comments for future handoff clarity
+- Use descriptive variable, function, and class names
+- Read the README before making changes
+- Update the README when behavior, setup, usage, or project expectations change
+- Update README file hierarchy when files are created/removed
+- Run full test suite before submitting changes
+- Fix all test failures before completing work
+- Add or update unit tests for each pull request
+- Keep `docs/MSI360_Sprint_Test_Cases.md` accurate after test changes
 
-- Q7/Q8: great extent = 1, some extent = 2, rarely = 3, not at all = 4
-- Q41/Q42: never = 1, rarely = 2, sometimes = 3, frequently = 4
+## Known Limitations
 
-The psychosocial score averages whichever of those four questions were answered in the conditional assessment flow. If none were answered, the multiplier is 1. Scores below 1.5 multiply the base composite by 1, scores from 1.5 to less than 2.4 multiply by 1.3, and scores from 2.4 to 4 multiply by 1.6. The adjusted final composite score is capped at 4. Q41 and Q42 still contribute to the environmental factor score in addition to the psychosocial modifier.
+- Non-English translation files are currently placeholders
+- Azure Translator API is not yet integrated
+- Gemini is called directly from the browser (exposes prototype API key; use test keys only)
+- Later survey/review result pages are functional placeholders pending final UI designs
+- Question grading mappings are prototype placeholders (subject to final grading review)
 
-## PDF Report
+## Language Composition
 
-Browser-side PDF download orchestration lives in:
-
-```text
-src/report/reportActions.ts
-```
-
-The React PDF document and report data model live in:
-
-```text
-src/report/
-```
-
-The PDF is generated in the browser with `@react-pdf/renderer` and keeps the existing Download PDF button flow. It includes an intro/about page, overview page, category score summary, category-specific detail pages, and a full English response-record appendix. The five scored categories are always shown in this order: Contact Stress, Force, Awkward Postures, Repetition, and Environmental Factors.
-
-The PDF intro page shows a 2-by-2 report context block with the generated date, responder context, job/task performed, and worker height. Responder context is derived from Q1 and Q2, for example `Supervisor, 1 to 5 years in role`; non-worker responder roles also receive a short note recommending review with a worker who performs the task. For Q3, the PDF uses the English-normalized task interpretation when Gemini provides one, so non-English worker task descriptions do not appear raw in the English PDF.
-
-When available, the overview page shows an AI-generated analysis block beside the job-specific note. This analysis is generated asynchronously from only Q1 through Q4 and includes a fixed disclaimer plus links to the Institute for Work & Health new-worker risk review and WorkSafeBC OHS Regulation Part 4.
-
-Report icons are centralized in `src/report/reportAssets.ts` and reference files under `public/icons/`; the hierarchy-of-controls image is loaded from `public/images/hierarchy-of-controls.png`. The current body diagram is a replaceable React PDF vector placeholder with symptom callouts, so a final body asset can be swapped in later without changing report data logic.
-
-Category explanations and suggested actions are derived from selected answers that contribute a category risk score of `2` or higher. Scores of `4` count as high priority, `3` as medium priority, and `2` as review priority. When no scored hazard is identified for a category, the PDF displays `0` for that category in the report presentation while leaving the underlying scoring result as `null`.
-
-The response-record appendix uses full English question text from `src/data/translations/en.ts`. Do not shorten question text in that detailed question-and-answer section.
-
-## Current Limitations
-
-- Non-English translation files are placeholders.
-- Azure Translator is not wired yet.
-- Gemini is called directly from the browser, which exposes the prototype API key.
-- Later survey/review/result pages are functional placeholders until final UI designs are supplied.
-- Question grading mappings are placeholders.
+This repository is **98.7% TypeScript**, 1.2% CSS, and 0.1% other languages.
