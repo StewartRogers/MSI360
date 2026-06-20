@@ -7,7 +7,7 @@ declare const __MSI360_TEST_GEMINI_TIMEOUT_MS__: number | undefined;
  * confidence, and response-shaping values here so prototype tuning does not
  * require hunting through the app.
  */
-export const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 10000;
+export const geminiRequestTimeoutMs = typeof __MSI360_TEST_GEMINI_TIMEOUT_MS__ === "number" ? __MSI360_TEST_GEMINI_TIMEOUT_MS__ : 30000;
 export const taskInterpretationTemperature = 0.1;
 export const preAnswerTemperature = 0;
 export const preAnswerConfidenceThreshold = 0.9;
