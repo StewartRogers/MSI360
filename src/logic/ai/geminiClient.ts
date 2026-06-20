@@ -3,8 +3,7 @@ import { geminiRequestTimeoutMs } from "../../config/aiConfig";
 const GEMINI_PROXY_PATH = "/api/gemini";
 
 export function getGeminiApiUrl(): string | null {
-  if (import.meta.env.VITE_GEMINI_API_KEY) return GEMINI_PROXY_PATH;
-  if (import.meta.env.PROD) return GEMINI_PROXY_PATH;
+  if (import.meta.env.VITE_GEMINI_ENABLED) return GEMINI_PROXY_PATH;
   return null;
 }
 

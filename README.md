@@ -1,8 +1,8 @@
 # MSI360
 
-MSI360 is a **client-only React/TypeScript prototype** for a mobile-first musculoskeletal injury (MSI) risk assessment tool. It renders questions from local TypeScript data, keeps answers in browser memory, and uses the Gemini API for intelligent text-answer interpretation and pre-filling of follow-up questions. The app generates a comprehensive PDF report in the browser with risk scores, category analyses, and actionable guidance.
+MSI360 is a **React/TypeScript prototype** for a mobile-first musculoskeletal injury (MSI) risk assessment tool, deployed to Vercel. It renders questions from local TypeScript data, keeps answers in browser memory, and uses the Gemini API (via a serverless proxy) for intelligent text-answer interpretation and pre-filling of follow-up questions. The app generates a comprehensive PDF report in the browser with risk scores, category analyses, and actionable guidance.
 
-**There is no backend and no database in this version.** All processing happens client-side.
+**There is no database in this version.** Assessment state lives in browser memory. Gemini API calls are proxied through a Vercel serverless function (`api/gemini.ts`) to keep the API key server-side.
 
 ## Quick Start
 
@@ -74,11 +74,10 @@ The assessment uses a **single-page progressive flow**:
 
 ## Environment Variables
 
-Create `.env.local` in the repository root:
+### Client-side (`.env.local`)
 
 ```env
-VITE_GEMINI_API_KEY=your_gemini_key_here
-VITE_GEMINI_MODEL=gemini-3.1-flash-lite
+VITE_GEMINI_ENABLED=true
 
 # Planned for later (not currently integrated)
 VITE_AZURE_TRANSLATOR_KEY=your_azure_translator_key_here
@@ -86,17 +85,30 @@ VITE_AZURE_TRANSLATOR_REGION=canadacentral
 VITE_AZURE_TRANSLATOR_ENDPOINT=https://api.cognitive.microsofttranslator.com
 ```
 
-⚠️ **Important:** This is a client-only app, so all `VITE_` variables are visible in the browser. Use prototype/test keys only, restrict API access where possible, and **never commit `.env.local`**.
+### Server-side (Vercel project settings)
+
+| Variable | Required | Description |
+|---|---|---|
+| `GEMINI_API_KEY` | Yes | Google Gemini API key (never exposed to browser) |
+| `GEMINI_MODEL` | Yes | Gemini model ID (e.g. `gemini-3.1-flash-lite`) |
+| `ALLOWED_ORIGINS` | No | Comma-separated allowed origins for the proxy (e.g. `https://msi-360.vercel.app`) |
+
+⚠️ **Important:** The Gemini API key is kept server-side in the Vercel serverless proxy. `VITE_GEMINI_ENABLED` is a boolean flag only — do not put the real API key in any `VITE_` variable. **Never commit `.env.local`**.
 
 ## Project Structure
 
 ```
 AGENTS.md                              # Development guidelines
 README.md                              # This file
+CLAUDE.md                              # Claude Code guidance
 package.json                           # Dependencies and scripts
 tsconfig.json                          # TypeScript configuration
 vite.config.ts                         # Vite build configuration
+vercel.json                            # Vercel deployment configuration
 index.html                             # HTML entry point
+
+api/
+  gemini.ts                            # Vercel serverless proxy for Gemini API
 
 docs/
   MSI360_Sprint_Test_Cases.md         # Automated and manual test coverage
@@ -483,7 +495,7 @@ See **`AGENTS.md`** for detailed development practices:
 
 - Non-English translation files are currently placeholders
 - Azure Translator API is not yet integrated
-- Gemini is called directly from the browser (exposes prototype API key; use test keys only)
+- Gemini API calls are proxied through a Vercel serverless function; local dev requires `vercel dev` for AI features
 - Later survey/review result pages are functional placeholders pending final UI designs
 - Question grading mappings are prototype placeholders (subject to final grading review)
 

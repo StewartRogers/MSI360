@@ -16,10 +16,11 @@ No linter is configured. Code quality relies on TypeScript strict mode and tests
 
 ## Architecture
 
-**Client-only React 18 / TypeScript 5 / Vite 8 prototype.** No backend, no database, no router, no state library. All state lives in `App.tsx` via `useState`. The app is a single-page progressive flow: onboarding -> assessment questions -> scoring -> PDF report download.
+**React 18 / TypeScript 5 / Vite 8 prototype** deployed to Vercel. No database, no router, no state library. All UI state lives in `App.tsx` via `useState`. Gemini API calls are proxied through a Vercel serverless function (`api/gemini.ts`) to keep the API key server-side. The app is a single-page progressive flow: onboarding -> assessment questions -> scoring -> PDF report download.
 
 ### Key directories
 
+- **`api/`** -- Vercel serverless functions (`gemini.ts` proxies Gemini API)
 - **`src/data/`** -- Question catalog (`catalog.ts`), tag taxonomy (`tags.ts`), 30+ translation files (`translations/`)
 - **`src/logic/`** -- Business logic: `questionnaire/` (routing, AI interpretation, pre-answering), `scoring/` (risk calculation), `ai/` (Gemini client)
 - **`src/report/`** -- PDF generation with `@react-pdf/renderer`. Entry: `reportActions.ts` -> `ReportDocument.tsx`
@@ -37,7 +38,7 @@ No linter is configured. Code quality relies on TypeScript strict mode and tests
 
 ### AI integration
 
-Gemini API is called directly from browser (no backend proxy). Three workflows:
+Gemini API calls go through a Vercel serverless proxy at `api/gemini.ts`. The API key stays server-side. Three workflows:
 - **Task interpretation** (`aiTaskInterpretation.ts`): free text -> routing tags + missing details
 - **Pre-answering** (`preAnswering.ts`): auto-fill answers at >= 0.9 confidence
 - **Report analysis** (`reportAnalysis.ts`): background paragraph for PDF
@@ -47,7 +48,7 @@ All AI is optional -- local fallback rules in `taskFallbackRules.ts` handle fail
 ## Key conventions
 
 - Question IDs match source questionnaire (`question-1` through `question-42`)
-- All `VITE_` env vars are browser-visible -- use test API keys only
+- `VITE_GEMINI_ENABLED` is a boolean flag only -- the real API key is server-side (`GEMINI_API_KEY`)
 - Translations: `en.ts` is the reference; other languages fall back to English
 - After changing tests, update `docs/MSI360_Sprint_Test_Cases.md`
 - After changing behavior/structure, update `README.md` (including file hierarchy)
@@ -55,8 +56,14 @@ All AI is optional -- local fallback rules in `taskFallbackRules.ts` handle fail
 
 ## Environment
 
-Create `.env.local`:
+Client-side (`.env.local`):
 ```
-VITE_GEMINI_API_KEY=your_key
-VITE_GEMINI_MODEL=gemini-3.1-flash-lite
+VITE_GEMINI_ENABLED=true
+```
+
+Server-side (Vercel project settings):
+```
+GEMINI_API_KEY=your_real_key
+GEMINI_MODEL=gemini-3.1-flash-lite
+ALLOWED_ORIGINS=https://your-domain.vercel.app
 ```
