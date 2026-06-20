@@ -5,5 +5,15 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173
+  },
+  build: {
+    chunkSizeWarningLimit: 1500,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("@react-pdf")) return "react-pdf";
+        }
+      }
+    }
   }
 });
