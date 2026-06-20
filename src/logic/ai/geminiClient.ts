@@ -1,11 +1,11 @@
-import { defaultGeminiModel, geminiRequestTimeoutMs } from "../../config/aiConfig";
+import { geminiRequestTimeoutMs } from "../../config/aiConfig";
+
+const GEMINI_PROXY_PATH = "/api/gemini";
 
 export function getGeminiApiUrl(): string | null {
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  if (!apiKey) return null;
-
-  const model = import.meta.env.VITE_GEMINI_MODEL || defaultGeminiModel;
-  return `https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent?key=${encodeURIComponent(apiKey)}`;
+  if (import.meta.env.VITE_GEMINI_API_KEY) return GEMINI_PROXY_PATH;
+  if (import.meta.env.PROD) return GEMINI_PROXY_PATH;
+  return null;
 }
 
 export async function postGeminiPrompt(apiUrl: string, prompt: string, temperature: number, timeoutMessage: string, timeoutMs = geminiRequestTimeoutMs): Promise<Response> {
@@ -15,17 +15,9 @@ export async function postGeminiPrompt(apiUrl: string, prompt: string, temperatu
   try {
     return await fetch(apiUrl, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       signal: controller.signal,
-      body: JSON.stringify({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature,
-          responseMimeType: "application/json"
-        }
-      })
+      body: JSON.stringify({ prompt, temperature })
     });
   } catch (error) {
     if (isAbortError(error)) throw new Error(timeoutMessage);
