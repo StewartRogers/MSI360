@@ -78,7 +78,7 @@ Create `.env.local` in the repository root:
 
 ```env
 VITE_GEMINI_API_KEY=your_gemini_key_here
-VITE_GEMINI_MODEL=gemini-3.1-flash-lite-preview
+VITE_GEMINI_MODEL=gemini-2.5-flash
 
 # Planned for later (not currently integrated)
 VITE_AZURE_TRANSLATOR_KEY=your_azure_translator_key_here
@@ -406,7 +406,7 @@ Frequently adjusted prototype constants are centralized:
 
 - Gemini model name and request timeout
 - Prompt temperatures and sampling parameters
-- Pre-answer confidence threshold (default ≥ 0.8)
+- Pre-answer confidence threshold (default ≥ 0.9)
 - Report-analysis length limits
 - Fallback provider IDs and confidence levels
 
