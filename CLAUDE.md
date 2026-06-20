@@ -58,5 +58,5 @@ All AI is optional -- local fallback rules in `taskFallbackRules.ts` handle fail
 Create `.env.local`:
 ```
 VITE_GEMINI_API_KEY=your_key
-VITE_GEMINI_MODEL=gemini-2.5-flash
+VITE_GEMINI_MODEL=gemini-3.1-flash-lite
 ```

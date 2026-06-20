@@ -1,7 +1,8 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const GEMINI_MODEL = process.env.GEMINI_MODEL;
+
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== "POST") {
@@ -9,8 +10,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return;
   }
 
-  if (!GEMINI_API_KEY) {
-    res.status(500).json({ error: "Gemini API key not configured" });
+  if (!GEMINI_API_KEY || !GEMINI_MODEL) {
+    res.status(500).json({ error: "Gemini environment variables not configured" });
     return;
   }
 

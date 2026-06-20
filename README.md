@@ -78,7 +78,7 @@ Create `.env.local` in the repository root:
 
 ```env
 VITE_GEMINI_API_KEY=your_gemini_key_here
-VITE_GEMINI_MODEL=gemini-2.5-flash
+VITE_GEMINI_MODEL=gemini-3.1-flash-lite
 
 # Planned for later (not currently integrated)
 VITE_AZURE_TRANSLATOR_KEY=your_azure_translator_key_here
