@@ -91,7 +91,7 @@ VITE_AZURE_TRANSLATOR_ENDPOINT=https://api.cognitive.microsofttranslator.com
 |---|---|---|
 | `GEMINI_API_KEY` | Yes | Google Gemini API key (never exposed to browser) |
 | `GEMINI_MODEL` | Yes | Gemini model ID (e.g. `gemini-3.1-flash-lite`) |
-| `ALLOWED_ORIGINS` | No | Comma-separated allowed origins for the proxy (e.g. `https://msi-360.vercel.app`) |
+| `ALLOWED_ORIGINS` | No | Comma-separated allowed origins for the proxy (e.g. `https://msi-360.vercel.app`). If unset, the proxy falls back to same-origin-only requests instead of accepting any origin. |
 
 ⚠️ **Important:** The Gemini API key is kept server-side in the Vercel serverless proxy. `VITE_GEMINI_ENABLED` is a boolean flag only — do not put the real API key in any `VITE_` variable. **Never commit `.env.local`**.
 
@@ -315,6 +315,12 @@ Returns:
 - After task submission: spinner and disabled nav buttons until both passes complete
 - If either call fails/times out: app continues with fallback behavior and shows a semi-transparent toast notice
 - Report analysis runs in the background after Q4 (height) and completes independently
+
+### Proxy Hardening (`api/gemini.ts`)
+
+- **Origin check**: requests must match `ALLOWED_ORIGINS` if set, otherwise same-origin only (fail closed, not open)
+- **Rate limiting**: in-memory sliding window, 20 requests/60s per client IP; returns `429` with `Retry-After`. Best-effort only — state resets on cold start and isn't shared across instances/regions
+- **Prompt size cap**: rejects prompts over 8000 characters with `413`
 
 ## Scoring System
 
