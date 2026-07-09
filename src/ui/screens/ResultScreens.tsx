@@ -68,10 +68,28 @@ export function ScoreScreen({ result, progressStep, totalSteps, translations, on
 /**
  * Optional email collection screen.
  *
- * The current prototype records the email only in local state and displays it on
- * the next screen. It does not send email without a future backend integration.
+ * If an address is entered, Continue sends the PDF report by email through the
+ * /api/send-report proxy before advancing to the report-ready screen. The send
+ * is best-effort: a failed send does not block navigation, and the report can
+ * always be downloaded directly on the next screen.
  */
-export function EmailScreen({ value, translations, isRtl = false, onChange, onBack, onContinue }: { value: string; translations: Translation; isRtl?: boolean; onChange: (value: string) => void; onBack: () => void; onContinue: () => void }) {
+export function EmailScreen({
+  value,
+  translations,
+  isRtl = false,
+  isSendingReport = false,
+  onChange,
+  onBack,
+  onContinue
+}: {
+  value: string;
+  translations: Translation;
+  isRtl?: boolean;
+  isSendingReport?: boolean;
+  onChange: (value: string) => void;
+  onBack: () => void;
+  onContinue: () => void;
+}) {
   const actionLabels = getActionButtonLabels(translations);
 
   return (
@@ -93,7 +111,7 @@ export function EmailScreen({ value, translations, isRtl = false, onChange, onBa
           </label>
           <input id="email-address" className="single-input" value={value} onChange={(event) => onChange(event.target.value)} inputMode="email" />
         </div>
-        <ActionButtons {...actionLabels} onBack={onBack} onContinue={onContinue} />
+        <ActionButtons {...actionLabels} onBack={onBack} onContinue={onContinue} isBusy={isSendingReport} />
       </section>
     </>
   );

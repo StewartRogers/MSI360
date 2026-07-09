@@ -49,6 +49,7 @@ export default function App() {
   const [scoreResult, setScoreResult] = useState<ScoreResult | null>(null);
   const [status, setStatus] = useState("");
   const [isInterpretingTaskDescription, setIsInterpretingTaskDescription] = useState(false);
+  const [isSendingReport, setIsSendingReport] = useState(false);
   const [email, setEmail] = useState("");
   const [nextAssessmentChoice, setNextAssessmentChoice] = useState("");
   const [autoAnsweredQuestionIds, setAutoAnsweredQuestionIds] = useState<string[]>([]);
@@ -299,6 +300,37 @@ export default function App() {
   }
 
   /**
+   * Advances from the email-collection screen, sending the PDF report by email
+   * first when an address was entered. The send is optional and best-effort:
+   * a failed or timed-out send still reaches the report-ready screen (where the
+   * PDF can always be downloaded directly) and only surfaces a toast notice.
+   */
+  async function continueFromEmail() {
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail) {
+      setStep("report");
+      return;
+    }
+
+    setIsSendingReport(true);
+    try {
+      const nextResult = scoreResult || scoreAssessment(answers);
+      setScoreResult(nextResult);
+      const { sendReportEmail } = await import("./report/sendReportEmail");
+      const sendResult = await sendReportEmail(trimmedEmail, answers, aiOutputs, nextResult, reportAnalysis);
+      if (!sendResult.ok) {
+        setToastQueue((queuedToasts) => [
+          ...queuedToasts,
+          { id: nextToastId.current++, message: getAppText(t, "email_report_send_failed", "We couldn't email your report. You can still download it below.") }
+        ]);
+      }
+    } finally {
+      setIsSendingReport(false);
+      setStep("report");
+    }
+  }
+
+  /**
    * Clears all local state for a fresh assessment.
    */
   function startNewAssessment() {
@@ -309,6 +341,7 @@ export default function App() {
     setAssessmentIndex(0);
     setStatus("");
     setIsInterpretingTaskDescription(false);
+    setIsSendingReport(false);
     setEmail("");
     setNextAssessmentChoice("");
     setAutoAnsweredQuestionIds([]);
@@ -420,7 +453,17 @@ export default function App() {
 
       {step === "score" && <ScoreScreen result={result} progressStep={totalQuestionSteps} totalSteps={totalQuestionSteps} translations={t} onBack={goBack} onContinue={() => setStep("email")} />}
 
-      {step === "email" && <EmailScreen value={email} translations={t} isRtl={isRtl} onChange={setEmail} onBack={goBack} onContinue={() => setStep("report")} />}
+      {step === "email" && (
+        <EmailScreen
+          value={email}
+          translations={t}
+          isRtl={isRtl}
+          isSendingReport={isSendingReport}
+          onChange={setEmail}
+          onBack={goBack}
+          onContinue={() => void continueFromEmail()}
+        />
+      )}
 
       {step === "report" && (
         <ReportReadyScreen

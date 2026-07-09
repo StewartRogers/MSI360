@@ -16,11 +16,11 @@ No linter is configured. Code quality relies on TypeScript strict mode and tests
 
 ## Architecture
 
-**React 18 / TypeScript 5 / Vite 8 prototype** deployed to Vercel. No database, no router, no state library. All UI state lives in `App.tsx` via `useState`. Gemini API calls are proxied through a Vercel serverless function (`api/gemini.ts`) to keep the API key server-side. The app is a single-page progressive flow: onboarding -> assessment questions -> scoring -> PDF report download.
+**React 18 / TypeScript 5 / Vite 8 prototype** deployed to Vercel. No database, no router, no state library. All UI state lives in `App.tsx` via `useState`. Gemini API calls are proxied through a Vercel serverless function (`api/gemini.ts`) to keep the API key server-side. The app is a single-page progressive flow: onboarding -> assessment questions -> scoring -> PDF report download (optionally emailed via Resend, proxied through `api/send-report.ts`).
 
 ### Key directories
 
-- **`api/`** -- Vercel serverless functions (`gemini.ts` proxies Gemini API)
+- **`api/`** -- Vercel serverless functions (`gemini.ts` proxies Gemini API, `send-report.ts` emails the PDF report via Resend)
 - **`src/data/`** -- Question catalog (`catalog.ts`), tag taxonomy (`tags.ts`), 30+ translation files (`translations/`)
 - **`src/logic/`** -- Business logic: `questionnaire/` (routing, AI interpretation, pre-answering), `scoring/` (risk calculation), `ai/` (Gemini client)
 - **`src/report/`** -- PDF generation with `@react-pdf/renderer`. Entry: `reportActions.ts` -> `ReportDocument.tsx`
@@ -47,6 +47,10 @@ All AI is optional -- local fallback rules in `taskFallbackRules.ts` handle fail
 
 The proxy is hardened: same-origin fallback when `ALLOWED_ORIGINS` is unset (fails closed, not open), a 20 req/60s per-IP in-memory rate limit, and an 8000-character prompt cap.
 
+### Email report delivery
+
+`src/report/sendReportEmail.ts` renders the same client-side PDF used by "Download PDF", base64-encodes it, and POSTs it to `api/send-report.ts`, which sends it via Resend (`RESEND_API_KEY`, `RESEND_FROM_EMAIL`). Triggered from the Email screen's Continue action only when an address was entered; the send is best-effort and never blocks navigation to the report screen on failure. The proxy reuses the same hardening pattern as `api/gemini.ts` (same-origin fallback, `ALLOWED_ORIGINS`), plus a stricter 5 req/60s per-IP rate limit and a 4,000,000-character base64 attachment cap. While `RESEND_FROM_EMAIL` points at Resend's shared testing domain (`onboarding@resend.dev`), delivery is restricted to the Resend account's own email address until a custom domain is verified.
+
 ## Key conventions
 
 - Question IDs match source questionnaire (`question-1` through `question-42`)
@@ -68,4 +72,6 @@ Server-side (Vercel project settings):
 GEMINI_API_KEY=your_real_key
 GEMINI_MODEL=gemini-3.1-flash-lite
 ALLOWED_ORIGINS=https://your-domain.vercel.app
+RESEND_API_KEY=your_real_key
+RESEND_FROM_EMAIL="Prototype <onboarding@resend.dev>"
 ```

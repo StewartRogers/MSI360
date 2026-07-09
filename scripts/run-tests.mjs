@@ -41,7 +41,8 @@ await build({
   define: {
     "import.meta.env.VITE_GEMINI_API_KEY": "undefined",
     "import.meta.env.VITE_GEMINI_MODEL": "undefined",
-    "__MSI360_TEST_GEMINI_TIMEOUT_MS__": "8000"
+    "__MSI360_TEST_GEMINI_TIMEOUT_MS__": "8000",
+    "__MSI360_TEST_EMAIL_TIMEOUT_MS__": "8000"
   },
   logLevel: "silent"
 });

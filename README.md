@@ -1,8 +1,8 @@
 # MSI360
 
-MSI360 is a **React/TypeScript prototype** for a mobile-first musculoskeletal injury (MSI) risk assessment tool, deployed to Vercel. It renders questions from local TypeScript data, keeps answers in browser memory, and uses the Gemini API (via a serverless proxy) for intelligent text-answer interpretation and pre-filling of follow-up questions. The app generates a comprehensive PDF report in the browser with risk scores, category analyses, and actionable guidance.
+MSI360 is a **React/TypeScript prototype** for a mobile-first musculoskeletal injury (MSI) risk assessment tool, deployed to Vercel. It renders questions from local TypeScript data, keeps answers in browser memory, and uses the Gemini API (via a serverless proxy) for intelligent text-answer interpretation and pre-filling of follow-up questions. The app generates a comprehensive PDF report in the browser with risk scores, category analyses, and actionable guidance, which can optionally be emailed to the worker via Resend.
 
-**There is no database in this version.** Assessment state lives in browser memory. Gemini API calls are proxied through a Vercel serverless function (`api/gemini.ts`) to keep the API key server-side.
+**There is no database in this version.** Assessment state lives in browser memory. Gemini API calls are proxied through a Vercel serverless function (`api/gemini.ts`) to keep the API key server-side; the PDF report email is sent through a second serverless function (`api/send-report.ts`) using Resend, keeping that API key server-side as well.
 
 ## Quick Start
 
@@ -70,7 +70,7 @@ The assessment uses a **single-page progressive flow**:
 1. **Intro** → **Language Selection** → **Role** → **Time in Role** → **Task Description**
 2. AI interpretation runs after task description
 3. **Height** → **Dynamic Assessment Questions** (routed by tags and previous answers)
-4. **Score Summary** → **Email Entry** → **Report Download** → **Submit** → **Complete**
+4. **Score Summary** → **Email Entry** (optionally sends the PDF report via Resend) → **Report Download** → **Submit** → **Complete**
 
 ## Environment Variables
 
@@ -91,9 +91,11 @@ VITE_AZURE_TRANSLATOR_ENDPOINT=https://api.cognitive.microsofttranslator.com
 |---|---|---|
 | `GEMINI_API_KEY` | Yes | Google Gemini API key (never exposed to browser) |
 | `GEMINI_MODEL` | Yes | Gemini model ID (e.g. `gemini-3.1-flash-lite`) |
-| `ALLOWED_ORIGINS` | No | Comma-separated allowed origins for the proxy (e.g. `https://msi-360.vercel.app`). If unset, the proxy falls back to same-origin-only requests instead of accepting any origin. |
+| `ALLOWED_ORIGINS` | No | Comma-separated allowed origins for both proxies (e.g. `https://msi-360.vercel.app`). If unset, the proxies fall back to same-origin-only requests instead of accepting any origin. |
+| `RESEND_API_KEY` | Yes (for email) | Resend API key (never exposed to browser) |
+| `RESEND_FROM_EMAIL` | Yes (for email) | Sender address, e.g. `"Prototype <onboarding@resend.dev>"` for Resend's shared testing domain, or a `"Name <you@yourdomain.com>"` address on a verified domain in production. While using the shared testing domain, Resend only delivers to the email address on the Resend account itself. |
 
-⚠️ **Important:** The Gemini API key is kept server-side in the Vercel serverless proxy. `VITE_GEMINI_ENABLED` is a boolean flag only — do not put the real API key in any `VITE_` variable. **Never commit `.env.local`**.
+⚠️ **Important:** The Gemini and Resend API keys are kept server-side in Vercel serverless proxies. `VITE_GEMINI_ENABLED` is a boolean flag only — do not put either real API key in any `VITE_` variable. **Never commit `.env.local`**.
 
 ## Project Structure
 
@@ -109,6 +111,7 @@ index.html                             # HTML entry point
 
 api/
   gemini.ts                            # Vercel serverless proxy for Gemini API
+  send-report.ts                       # Vercel serverless proxy that emails the PDF report via Resend
 
 docs/
   MSI360_Sprint_Test_Cases.md         # Automated and manual test coverage
@@ -133,6 +136,7 @@ src/
   
   config/
     aiConfig.ts                       # Gemini API defaults, timeouts, thresholds
+    emailConfig.ts                    # Email report request timeout and subject
     scoringConfig.ts                  # Score interpretation thresholds
     uiConfig.ts                       # UI constants (toast duration, etc.)
   
@@ -178,6 +182,7 @@ src/
     reportDocumentComponents.tsx    # PDF layout components
     reportDocumentStyles.ts         # PDF styling
     reportGuidance.ts               # Risk guidance and actions
+    sendReportEmail.ts              # Emails the rendered PDF via /api/send-report
   
   ui/
     styles.css                      # Global styles
@@ -209,6 +214,7 @@ tests/
     routing.test.ts                 # Tag-based routing
     score-presentation.test.ts      # Score display formatting
     scoring.test.ts                 # Risk calculation
+    send-report.test.ts             # Email validation, size cap, escaping, rate limiting
 ```
 
 ## Question Data & Localization
@@ -322,6 +328,19 @@ Returns:
 - **Rate limiting**: in-memory sliding window, 20 requests/60s per client IP; returns `429` with `Retry-After`. Best-effort only — state resets on cold start and isn't shared across instances/regions
 - **Prompt size cap**: rejects prompts over 8000 characters with `413`
 
+## Email Report Delivery
+
+The worker can optionally enter an email address on the Email screen; on Continue, `src/report/sendReportEmail.ts` renders the same PDF used by "Download PDF", base64-encodes it in the browser, and POSTs it to `api/send-report.ts`, which sends it through Resend. The send is best-effort — if it fails or times out, the app still advances to the report-ready screen (where the PDF can always be downloaded directly) and shows a dismissible toast notice instead of blocking navigation.
+
+### Proxy Hardening (`api/send-report.ts`)
+
+- **Origin check**: same fail-closed logic as `api/gemini.ts`, reusing the `ALLOWED_ORIGINS` env var
+- **Rate limiting**: in-memory sliding window, 5 requests/60s per client IP (stricter than the Gemini proxy since sending mail is costlier and more abusable); returns `429` with `Retry-After`
+- **Recipient validation**: rejects malformed email addresses with `400`
+- **Attachment size cap**: rejects base64 PDF payloads over 4,000,000 characters (~2.9MB raw) with `413`, leaving headroom under Vercel's ~4.5MB request body limit
+- **HTML escaping**: task summary, score, and date fields interpolated into the email body are HTML-escaped before use
+- **Testing-domain limitation**: while `RESEND_FROM_EMAIL` uses Resend's shared testing domain (`onboarding@resend.dev`), Resend only delivers to the email address on the Resend account itself — verify a custom domain in Resend before sending to arbitrary recipients in production
+
 ## Scoring System
 
 ### Score Calculation
@@ -427,6 +446,11 @@ Frequently adjusted prototype constants are centralized:
 - Pre-answer confidence threshold (default ≥ 0.9)
 - Report-analysis length limits
 - Fallback provider IDs and confidence levels
+
+### `src/config/emailConfig.ts`
+
+- Email report request timeout
+- Email subject line
 
 ### `src/config/scoringConfig.ts`
 

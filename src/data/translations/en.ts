@@ -37,6 +37,7 @@ export const en: Translation = {
     email_body: "Enter your email address if you'd like to receive a copy of this report. This may take up to 15 minutes. Please check your junk or spam folder if you don't see the email in your inbox.",
     email_next_body: "You will see the final report on the next screen.",
     email_address_label: "Email address",
+    email_report_send_failed: "We couldn't email your report. You can still download it below.",
     report_ready_title: "Your Report Is Ready",
     report_card_title: "MSI Risk Report",
     report_date_label: "Date",
