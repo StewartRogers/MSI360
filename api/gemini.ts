@@ -4,7 +4,11 @@ const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = process.env.GEMINI_MODEL;
 const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",").map(s => s.trim()).filter(Boolean);
 
-const MAX_PROMPT_LENGTH = 8000;
+// Pre-answer prompts (preAnswering.ts) embed full label/option text for every
+// eligible follow-up question as JSON, which routinely runs 10-15k characters
+// for a normal task description -- comfortably below Vercel's request body
+// limit, so the cap here only needs to guard against pathological input.
+const MAX_PROMPT_LENGTH = 20000;
 
 // Best-effort per-instance limiter (state resets on cold start and isn't
 // shared across regions/instances), but it still blocks the common case of a

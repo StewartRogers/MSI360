@@ -45,7 +45,7 @@ Gemini API calls go through a Vercel serverless proxy at `api/gemini.ts`. The AP
 
 All AI is optional -- local fallback rules in `taskFallbackRules.ts` handle failures.
 
-The proxy is hardened: same-origin fallback when `ALLOWED_ORIGINS` is unset (fails closed, not open), a 20 req/60s per-IP in-memory rate limit, and an 8000-character prompt cap.
+The proxy is hardened: same-origin fallback when `ALLOWED_ORIGINS` is unset (fails closed, not open), a 20 req/60s per-IP in-memory rate limit, and a 20000-character prompt cap (pre-answer prompts routinely run 10-15k characters, so this only guards against pathological input).
 
 ### Email report delivery
 
