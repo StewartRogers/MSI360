@@ -192,3 +192,12 @@ input:disabled {
     transform: rotate(360deg);
   }
 }
+
+/*
+ * Halkomelem (hən̓q̓əmin̓əm̓) uses tall combining marks above letters (U+0313),
+ * which collide with the line above at the default tight heading spacing.
+ */
+:lang(hur) h1,
+:lang(hur) h2 {
+  line-height: 1.45;
+}

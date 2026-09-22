@@ -69,10 +69,16 @@ export function LanguageScreen(props: {
   function renderLanguageLabel(language: Language) {
     return (
       <span className="language-label">
-        <img className="language-flag-icon" src={`https://flagcdn.com/24x18/${language.flagCode}.png`} alt="" aria-hidden="true" loading="lazy" />
-        <span className="language-flag-fallback" aria-hidden="true">
-          {language.flag}
-        </span>
+        {language.flagCode ? (
+          <>
+            <img className="language-flag-icon" src={`https://flagcdn.com/24x18/${language.flagCode}.png`} alt="" aria-hidden="true" loading="lazy" />
+            <span className="language-flag-fallback" aria-hidden="true">
+              {language.flag}
+            </span>
+          </>
+        ) : (
+          <span className="language-flag-none" aria-hidden="true" />
+        )}
         <span>{language.name}</span>
       </span>
     );

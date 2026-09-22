@@ -39,13 +39,15 @@ export type RiskScores = Partial<Record<RiskFactor, number>>;
  *
  * `code` must match a key in `src/data/translations/index.ts`. `flagCode` is
  * used by the current flag CDN URL, and `flag` is retained as a fallback glyph
- * if the remote image cannot load.
+ * if the remote image cannot load. Both are omitted for languages that no
+ * national flag represents, such as Indigenous languages; the selector then
+ * shows a neutral placeholder.
  */
 export interface Language {
   code: string;
   name: string;
-  flag: string;
-  flagCode: string;
+  flag?: string;
+  flagCode?: string;
   ready: boolean;
 }
 

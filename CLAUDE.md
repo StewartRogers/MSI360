@@ -56,6 +56,7 @@ The proxy is hardened: same-origin fallback when `ALLOWED_ORIGINS` is unset (fai
 - Question IDs match source questionnaire (`question-1` through `question-42`)
 - `VITE_GEMINI_ENABLED` is a boolean flag only -- the real API key is server-side (`GEMINI_API_KEY`)
 - Translations: `en.ts` is the reference; other languages fall back to English
+- Partial translations use `withEnglishFallback`; translator CSVs round-trip via `scripts/translation-sheet.mjs` (`hur` Halkomelem is a test entry)
 - After changing tests, update `docs/MSI360_Sprint_Test_Cases.md`
 - After changing behavior/structure, update `README.md` (including file hierarchy)
 - See `AGENTS.md` for development guidelines

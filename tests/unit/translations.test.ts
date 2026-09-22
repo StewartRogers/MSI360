@@ -41,3 +41,12 @@ for (const [code, translation] of Object.entries(translations)) {
     assert.deepEqual(collectKeys(translation).filter((key) => !english.has(key)), []);
   });
 }
+
+test("partial translations keep localized text and fall back to English elsewhere", () => {
+  const halkomelem = translations.hur;
+
+  assert.ok(halkomelem.app.language_title.includes("hən̓q̓əmin̓əm̓"));
+  assert.equal(halkomelem.app.language_title, halkomelem.app.language_title.normalize("NFC"));
+  assert.equal(halkomelem.app.continue_button, translations.en.app.continue_button);
+  assert.deepEqual(halkomelem.questions["question-1"], translations.en.questions["question-1"]);
+});

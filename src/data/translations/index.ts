@@ -17,6 +17,7 @@ import { gu } from "./gu";
 import { hi } from "./hi";
 import { hr } from "./hr";
 import { hu } from "./hu";
+import { hur } from "./hur";
 import { id } from "./id";
 import { ilo } from "./ilo";
 import { it } from "./it";
@@ -87,5 +88,6 @@ export const translations: Record<string, Translation> = {
   ceb,
   id,
   af,
-  da
+  da,
+  hur
 };

@@ -115,6 +115,8 @@ api/
 
 docs/
   MSI360_Sprint_Test_Cases.md         # Automated and manual test coverage
+  translations/
+    hur.csv                           # Halkomelem translator worksheet (test entry)
 
 public/
   icons/                              # SVG and image icons
@@ -123,6 +125,7 @@ public/
 
 scripts/
   run-tests.mjs                       # Test runner with esbuild
+  translation-sheet.mjs               # Export/import translator CSV worksheets
 
 src/
   App.tsx                             # Root component and state coordinator
@@ -150,6 +153,8 @@ src/
     translations/
       index.ts                        # Translation index
       en.ts                           # English (primary language)
+      hur.ts                          # Halkomelem test entry (generated, mostly English fallback)
+      withEnglishFallback.ts          # Layers partial translations over English
       [other languages].ts            # Additional language translations
   
   logic/
@@ -250,6 +255,21 @@ Language-specific content lives in `src/data/translations/*.ts`:
 4. Add it to `languages` in `src/data/languages.ts` with the native display name
 5. If the language is written right to left, add its code to `rtlLanguageCodes` in `src/data/languages.ts`
 6. Run `npm test`; `tests/unit/translations.test.ts` fails if any English key is missing from the new file
+
+#### Translator Worksheets
+
+For translators who do not edit code, export a CSV worksheet, have it filled in, and import it:
+
+```bash
+node scripts/translation-sheet.mjs export <lang-code> docs/translations/<lang-code>.csv
+node scripts/translation-sheet.mjs import <lang-code> docs/translations/<lang-code>.csv <fileName>
+```
+
+Each row has the string key, where it appears, the English text, and a `translation` column. Blank translation cells fall back to English through `withEnglishFallback`, so a partly finished sheet still produces a working language. Then register the file in `translations/index.ts` and `languages.ts` as above. Languages with no national flag (such as Indigenous languages) omit `flag` and `flagCode` and show a neutral placeholder.
+
+#### Halkomelem Test Entry
+
+`hur` (Halkomelem) is a non-production test of hosting an Indigenous language. Only the language screen heading (the three dialect names: Hul'q'umi'num', hən̓q̓əmin̓əm̓, Halq'eméylem), a character check line, and "Huy ch q'u" on the completion screen are in Halkomelem; everything else is English until a fluent speaker completes `docs/translations/hur.csv`. hən̓q̓əmin̓əm̓ spelling uses tall combining marks (U+0313), so `base.css` gives headings more line spacing under `:lang(hur)` to stop them colliding with the line above.
 
 The language screen, task-analysis messages, and "no additional questions" message are all translated. The intro screen appears before a language is chosen, so it stays in English, and the PDF report is English only by design. The page `lang` attribute follows the selected language for screen readers.
 

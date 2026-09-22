@@ -132,6 +132,16 @@
   display: none;
 }
 
+/* Neutral placeholder for languages that no national flag represents. */
+.language-flag-none {
+  flex: 0 0 auto;
+  width: 24px;
+  height: 18px;
+  border: 1px solid #d8d1ce;
+  border-radius: 2px;
+  background: #f1eeec;
+}
+
 .language-select-button:focus,
 .language-option:focus {
   border-color: #659db3;

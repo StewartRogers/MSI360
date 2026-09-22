@@ -204,8 +204,15 @@ test("every configured question has English display text for its options", () =>
 });
 
 test("every language has a flag icon code for dropdown rendering", () => {
+  // Indigenous languages intentionally have no national flag.
+  const flaglessLanguageCodes = new Set(["hur"]);
+
   for (const language of languages) {
-    assert.ok(/^[a-z]{2}$/.test(language.flagCode), `Missing flag icon code for ${language.name}`);
+    if (flaglessLanguageCodes.has(language.code)) {
+      assert.equal(language.flagCode, undefined, `Unexpected flag for ${language.name}`);
+      continue;
+    }
+    assert.ok(/^[a-z]{2}$/.test(language.flagCode ?? ""), `Missing flag icon code for ${language.name}`);
   }
 });
 
@@ -250,7 +257,8 @@ test("language dropdown displays each language name in that language", () => {
     ceb: "Cebuano",
     id: "Bahasa Indonesia",
     af: "Afrikaans",
-    da: "Dansk"
+    da: "Dansk",
+    hur: "hən̓q̓əmin̓əm̓ / Halkomelem (test)"
   };
 
   for (const language of languages) {

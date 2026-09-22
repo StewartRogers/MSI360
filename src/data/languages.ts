@@ -49,7 +49,10 @@ export const languages: Language[] = [
   { code: "ceb", name: "Cebuano", flag: "🇵🇭", flagCode: "ph", ready: true },
   { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩", flagCode: "id", ready: true },
   { code: "af", name: "Afrikaans", flag: "🇿🇦", flagCode: "za", ready: true },
-  { code: "da", name: "Dansk", flag: "🇩🇰", flagCode: "dk", ready: true }
+  { code: "da", name: "Dansk", flag: "🇩🇰", flagCode: "dk", ready: true },
+  // Halkomelem test entry: no national flag, and only a few strings are
+  // translated (see docs/translations/hur.csv); the rest shows English.
+  { code: "hur", name: "hən̓q̓əmin̓əm̓ / Halkomelem (test)", ready: true }
 ];
 
 /**
