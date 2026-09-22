@@ -37,6 +37,7 @@ export const ml: Translation = {
     email_body: "ഈ റിപ്പോർട്ടിന്റെ പകർപ്പ് ലഭിക്കാൻ ആഗ്രഹിക്കുന്നുവെങ്കിൽ നിങ്ങളുടെ ഇമെയിൽ വിലാസം നൽകുക. ഇതിന് 15 മിനിറ്റ് വരെ എടുത്തേക്കാം. ഇൻബോക്സിൽ ഇമെയിൽ കാണുന്നില്ലെങ്കിൽ junk അല്ലെങ്കിൽ spam ഫോൾഡർ പരിശോധിക്കുക.",
     email_next_body: "അടുത്ത സ്ക്രീനിൽ അന്തിമ റിപ്പോർട്ട് കാണും.",
     email_address_label: "ഇമെയിൽ വിലാസം",
+    email_report_send_failed: "നിങ്ങളുടെ റിപ്പോർട്ട് ഇമെയിൽ ചെയ്യാൻ കഴിഞ്ഞില്ല. നിങ്ങൾക്ക് ഇപ്പോഴും താഴെ നിന്ന് അത് ഡൗൺലോഡ് ചെയ്യാം.",
     report_ready_title: "നിങ്ങളുടെ റിപ്പോർട്ട് തയ്യാറാണ്",
     report_card_title: "MSI അപകട റിപ്പോർട്ട്",
     report_date_label: "തീയതി",
@@ -66,7 +67,13 @@ export const ml: Translation = {
     ai_loading_task_description: "നിങ്ങളുടെ ജോലിയുടെ വിവരണം വിശകലനം ചെയ്യുന്നു...",
     ai_task_analysis_fallback_toast: "AI ജോലി വിശകലന പ്രതികരണം സമയപരിധി കഴിഞ്ഞു. പകരം പ്രാദേശിക fallback ഉപയോഗിക്കുന്നു.",
     ai_question_pruning_fallback_toast: "AI ചോദ്യ തിരഞ്ഞെടുപ്പ് പ്രതികരണം സമയപരിധി കഴിഞ്ഞു. പകരം fallback തുടർചോദ്യങ്ങൾ ഉപയോഗിക്കുന്നു.",
-    ai_fallback_toast_dismiss: "AI fallback അറിയിപ്പ് അടയ്ക്കുക"
+    ai_fallback_toast_dismiss: "AI fallback അറിയിപ്പ് അടയ്ക്കുക",
+    language_title: "നിങ്ങളുടെ ഭാഷ തിരഞ്ഞെടുക്കുക",
+    language_body: "ചോദ്യങ്ങൾ നിങ്ങൾ ഇഷ്ടപ്പെടുന്ന ഭാഷയിൽ കാണിക്കാം. റിപ്പോർട്ട് ഇംഗ്ലീഷിലാണ് തയ്യാറാക്കുന്നത്.",
+    language_label: "ഭാഷ",
+    language_placeholder: "ഒരു ഭാഷ തിരഞ്ഞെടുക്കുക",
+    language_coming_soon: "ഉടൻ വരുന്നു",
+    assessment_no_questions: "കൂടുതൽ ചോദ്യങ്ങൾ ആവശ്യമില്ല."
   },
   sections: {
     intro: "ജോലിയെക്കുറിച്ച്",

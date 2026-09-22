@@ -124,6 +124,9 @@ npm run test:automated
 | AT-100 | `tests/unit/send-report.test.ts` | Unit test | `isWithinPdfSizeCap` enforces the base64 length ceiling. | Payloads under the cap pass; empty and over-cap payloads fail. |
 | AT-101 | `tests/unit/send-report.test.ts` | Unit test | `escapeHtml` neutralizes markup-significant characters before HTML interpolation. | `<`, `>`, `&`, `"`, and `'` are all escaped to their HTML entities. |
 | AT-102 | `tests/unit/send-report.test.ts` | Unit test | `isRateLimited` allows requests under the per-IP limit and blocks beyond it. | The first 5 requests from a client within the window return `false`; the 6th returns `true`. |
+| AT-103 | `tests/unit/translations.test.ts` | Translation coverage test | Every ready language in the selector has a translation bundle, and every bundle is listed in the selector. | No ready language is missing a bundle and no bundle is unregistered in `src/data/languages.ts`. |
+| AT-104 | `tests/unit/translations.test.ts` | Translation coverage test | Each non-English translation defines every English key with non-empty text. | App, section, question, option, and grouped labels all exist for each language, so a newly added English string cannot ship untranslated. |
+| AT-105 | `tests/unit/translations.test.ts` | Translation coverage test | Each non-English translation has no keys that English lacks. | Misspelled or stale keys are reported instead of silently ignored. |
 
 ## Manual Test Cases
 

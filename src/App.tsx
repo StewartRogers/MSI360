@@ -73,6 +73,12 @@ export default function App() {
     return () => window.clearTimeout(timerId);
   }, [activeToast]);
 
+  // Keep the page language in sync so screen readers pronounce translated copy
+  // correctly. Layout direction stays per-screen via the `isRtl` props.
+  useEffect(() => {
+    document.documentElement.lang = language || "en";
+  }, [language]);
+
   const t = translations[language] || translations.en;
   const isRtl = isRtlLanguage(language);
   const selectedLanguage = languages.find((item) => item.code === language) || null;

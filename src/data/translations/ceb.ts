@@ -37,6 +37,7 @@ export const ceb: Translation = {
     email_body: "Isulod ang imong email address kung gusto ka makadawat ug kopya niini nga report. Mahimong molungtad hangtod 15 minutos. Tan-awa ang junk o spam folder kung dili nimo makita ang email sa inbox.",
     email_next_body: "Makita nimo ang final report sa sunod nga screen.",
     email_address_label: "Email address",
+    email_report_send_failed: "Wala namo ma-email ang imong report. Mahimo pa nimo kini i-download sa ubos.",
     report_ready_title: "Andam na ang imong report",
     report_card_title: "MSI risk report",
     report_date_label: "Petsa",
@@ -66,7 +67,13 @@ export const ceb: Translation = {
     ai_loading_task_description: "Gianalisa ang imong paghulagway sa buluhaton...",
     ai_task_analysis_fallback_toast: "Ni-time out ang tubag sa AI task analysis. Gigamit ang lokal nga fallback.",
     ai_question_pruning_fallback_toast: "Ni-time out ang tubag sa AI question pruning. Gigamit ang fallback nga follow-up questions.",
-    ai_fallback_toast_dismiss: "Isira ang AI fallback notice"
+    ai_fallback_toast_dismiss: "Isira ang AI fallback notice",
+    language_title: "Pilia ang Imong Pinulongan",
+    language_body: "Mahimong ipakita ang mga pangutana sa pinulongan nga gusto nimo. Ang report himoon sa English.",
+    language_label: "Pinulongan",
+    language_placeholder: "Pilia ang pinulongan",
+    language_coming_soon: "Hapit na",
+    assessment_no_questions: "Wala nay dugang pangutana nga gikinahanglan."
   },
   sections: {
     intro: "Mahitungod sa trabaho",

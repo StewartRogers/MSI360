@@ -37,6 +37,7 @@ export const pa: Translation = {
     email_body: "ਜੇ ਤੁਸੀਂ ਇਸ ਰਿਪੋਰਟ ਦੀ ਕਾਪੀ ਲੈਣਾ ਚਾਹੁੰਦੇ ਹੋ ਤਾਂ ਆਪਣਾ ਈਮੇਲ ਪਤਾ ਦਰਜ ਕਰੋ। ਇਸ ਵਿੱਚ 15 ਮਿੰਟ ਤੱਕ ਲੱਗ ਸਕਦੇ ਹਨ। ਜੇ ਈਮੇਲ ਇਨਬਾਕਸ ਵਿੱਚ ਨਾ ਵੇਖੋ ਤਾਂ ਕਿਰਪਾ ਕਰਕੇ ਜੰਕ ਜਾਂ ਸਪੈਮ ਫੋਲਡਰ ਜਾਂਚੋ।",
     email_next_body: "ਤੁਸੀਂ ਅਗਲੀ ਸਕ੍ਰੀਨ 'ਤੇ ਅੰਤਿਮ ਰਿਪੋਰਟ ਵੇਖੋਗੇ।",
     email_address_label: "ਈਮੇਲ ਪਤਾ",
+    email_report_send_failed: "ਅਸੀਂ ਤੁਹਾਡੀ ਰਿਪੋਰਟ ਈਮੇਲ ਨਹੀਂ ਕਰ ਸਕੇ। ਤੁਸੀਂ ਫਿਰ ਵੀ ਇਸਨੂੰ ਹੇਠਾਂ ਡਾਊਨਲੋਡ ਕਰ ਸਕਦੇ ਹੋ।",
     report_ready_title: "ਤੁਹਾਡੀ ਰਿਪੋਰਟ ਤਿਆਰ ਹੈ",
     report_card_title: "MSI ਜੋਖਮ ਰਿਪੋਰਟ",
     report_date_label: "ਤਾਰੀਖ",
@@ -66,7 +67,13 @@ export const pa: Translation = {
     ai_loading_task_description: "ਤੁਹਾਡੇ ਕੰਮ ਦੇ ਵੇਰਵੇ ਦਾ ਵਿਸ਼ਲੇਸ਼ਣ ਕੀਤਾ ਜਾ ਰਿਹਾ ਹੈ...",
     ai_task_analysis_fallback_toast: "AI ਕੰਮ ਵਿਸ਼ਲੇਸ਼ਣ ਜਵਾਬ ਦਾ ਸਮਾਂ ਮੁੱਕ ਗਿਆ। ਇਸ ਦੀ ਥਾਂ ਸਥਾਨਕ fallback ਵਰਤਿਆ ਜਾ ਰਿਹਾ ਹੈ।",
     ai_question_pruning_fallback_toast: "AI ਪ੍ਰਸ਼ਨ ਚੋਣ ਜਵਾਬ ਦਾ ਸਮਾਂ ਮੁੱਕ ਗਿਆ। ਇਸ ਦੀ ਥਾਂ fallback ਫਾਲੋ-ਅੱਪ ਪ੍ਰਸ਼ਨ ਵਰਤੇ ਜਾ ਰਹੇ ਹਨ।",
-    ai_fallback_toast_dismiss: "AI fallback ਸੂਚਨਾ ਬੰਦ ਕਰੋ"
+    ai_fallback_toast_dismiss: "AI fallback ਸੂਚਨਾ ਬੰਦ ਕਰੋ",
+    language_title: "ਆਪਣੀ ਭਾਸ਼ਾ ਚੁਣੋ",
+    language_body: "ਸਵਾਲ ਤੁਹਾਡੀ ਪਸੰਦੀਦਾ ਭਾਸ਼ਾ ਵਿੱਚ ਦਿਖਾਏ ਜਾ ਸਕਦੇ ਹਨ। ਰਿਪੋਰਟ ਅੰਗਰੇਜ਼ੀ ਵਿੱਚ ਤਿਆਰ ਕੀਤੀ ਜਾਂਦੀ ਹੈ।",
+    language_label: "ਭਾਸ਼ਾ",
+    language_placeholder: "ਇੱਕ ਭਾਸ਼ਾ ਚੁਣੋ",
+    language_coming_soon: "ਜਲਦੀ ਆ ਰਿਹਾ ਹੈ",
+    assessment_no_questions: "ਹੋਰ ਕਿਸੇ ਸਵਾਲ ਦੀ ਲੋੜ ਨਹੀਂ ਹੈ।"
   },
   sections: {
     intro: "ਕੰਮ ਬਾਰੇ",

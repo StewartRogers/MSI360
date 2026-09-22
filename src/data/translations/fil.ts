@@ -37,6 +37,7 @@ export const fil: Translation = {
     email_body: "Ilagay ang iyong email address kung gusto mong makatanggap ng kopya ng ulat na ito. Maaari itong tumagal nang hanggang 15 minuto. Pakitingnan ang junk o spam folder kung hindi mo makita ang email sa iyong inbox.",
     email_next_body: "Makikita mo ang huling ulat sa susunod na screen.",
     email_address_label: "Email address",
+    email_report_send_failed: "Hindi namin ma-email ang iyong ulat. Maaari mo pa rin itong i-download sa ibaba.",
     report_ready_title: "Handa na ang Iyong Ulat",
     report_card_title: "Ulat sa Panganib ng MSI",
     report_date_label: "Petsa",
@@ -66,7 +67,13 @@ export const fil: Translation = {
     ai_loading_task_description: "Sinusuri ang paglalarawan ng iyong gawain...",
     ai_task_analysis_fallback_toast: "Nag-time out ang tugon ng AI task analysis. Lokal na fallback ang ginagamit sa halip.",
     ai_question_pruning_fallback_toast: "Nag-time out ang tugon ng AI question pruning. Mga fallback na follow-up question ang ginagamit sa halip.",
-    ai_fallback_toast_dismiss: "Isara ang abiso ng AI fallback"
+    ai_fallback_toast_dismiss: "Isara ang abiso ng AI fallback",
+    language_title: "Piliin ang Iyong Wika",
+    language_body: "Maaaring ipakita ang mga tanong sa wikang gusto mo. Ang ulat ay ginagawa sa Ingles.",
+    language_label: "Wika",
+    language_placeholder: "Pumili ng wika",
+    language_coming_soon: "Malapit na",
+    assessment_no_questions: "Wala nang karagdagang tanong na kailangan."
   },
   sections: {
     intro: "Tungkol sa trabaho",

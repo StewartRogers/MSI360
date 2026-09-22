@@ -37,6 +37,7 @@ export const id: Translation = {
     email_body: "Masukkan alamat email jika Anda ingin menerima salinan laporan ini. Proses ini dapat memakan waktu hingga 15 menit. Periksa folder junk atau spam jika email tidak terlihat di kotak masuk.",
     email_next_body: "Anda akan melihat laporan akhir di layar berikutnya.",
     email_address_label: "Alamat email",
+    email_report_send_failed: "Kami tidak dapat mengirim laporan Anda melalui email. Anda tetap dapat mengunduhnya di bawah.",
     report_ready_title: "Laporan Anda siap",
     report_card_title: "Laporan risiko MSI",
     report_date_label: "Tanggal",
@@ -66,7 +67,13 @@ export const id: Translation = {
     ai_loading_task_description: "Menganalisis deskripsi tugas Anda...",
     ai_task_analysis_fallback_toast: "Respons analisis tugas AI kehabisan waktu. Fallback lokal sedang digunakan.",
     ai_question_pruning_fallback_toast: "Respons penyaringan pertanyaan AI kehabisan waktu. Pertanyaan lanjutan fallback sedang digunakan.",
-    ai_fallback_toast_dismiss: "Tutup pemberitahuan fallback AI"
+    ai_fallback_toast_dismiss: "Tutup pemberitahuan fallback AI",
+    language_title: "Pilih Bahasa Anda",
+    language_body: "Pertanyaan dapat ditampilkan dalam bahasa pilihan Anda. Laporan dibuat dalam bahasa Inggris.",
+    language_label: "Bahasa",
+    language_placeholder: "Pilih bahasa",
+    language_coming_soon: "Segera hadir",
+    assessment_no_questions: "Tidak ada pertanyaan tambahan yang diperlukan."
   },
   sections: {
     intro: "Tentang pekerjaan",

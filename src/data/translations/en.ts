@@ -67,7 +67,13 @@ export const en: Translation = {
     ai_loading_task_description: "Analyzing your task description...",
     ai_task_analysis_fallback_toast: "AI task analysis response timed out. Local fallback is being used instead.",
     ai_question_pruning_fallback_toast: "AI question pruning response timed out. Fallback follow-up questions are being used instead.",
-    ai_fallback_toast_dismiss: "Dismiss AI fallback notice"
+    ai_fallback_toast_dismiss: "Dismiss AI fallback notice",
+    language_title: "Choose Your Language",
+    language_body: "Questions can be shown in your preferred language. The report is generated in English.",
+    language_label: "Language",
+    language_placeholder: "Select a language",
+    language_coming_soon: "Coming soon",
+    assessment_no_questions: "No additional questions are needed."
   },
   sections: {
     intro: "About the work",

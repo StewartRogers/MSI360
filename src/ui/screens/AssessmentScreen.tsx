@@ -2,7 +2,7 @@ import { groupImages, optionImages, promptUsesSectionTitle, questionIds, standal
 import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { CheckboxRow, ImageRadioCard, RadioRow } from "../components/AnswerControls";
-import { getActionButtonLabels, getProgressLabel, getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getAppText, getProgressLabel, getQuestionText } from "../../data/translationText";
 import { setGroupAnswerValue, toggleOption, toggleSingleOption } from "../../logic/questionnaire/answerSelection";
 import { isRecord, splitParagraphs } from "../../logic/questionnaire/flow";
 import type { Answer, AnswerValue, Question, QuestionText, Translation } from "../../types";
@@ -33,7 +33,7 @@ export function AssessmentQuestionScreen(props: {
         <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} compact />
         <section className="page page-with-actions">
           <div className="content-block">
-            <h2>No additional questions are needed.</h2>
+            <h2>{getAppText(props.translations, "assessment_no_questions", "No additional questions are needed.")}</h2>
           </div>
           <ActionButtons {...actionLabels} onBack={props.onBack} canContinue={props.canContinue} onContinue={props.onContinue} />
         </section>

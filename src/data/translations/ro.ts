@@ -37,6 +37,7 @@ export const ro: Translation = {
     email_body: "Introdu adresa de e-mail daca doresti sa primesti o copie a acestui raport. Poate dura pana la 15 minute. Verifica folderul junk sau spam daca nu vezi e-mailul in inbox.",
     email_next_body: "Vei vedea raportul final pe ecranul urmator.",
     email_address_label: "Adresa de e-mail",
+    email_report_send_failed: "Nu am putut trimite raportul prin e-mail. Îl puteți descărca în continuare mai jos.",
     report_ready_title: "Raportul tau este gata",
     report_card_title: "Raport de risc MSI",
     report_date_label: "Data",
@@ -66,7 +67,13 @@ export const ro: Translation = {
     ai_loading_task_description: "Se analizează descrierea sarcinii dvs...",
     ai_task_analysis_fallback_toast: "Răspunsul analizei sarcinii cu AI a expirat. Se folosește alternativa locală.",
     ai_question_pruning_fallback_toast: "Răspunsul filtrării întrebărilor cu AI a expirat. Se folosesc întrebări de urmărire alternative.",
-    ai_fallback_toast_dismiss: "Închide notificarea alternativei AI"
+    ai_fallback_toast_dismiss: "Închide notificarea alternativei AI",
+    language_title: "Alegeți limba",
+    language_body: "Întrebările pot fi afișate în limba preferată. Raportul este generat în limba engleză.",
+    language_label: "Limbă",
+    language_placeholder: "Selectați o limbă",
+    language_coming_soon: "În curând",
+    assessment_no_questions: "Nu mai sunt necesare alte întrebări."
   },
   sections: {
     intro: "Despre munca",

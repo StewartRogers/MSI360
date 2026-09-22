@@ -37,6 +37,7 @@ export const hu: Translation = {
     email_body: "Adja meg e-mail címét, ha szeretne másolatot kapni erről a jelentésről. Ez akár 15 percet is igénybe vehet. Ha nem látja az e-mailt a beérkezett üzenetek között, ellenőrizze a levélszemét vagy spam mappát.",
     email_next_body: "A végleges jelentést a következő képernyőn fogja látni.",
     email_address_label: "E-mail cím",
+    email_report_send_failed: "Nem sikerült e-mailben elküldeni a jelentést. Lent továbbra is letöltheti.",
     report_ready_title: "A jelentése elkészült",
     report_card_title: "MSI-kockázati jelentés",
     report_date_label: "Dátum",
@@ -66,7 +67,13 @@ export const hu: Translation = {
     ai_loading_task_description: "A feladatleírás elemzése folyamatban...",
     ai_task_analysis_fallback_toast: "Az AI feladatelemzés válasza időtúllépés miatt megszakadt. Helyette a helyi tartalék működik.",
     ai_question_pruning_fallback_toast: "Az AI kérdésszűrés válasza időtúllépés miatt megszakadt. Helyette tartalék követő kérdések jelennek meg.",
-    ai_fallback_toast_dismiss: "AI tartalék értesítés bezárása"
+    ai_fallback_toast_dismiss: "AI tartalék értesítés bezárása",
+    language_title: "Válassza ki a nyelvet",
+    language_body: "A kérdések az Ön által választott nyelven jeleníthetők meg. A jelentés angol nyelven készül.",
+    language_label: "Nyelv",
+    language_placeholder: "Válasszon nyelvet",
+    language_coming_soon: "Hamarosan",
+    assessment_no_questions: "Nincs szükség további kérdésekre."
   },
   sections: {
     intro: "A munkáról",

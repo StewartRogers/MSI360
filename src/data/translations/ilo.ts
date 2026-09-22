@@ -37,6 +37,7 @@ export const ilo: Translation = {
     email_body: "Ikabil ti email address-mo no kayatmo ti makaawat iti kopia daytoy a report. Mabalin nga agbayag agingga 15 minutos. Kitaem ti junk wenno spam folder no saanmo a makita iti inbox.",
     email_next_body: "Makitatom ti final report iti sumaruno a screen.",
     email_address_label: "Email address",
+    email_report_send_failed: "Saanmi a nai-email ti report-mo. Mabalinmo latta nga i-download iti baba.",
     report_ready_title: "Nakasagana ti Report-mo",
     report_card_title: "MSI Risk Report",
     report_date_label: "Petsa",
@@ -66,7 +67,13 @@ export const ilo: Translation = {
     ai_loading_task_description: "An-analisaren ti deskripsion ti trabahom...",
     ai_task_analysis_fallback_toast: "Nag-time out ti sungbat ti AI task analysis. Mausar ti lokal a fallback.",
     ai_question_pruning_fallback_toast: "Nag-time out ti sungbat ti AI question pruning. Mausar dagiti fallback follow-up questions.",
-    ai_fallback_toast_dismiss: "Isara ti AI fallback notice"
+    ai_fallback_toast_dismiss: "Isara ti AI fallback notice",
+    language_title: "Pilien ti Pagsasao-mo",
+    language_body: "Mabalin a maipakita dagiti saludsod iti pagsasao a kayatmo. Ti report ket maaramid iti Ingles.",
+    language_label: "Pagsasao",
+    language_placeholder: "Agpili iti pagsasao",
+    language_coming_soon: "Umay intono madamdama",
+    assessment_no_questions: "Awanen ti kasapulan a sabali pay a saludsod."
   },
   sections: {
     intro: "Maipapan iti trabaho",

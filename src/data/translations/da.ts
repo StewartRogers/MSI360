@@ -37,6 +37,7 @@ export const da: Translation = {
     email_body: "Indtast din e-mailadresse, hvis du vil modtage en kopi af denne rapport. Det kan tage op til 15 minutter. Tjek junk- eller spam-mappen, hvis du ikke ser e-mailen i indbakken.",
     email_next_body: "Du vil se den endelige rapport på næste skærm.",
     email_address_label: "E-mailadresse",
+    email_report_send_failed: "Vi kunne ikke sende din rapport via e-mail. Du kan stadig downloade den nedenfor.",
     report_ready_title: "Din rapport er klar",
     report_card_title: "MSI-risikorapport",
     report_date_label: "Dato",
@@ -66,7 +67,13 @@ export const da: Translation = {
     ai_loading_task_description: "Analyserer din opgavebeskrivelse...",
     ai_task_analysis_fallback_toast: "AI-opgaveanalysen fik timeout. Lokal fallback bruges i stedet.",
     ai_question_pruning_fallback_toast: "AI-spørgsmålsfiltreringen fik timeout. Fallback-opfølgende spørgsmål bruges i stedet.",
-    ai_fallback_toast_dismiss: "Luk AI-fallbackbesked"
+    ai_fallback_toast_dismiss: "Luk AI-fallbackbesked",
+    language_title: "Vælg dit sprog",
+    language_body: "Spørgsmålene kan vises på dit foretrukne sprog. Rapporten udarbejdes på engelsk.",
+    language_label: "Sprog",
+    language_placeholder: "Vælg et sprog",
+    language_coming_soon: "Kommer snart",
+    assessment_no_questions: "Der er ikke brug for flere spørgsmål."
   },
   sections: {
     intro: "Om arbejdet",

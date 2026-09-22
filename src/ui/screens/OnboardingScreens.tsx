@@ -4,7 +4,7 @@ import { AppHeader } from "../components/AppHeader";
 import { ActionButtons } from "../components/ActionButtons";
 import { RadioRow } from "../components/AnswerControls";
 import { questions } from "../../data/catalog";
-import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getProgressLabel, getQuestionText } from "../../data/translationText";
+import { getActionButtonLabels, getAiLoadingTaskDescriptionLabel, getAnalyzingButtonLabel, getAppText, getProgressLabel, getQuestionText } from "../../data/translationText";
 import { toggleSingleOption } from "../../logic/questionnaire/answerSelection";
 import type { Answer, Language, Translation } from "../../types";
 
@@ -83,11 +83,11 @@ export function LanguageScreen(props: {
       <AppHeader tone="blue" progressStep={props.progressStep} totalSteps={props.totalSteps} progressLabel={getProgressLabel(props.translations, props.progressStep, props.totalSteps)} />
       <section className="page page-with-actions language-page">
         <div className="content-block">
-          <h2>Choose Your Language</h2>
-          <p className="body-copy">Questions can be shown in your preferred language. The report is generated in English.</p>
+          <h2>{getAppText(props.translations, "language_title", "Choose Your Language")}</h2>
+          <p className="body-copy">{getAppText(props.translations, "language_body", "Questions can be shown in your preferred language. The report is generated in English.")}</p>
           <div className="language-select-block">
             <label className="field-label" htmlFor="language-select">
-              Language
+              {getAppText(props.translations, "language_label", "Language")}
             </label>
             <button
               id="language-select"
@@ -97,7 +97,7 @@ export function LanguageScreen(props: {
               aria-expanded={isOpen}
               onClick={() => setIsOpen((open) => !open)}
             >
-              {props.selectedLanguage ? renderLanguageLabel(props.selectedLanguage) : <span>Select a language</span>}
+              {props.selectedLanguage ? renderLanguageLabel(props.selectedLanguage) : <span>{getAppText(props.translations, "language_placeholder", "Select a language")}</span>}
             </button>
             {isOpen && (
               <div className="language-menu" role="listbox" aria-labelledby="language-select">
@@ -115,7 +115,7 @@ export function LanguageScreen(props: {
                       onClick={() => handleLanguageSelect(language)}
                     >
                       {renderLanguageLabel(language)}
-                      {isUnavailable && <span className="language-unavailable-label">Coming soon</span>}
+                      {isUnavailable && <span className="language-unavailable-label">{getAppText(props.translations, "language_coming_soon", "Coming soon")}</span>}
                     </button>
                   );
                 })}

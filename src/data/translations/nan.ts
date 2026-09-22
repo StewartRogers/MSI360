@@ -37,6 +37,7 @@ export const nan: Translation = {
     email_body: "若你欲收著這份報告副本，請輸入電郵地址。這可能需要最多 15 分鐘。若收件匣看無，請檢查垃圾郵件。",
     email_next_body: "你會佇下一頁看著最終報告。",
     email_address_label: "電郵地址",
+    email_report_send_failed: "阮無法度用電郵寄你的報告。你猶原會使佇下跤下載。",
     report_ready_title: "你的報告已經準備好",
     report_card_title: "MSI 風險報告",
     report_date_label: "日期",
@@ -66,7 +67,13 @@ export const nan: Translation = {
     ai_loading_task_description: "咧分析你的工作描述...",
     ai_task_analysis_fallback_toast: "AI 工作分析回應逾時。改用本機備援。",
     ai_question_pruning_fallback_toast: "AI 問題篩選回應逾時。改用備援追問問題。",
-    ai_fallback_toast_dismiss: "關閉 AI 備援通知"
+    ai_fallback_toast_dismiss: "關閉 AI 備援通知",
+    language_title: "揀你的語言",
+    language_body: "問題會使用你佮意的語言顯示。報告是用英文產生。",
+    language_label: "語言",
+    language_placeholder: "揀一種語言",
+    language_coming_soon: "緊來矣",
+    assessment_no_questions: "毋免閣回答其他問題。"
   },
   sections: {
     intro: "關於工作",

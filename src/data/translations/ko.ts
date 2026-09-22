@@ -37,6 +37,7 @@ export const ko: Translation = {
     email_body: "이 보고서 사본을 받고 싶다면 이메일 주소를 입력하세요. 최대 15분이 걸릴 수 있습니다. 받은 편지함에 이메일이 보이지 않으면 정크 또는 스팸 폴더를 확인하세요.",
     email_next_body: "다음 화면에서 최종 보고서를 볼 수 있습니다.",
     email_address_label: "이메일 주소",
+    email_report_send_failed: "보고서를 이메일로 보내지 못했습니다. 아래에서 계속 다운로드할 수 있습니다.",
     report_ready_title: "보고서가 준비되었습니다",
     report_card_title: "MSI 위험 보고서",
     report_date_label: "날짜",
@@ -66,7 +67,13 @@ export const ko: Translation = {
     ai_loading_task_description: "작업 설명을 분석하는 중...",
     ai_task_analysis_fallback_toast: "AI 작업 분석 응답 시간이 초과되었습니다. 대신 로컬 대체 기능을 사용합니다.",
     ai_question_pruning_fallback_toast: "AI 질문 선별 응답 시간이 초과되었습니다. 대신 대체 후속 질문을 사용합니다.",
-    ai_fallback_toast_dismiss: "AI 대체 알림 닫기"
+    ai_fallback_toast_dismiss: "AI 대체 알림 닫기",
+    language_title: "언어 선택",
+    language_body: "질문은 원하는 언어로 표시될 수 있습니다. 보고서는 영어로 생성됩니다.",
+    language_label: "언어",
+    language_placeholder: "언어를 선택하세요",
+    language_coming_soon: "곧 제공 예정",
+    assessment_no_questions: "추가 질문이 필요하지 않습니다."
   },
   sections: {
     intro: "작업 정보",

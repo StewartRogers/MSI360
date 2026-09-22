@@ -37,6 +37,7 @@ export const fr: Translation = {
     email_body: "Entrez votre adresse courriel si vous souhaitez recevoir une copie de ce rapport. Cela peut prendre jusqu'à 15 minutes. Vérifiez votre dossier de courrier indésirable si vous ne voyez pas le courriel dans votre boîte de réception.",
     email_next_body: "Vous verrez le rapport final à l'écran suivant.",
     email_address_label: "Adresse courriel",
+    email_report_send_failed: "Nous n'avons pas pu envoyer votre rapport par courriel. Vous pouvez toujours le télécharger ci-dessous.",
     report_ready_title: "Votre rapport est prêt",
     report_card_title: "Rapport de risque MSI",
     report_date_label: "Date",
@@ -66,7 +67,13 @@ export const fr: Translation = {
     ai_loading_task_description: "Analyse de la description de votre tâche...",
     ai_task_analysis_fallback_toast: "La réponse de l'analyse de tâche par IA a expiré. La solution locale de secours est utilisée.",
     ai_question_pruning_fallback_toast: "La réponse de sélection des questions par IA a expiré. Des questions de suivi de secours sont utilisées.",
-    ai_fallback_toast_dismiss: "Fermer l'avis de secours IA"
+    ai_fallback_toast_dismiss: "Fermer l'avis de secours IA",
+    language_title: "Choisissez votre langue",
+    language_body: "Les questions peuvent s'afficher dans la langue de votre choix. Le rapport est produit en anglais.",
+    language_label: "Langue",
+    language_placeholder: "Sélectionnez une langue",
+    language_coming_soon: "Bientôt disponible",
+    assessment_no_questions: "Aucune question supplémentaire n'est nécessaire."
   },
   sections: {
     intro: "À propos du travail",

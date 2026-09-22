@@ -37,6 +37,7 @@ export const zhHans: Translation = {
     email_body: "如果你想收到此报告的副本，请输入电子邮件地址。这可能需要最多15分钟。如果收件箱中没有看到邮件，请检查垃圾邮件或垃圾箱文件夹。",
     email_next_body: "你将在下一个屏幕看到最终报告。",
     email_address_label: "电子邮件地址",
+    email_report_send_failed: "我们无法通过电子邮件发送您的报告。您仍可以在下方下载。",
     report_ready_title: "你的报告已准备好",
     report_card_title: "MSI 风险报告",
     report_date_label: "日期",
@@ -66,7 +67,13 @@ export const zhHans: Translation = {
     ai_loading_task_description: "正在分析您的任务描述...",
     ai_task_analysis_fallback_toast: "AI 任务分析响应超时。正在改用本地备用方案。",
     ai_question_pruning_fallback_toast: "AI 问题筛选响应超时。正在改用备用追问问题。",
-    ai_fallback_toast_dismiss: "关闭 AI 备用通知"
+    ai_fallback_toast_dismiss: "关闭 AI 备用通知",
+    language_title: "选择您的语言",
+    language_body: "问题可以用您偏好的语言显示。报告以英文生成。",
+    language_label: "语言",
+    language_placeholder: "请选择语言",
+    language_coming_soon: "即将推出",
+    assessment_no_questions: "无需回答其他问题。"
   },
   sections: {
     intro: "关于工作",

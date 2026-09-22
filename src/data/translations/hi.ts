@@ -37,6 +37,7 @@ export const hi: Translation = {
     email_body: "यदि आप इस रिपोर्ट की एक प्रति प्राप्त करना चाहते हैं, तो अपना ईमेल पता दर्ज करें। इसमें 15 मिनट तक लग सकते हैं। यदि ईमेल इनबॉक्स में न दिखे, तो जंक या स्पैम फ़ोल्डर देखें।",
     email_next_body: "आप अगली स्क्रीन पर अंतिम रिपोर्ट देखेंगे।",
     email_address_label: "ईमेल पता",
+    email_report_send_failed: "हम आपकी रिपोर्ट ईमेल नहीं कर सके। आप अब भी इसे नीचे डाउनलोड कर सकते हैं।",
     report_ready_title: "आपकी रिपोर्ट तैयार है",
     report_card_title: "MSI जोखिम रिपोर्ट",
     report_date_label: "तारीख",
@@ -66,7 +67,13 @@ export const hi: Translation = {
     ai_loading_task_description: "आपके कार्य विवरण का विश्लेषण किया जा रहा है...",
     ai_task_analysis_fallback_toast: "AI कार्य विश्लेषण प्रतिक्रिया का समय समाप्त हो गया। इसके बजाय स्थानीय fallback का उपयोग किया जा रहा है।",
     ai_question_pruning_fallback_toast: "AI प्रश्न चयन प्रतिक्रिया का समय समाप्त हो गया। इसके बजाय fallback अनुवर्ती प्रश्नों का उपयोग किया जा रहा है।",
-    ai_fallback_toast_dismiss: "AI fallback सूचना बंद करें"
+    ai_fallback_toast_dismiss: "AI fallback सूचना बंद करें",
+    language_title: "अपनी भाषा चुनें",
+    language_body: "प्रश्न आपकी पसंदीदा भाषा में दिखाए जा सकते हैं। रिपोर्ट अंग्रेज़ी में तैयार की जाती है।",
+    language_label: "भाषा",
+    language_placeholder: "एक भाषा चुनें",
+    language_coming_soon: "जल्द आ रहा है",
+    assessment_no_questions: "किसी अतिरिक्त प्रश्न की आवश्यकता नहीं है।"
   },
   sections: {
     intro: "काम के बारे में",

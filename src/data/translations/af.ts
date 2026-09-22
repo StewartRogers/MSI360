@@ -37,6 +37,7 @@ export const af: Translation = {
     email_body: "Voer u e-posadres in as u 'n kopie van hierdie verslag wil ontvang. Dit kan tot 15 minute neem. Gaan u gemorspos- of spam-lêergids na as u die e-pos nie in u inkassie sien nie.",
     email_next_body: "U sal die finale verslag op die volgende skerm sien.",
     email_address_label: "E-posadres",
+    email_report_send_failed: "Ons kon nie jou verslag e-pos nie. Jy kan dit steeds hieronder aflaai.",
     report_ready_title: "U verslag is gereed",
     report_card_title: "MSI-risikoverslag",
     report_date_label: "Datum",
@@ -66,7 +67,13 @@ export const af: Translation = {
     ai_loading_task_description: "Ontleed jou taakbeskrywing...",
     ai_task_analysis_fallback_toast: "KI-taakanalise het uitgetel. Plaaslike rugsteun word eerder gebruik.",
     ai_question_pruning_fallback_toast: "KI-vraagfiltrering het uitgetel. Rugsteun-opvolgvrae word eerder gebruik.",
-    ai_fallback_toast_dismiss: "Maak KI-rugsteunkennisgewing toe"
+    ai_fallback_toast_dismiss: "Maak KI-rugsteunkennisgewing toe",
+    language_title: "Kies jou taal",
+    language_body: "Vrae kan in jou voorkeurtaal gewys word. Die verslag word in Engels opgestel.",
+    language_label: "Taal",
+    language_placeholder: "Kies 'n taal",
+    language_coming_soon: "Kom binnekort",
+    assessment_no_questions: "Geen bykomende vrae is nodig nie."
   },
   sections: {
     intro: "Oor die werk",

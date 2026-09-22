@@ -37,6 +37,7 @@ export const yue: Translation = {
     email_body: "如果你想收到呢份報告嘅副本，請輸入電郵地址。可能需要最多15分鐘。如果收件箱見唔到電郵，請查看垃圾郵件資料夾。",
     email_next_body: "你會喺下一個畫面睇到最終報告。",
     email_address_label: "電郵地址",
+    email_report_send_failed: "我哋未能用電郵寄出你嘅報告。你仍然可以喺下面下載。",
     report_ready_title: "你嘅報告已準備好",
     report_card_title: "MSI 風險報告",
     report_date_label: "日期",
@@ -66,7 +67,13 @@ export const yue: Translation = {
     ai_loading_task_description: "正在分析你嘅工作描述...",
     ai_task_analysis_fallback_toast: "AI 工作分析回應逾時。現正改用本機備援。",
     ai_question_pruning_fallback_toast: "AI 問題篩選回應逾時。現正改用備援跟進問題。",
-    ai_fallback_toast_dismiss: "關閉 AI 備援通知"
+    ai_fallback_toast_dismiss: "關閉 AI 備援通知",
+    language_title: "揀選你嘅語言",
+    language_body: "問題可以用你偏好嘅語言顯示。報告會以英文產生。",
+    language_label: "語言",
+    language_placeholder: "揀選語言",
+    language_coming_soon: "即將推出",
+    assessment_no_questions: "唔需要再答其他問題。"
   },
   sections: {
     intro: "關於工作",

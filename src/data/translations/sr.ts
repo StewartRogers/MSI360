@@ -37,6 +37,7 @@ export const sr: Translation = {
     email_body: "Унесите адресу е-поште ако желите да примите копију овог извештаја. То може потрајати до 15 минута. Проверите фасциклу за нежељену пошту ако не видите поруку у пријемном сандучету.",
     email_next_body: "Коначни извештај ћете видети на следећем екрану.",
     email_address_label: "Адреса е-поште",
+    email_report_send_failed: "Нисмо успели да пошаљемо ваш извештај е-поштом. И даље можете да га преузмете испод.",
     report_ready_title: "Ваш извештај је спреман",
     report_card_title: "Извештај о MSI ризику",
     report_date_label: "Датум",
@@ -66,7 +67,13 @@ export const sr: Translation = {
     ai_loading_task_description: "Анализира се опис вашег задатка...",
     ai_task_analysis_fallback_toast: "Одговор AI анализе задатка је истекао. Уместо тога користи се локална замена.",
     ai_question_pruning_fallback_toast: "Одговор AI филтрирања питања је истекао. Уместо тога користе се замјенска додатна питања.",
-    ai_fallback_toast_dismiss: "Затвори AI обавештење о замени"
+    ai_fallback_toast_dismiss: "Затвори AI обавештење о замени",
+    language_title: "Изаберите језик",
+    language_body: "Питања могу бити приказана на језику који желите. Извештај се прави на енглеском језику.",
+    language_label: "Језик",
+    language_placeholder: "Изаберите језик",
+    language_coming_soon: "Ускоро",
+    assessment_no_questions: "Нису потребна додатна питања."
   },
   sections: {
     intro: "О раду",

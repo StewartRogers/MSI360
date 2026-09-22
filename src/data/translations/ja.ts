@@ -37,6 +37,7 @@ export const ja: Translation = {
     email_body: "このレポートのコピーを受け取りたい場合は、メールアドレスを入力してください。最大15分かかる場合があります。受信トレイにメールが見当たらない場合は、迷惑メールフォルダーを確認してください。",
     email_next_body: "次の画面で最終レポートを確認できます。",
     email_address_label: "メールアドレス",
+    email_report_send_failed: "レポートをメールで送信できませんでした。下のボタンから引き続きダウンロードできます。",
     report_ready_title: "レポートの準備ができました",
     report_card_title: "MSIリスクレポート",
     report_date_label: "日付",
@@ -66,7 +67,13 @@ export const ja: Translation = {
     ai_loading_task_description: "作業内容を分析しています...",
     ai_task_analysis_fallback_toast: "AIによる作業分析の応答がタイムアウトしました。代わりにローカルの代替処理を使用しています。",
     ai_question_pruning_fallback_toast: "AIによる質問絞り込みの応答がタイムアウトしました。代替のフォローアップ質問を使用しています。",
-    ai_fallback_toast_dismiss: "AI代替通知を閉じる"
+    ai_fallback_toast_dismiss: "AI代替通知を閉じる",
+    language_title: "言語を選択してください",
+    language_body: "質問はご希望の言語で表示できます。レポートは英語で作成されます。",
+    language_label: "言語",
+    language_placeholder: "言語を選択",
+    language_coming_soon: "近日公開",
+    assessment_no_questions: "追加の質問はありません。"
   },
   sections: {
     intro: "作業について",

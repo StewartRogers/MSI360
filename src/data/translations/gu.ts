@@ -37,6 +37,7 @@ export const gu: Translation = {
     email_body: "જો તમે આ રિપોર્ટની નકલ મેળવવા માંગતા હોવ તો તમારું ઇમેઇલ સરનામું દાખલ કરો. તેમાં 15 મિનિટ સુધી લાગી શકે છે. જો ઇમેઇલ ઇનબોક્સમાં ન દેખાય તો જંક અથવા સ્પામ ફોલ્ડર તપાસો.",
     email_next_body: "તમે અંતિમ રિપોર્ટ આગળની સ્ક્રીન પર જોશો.",
     email_address_label: "ઇમેઇલ સરનામું",
+    email_report_send_failed: "અમે તમારો રિપોર્ટ ઇમેઇલ કરી શક્યા નહીં. તમે હજુ પણ તેને નીચે ડાઉનલોડ કરી શકો છો.",
     report_ready_title: "તમારો રિપોર્ટ તૈયાર છે",
     report_card_title: "MSI જોખમ રિપોર્ટ",
     report_date_label: "તારીખ",
@@ -66,7 +67,13 @@ export const gu: Translation = {
     ai_loading_task_description: "તમારા કાર્યના વર્ણનનું વિશ્લેષણ થઈ રહ્યું છે...",
     ai_task_analysis_fallback_toast: "AI કાર્ય વિશ્લેષણનો જવાબ સમયમર્યાદા પાર કરી ગયો. તેના બદલે સ્થાનિક fallback વપરાઈ રહ્યું છે.",
     ai_question_pruning_fallback_toast: "AI પ્રશ્ન પસંદગીનો જવાબ સમયમર્યાદા પાર કરી ગયો. તેના બદલે fallback અનુસરણ પ્રશ્નો વપરાઈ રહ્યા છે.",
-    ai_fallback_toast_dismiss: "AI fallback સૂચના બંધ કરો"
+    ai_fallback_toast_dismiss: "AI fallback સૂચના બંધ કરો",
+    language_title: "તમારી ભાષા પસંદ કરો",
+    language_body: "પ્રશ્નો તમારી પસંદગીની ભાષામાં બતાવી શકાય છે. રિપોર્ટ અંગ્રેજીમાં તૈયાર થાય છે.",
+    language_label: "ભાષા",
+    language_placeholder: "એક ભાષા પસંદ કરો",
+    language_coming_soon: "ટૂંક સમયમાં",
+    assessment_no_questions: "વધુ કોઈ પ્રશ્નોની જરૂર નથી."
   },
   sections: {
     intro: "કામ વિશે",

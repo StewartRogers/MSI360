@@ -37,6 +37,7 @@ export const nl: Translation = {
     email_body: "Voer je e-mailadres in als je een kopie van dit rapport wilt ontvangen. Dit kan tot 15 minuten duren. Controleer je map met ongewenste e-mail of spam als je de e-mail niet in je inbox ziet.",
     email_next_body: "Je ziet het definitieve rapport op het volgende scherm.",
     email_address_label: "E-mailadres",
+    email_report_send_failed: "We konden uw rapport niet per e-mail verzenden. U kunt het hieronder nog steeds downloaden.",
     report_ready_title: "Je rapport is klaar",
     report_card_title: "MSI-risicorapport",
     report_date_label: "Datum",
@@ -66,7 +67,13 @@ export const nl: Translation = {
     ai_loading_task_description: "Uw taakbeschrijving wordt geanalyseerd...",
     ai_task_analysis_fallback_toast: "De AI-taakanalyse reageerde niet op tijd. De lokale fallback wordt gebruikt.",
     ai_question_pruning_fallback_toast: "De AI-vraagselectie reageerde niet op tijd. Fallback-vervolgvragen worden gebruikt.",
-    ai_fallback_toast_dismiss: "AI-fallbackmelding sluiten"
+    ai_fallback_toast_dismiss: "AI-fallbackmelding sluiten",
+    language_title: "Kies uw taal",
+    language_body: "Vragen kunnen in uw voorkeurstaal worden weergegeven. Het rapport wordt in het Engels gemaakt.",
+    language_label: "Taal",
+    language_placeholder: "Selecteer een taal",
+    language_coming_soon: "Binnenkort beschikbaar",
+    assessment_no_questions: "Er zijn geen extra vragen nodig."
   },
   sections: {
     intro: "Over het werk",

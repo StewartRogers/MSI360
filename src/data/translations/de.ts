@@ -37,6 +37,7 @@ export const de: Translation = {
     email_body: "Geben Sie Ihre E-Mail-Adresse ein, wenn Sie eine Kopie dieses Berichts erhalten möchten. Dies kann bis zu 15 Minuten dauern. Prüfen Sie Ihren Junk- oder Spam-Ordner, wenn Sie die E-Mail nicht im Posteingang sehen.",
     email_next_body: "Den endgültigen Bericht sehen Sie auf dem nächsten Bildschirm.",
     email_address_label: "E-Mail-Adresse",
+    email_report_send_failed: "Wir konnten Ihren Bericht nicht per E-Mail senden. Sie können ihn unten trotzdem herunterladen.",
     report_ready_title: "Ihr Bericht ist bereit",
     report_card_title: "MSI-Risikobericht",
     report_date_label: "Datum",
@@ -66,7 +67,13 @@ export const de: Translation = {
     ai_loading_task_description: "Ihre Aufgabenbeschreibung wird analysiert...",
     ai_task_analysis_fallback_toast: "Die KI-Aufgabenanalyse hat nicht rechtzeitig geantwortet. Stattdessen wird die lokale Ausweichlösung verwendet.",
     ai_question_pruning_fallback_toast: "Die KI-Fragenauswahl hat nicht rechtzeitig geantwortet. Stattdessen werden Ausweich-Folgefragen verwendet.",
-    ai_fallback_toast_dismiss: "KI-Ausweichhinweis schließen"
+    ai_fallback_toast_dismiss: "KI-Ausweichhinweis schließen",
+    language_title: "Wählen Sie Ihre Sprache",
+    language_body: "Die Fragen können in Ihrer bevorzugten Sprache angezeigt werden. Der Bericht wird auf Englisch erstellt.",
+    language_label: "Sprache",
+    language_placeholder: "Sprache auswählen",
+    language_coming_soon: "Demnächst verfügbar",
+    assessment_no_questions: "Es sind keine weiteren Fragen erforderlich."
   },
   sections: {
     intro: "Über die Arbeit",

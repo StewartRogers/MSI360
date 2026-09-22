@@ -37,6 +37,7 @@ export const prs: Translation = {
     email_body: "اگر می‌خواهید کاپی این گزارش را دریافت کنید، آدرس ایمیل خود را وارد کنید. این کار ممکن است تا 15 دقیقه طول بکشد. اگر ایمیل را در صندوق ورودی نمی‌بینید، پوشه هرزنامه یا اسپم را بررسی کنید.",
     email_next_body: "گزارش نهایی را در صفحه بعد خواهید دید.",
     email_address_label: "آدرس ایمیل",
+    email_report_send_failed: "نتوانستیم گزارش شما را ایمیل کنیم. هنوز هم می‌توانید آن را در پایین دانلود کنید.",
     report_ready_title: "گزارش شما آماده است",
     report_card_title: "گزارش خطر MSI",
     report_date_label: "تاریخ",
@@ -66,7 +67,13 @@ export const prs: Translation = {
     ai_loading_task_description: "در حال تحلیل شرح وظیفه شما...",
     ai_task_analysis_fallback_toast: "پاسخ تحلیل وظیفه با هوش مصنوعی به پایان زمان رسید. به جای آن از پشتیبان محلی استفاده می‌شود.",
     ai_question_pruning_fallback_toast: "پاسخ پالایش پرسش‌ها با هوش مصنوعی به پایان زمان رسید. به جای آن از پرسش‌های پیگیری پشتیبان استفاده می‌شود.",
-    ai_fallback_toast_dismiss: "بستن اعلان پشتیبان هوش مصنوعی"
+    ai_fallback_toast_dismiss: "بستن اعلان پشتیبان هوش مصنوعی",
+    language_title: "زبان خود را انتخاب کنید",
+    language_body: "سوال‌ها می‌توانند به زبان دلخواه شما نشان داده شوند. گزارش به زبان انگلیسی تهیه می‌شود.",
+    language_label: "زبان",
+    language_placeholder: "یک زبان را انتخاب کنید",
+    language_coming_soon: "به زودی",
+    assessment_no_questions: "به سوال‌های بیشتر ضرورت نیست."
   },
   sections: {
     intro: "درباره کار",

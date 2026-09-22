@@ -37,6 +37,7 @@ export const cs: Translation = {
     email_body: "Zadejte svou e-mailovou adresu, pokud chcete obdržet kopii této zprávy. Může to trvat až 15 minut. Pokud e-mail nevidíte v doručené poště, zkontrolujte složku nevyžádané pošty nebo spamu.",
     email_next_body: "Konečnou zprávu uvidíte na další obrazovce.",
     email_address_label: "E-mailová adresa",
+    email_report_send_failed: "Zprávu se nepodařilo odeslat e-mailem. Stále si ji můžete stáhnout níže.",
     report_ready_title: "Vaše zpráva je připravena",
     report_card_title: "Zpráva o riziku MSI",
     report_date_label: "Datum",
@@ -66,7 +67,13 @@ export const cs: Translation = {
     ai_loading_task_description: "Analyzuje se popis vašeho úkolu...",
     ai_task_analysis_fallback_toast: "Odpověď AI analýzy úkolu vypršela. Místo toho se používá místní záloha.",
     ai_question_pruning_fallback_toast: "Odpověď AI filtrování otázek vypršela. Místo toho se používají záložní doplňující otázky.",
-    ai_fallback_toast_dismiss: "Zavřít upozornění na zálohu AI"
+    ai_fallback_toast_dismiss: "Zavřít upozornění na zálohu AI",
+    language_title: "Vyberte jazyk",
+    language_body: "Otázky lze zobrazit ve vámi preferovaném jazyce. Zpráva se vytváří v angličtině.",
+    language_label: "Jazyk",
+    language_placeholder: "Vyberte jazyk",
+    language_coming_soon: "Již brzy",
+    assessment_no_questions: "Nejsou potřeba žádné další otázky."
   },
   sections: {
     intro: "O práci",

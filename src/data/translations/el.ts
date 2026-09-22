@@ -37,6 +37,7 @@ export const el: Translation = {
     email_body: "Εισαγάγετε τη διεύθυνση email σας αν θέλετε να λάβετε αντίγραφο αυτής της αναφοράς. Αυτό μπορεί να διαρκέσει έως 15 λεπτά. Ελέγξτε τον φάκελο ανεπιθύμητης αλληλογραφίας αν δεν δείτε το email στα εισερχόμενα.",
     email_next_body: "Θα δείτε την τελική αναφορά στην επόμενη οθόνη.",
     email_address_label: "Διεύθυνση email",
+    email_report_send_failed: "Δεν ήταν δυνατή η αποστολή της αναφοράς σας μέσω email. Μπορείτε ακόμη να τη λάβετε παρακάτω.",
     report_ready_title: "Η αναφορά σας είναι έτοιμη",
     report_card_title: "Αναφορά κινδύνου MSI",
     report_date_label: "Ημερομηνία",
@@ -66,7 +67,13 @@ export const el: Translation = {
     ai_loading_task_description: "Αναλύεται η περιγραφή της εργασίας σας...",
     ai_task_analysis_fallback_toast: "Η απόκριση της ανάλυσης εργασίας AI έληξε. Χρησιμοποιείται η τοπική εναλλακτική λύση.",
     ai_question_pruning_fallback_toast: "Η απόκριση της επιλογής ερωτήσεων AI έληξε. Χρησιμοποιούνται εναλλακτικές συμπληρωματικές ερωτήσεις.",
-    ai_fallback_toast_dismiss: "Κλείσιμο ειδοποίησης εναλλακτικής AI"
+    ai_fallback_toast_dismiss: "Κλείσιμο ειδοποίησης εναλλακτικής AI",
+    language_title: "Επιλέξτε τη γλώσσα σας",
+    language_body: "Οι ερωτήσεις μπορούν να εμφανίζονται στη γλώσσα της προτίμησής σας. Η αναφορά δημιουργείται στα αγγλικά.",
+    language_label: "Γλώσσα",
+    language_placeholder: "Επιλέξτε γλώσσα",
+    language_coming_soon: "Σύντομα διαθέσιμο",
+    assessment_no_questions: "Δεν χρειάζονται επιπλέον ερωτήσεις."
   },
   sections: {
     intro: "Σχετικά με την εργασία",

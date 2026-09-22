@@ -37,6 +37,7 @@ export const ur: Translation = {
     email_body: "اگر آپ اس رپورٹ کی کاپی وصول کرنا چاہتے ہیں تو اپنا ای میل پتہ درج کریں۔ اس میں 15 منٹ تک لگ سکتے ہیں۔ اگر ای میل ان باکس میں نظر نہ آئے تو جنک یا اسپام فولڈر دیکھیں۔",
     email_next_body: "حتمی رپورٹ آپ کو اگلی اسکرین پر نظر آئے گی۔",
     email_address_label: "ای میل پتہ",
+    email_report_send_failed: "ہم آپ کی رپورٹ ای میل نہیں کر سکے۔ آپ اب بھی اسے نیچے سے ڈاؤن لوڈ کر سکتے ہیں۔",
     report_ready_title: "آپ کی رپورٹ تیار ہے",
     report_card_title: "MSI خطرے کی رپورٹ",
     report_date_label: "تاریخ",
@@ -66,7 +67,13 @@ export const ur: Translation = {
     ai_loading_task_description: "آپ کے کام کی تفصیل کا تجزیہ کیا جا رہا ہے...",
     ai_task_analysis_fallback_toast: "AI کام کے تجزیے کا جواب وقت ختم ہونے پر رک گیا۔ اس کے بجائے مقامی fallback استعمال کیا جا رہا ہے۔",
     ai_question_pruning_fallback_toast: "AI سوالات چھانٹنے کا جواب وقت ختم ہونے پر رک گیا۔ اس کے بجائے fallback فالو اپ سوالات استعمال کیے جا رہے ہیں۔",
-    ai_fallback_toast_dismiss: "AI fallback اطلاع بند کریں"
+    ai_fallback_toast_dismiss: "AI fallback اطلاع بند کریں",
+    language_title: "اپنی زبان منتخب کریں",
+    language_body: "سوالات آپ کی پسندیدہ زبان میں دکھائے جا سکتے ہیں۔ رپورٹ انگریزی میں تیار کی جاتی ہے۔",
+    language_label: "زبان",
+    language_placeholder: "ایک زبان منتخب کریں",
+    language_coming_soon: "جلد آ رہا ہے",
+    assessment_no_questions: "مزید کسی سوال کی ضرورت نہیں ہے۔"
   },
   sections: {
     intro: "کام کے بارے میں",

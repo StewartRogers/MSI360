@@ -37,6 +37,7 @@ export const ar: Translation = {
     email_body: "أدخل عنوان بريدك الإلكتروني إذا كنت ترغب في تلقي نسخة من هذا التقرير. قد يستغرق ذلك حتى 15 دقيقة. يرجى التحقق من مجلد البريد غير الهام أو العشوائي إذا لم تجد الرسالة في صندوق الوارد.",
     email_next_body: "سترى التقرير النهائي في الشاشة التالية.",
     email_address_label: "عنوان البريد الإلكتروني",
+    email_report_send_failed: "تعذّر علينا إرسال تقريرك بالبريد الإلكتروني. لا يزال بإمكانك تنزيله أدناه.",
     report_ready_title: "تقريرك جاهز",
     report_card_title: "تقرير خطر MSI",
     report_date_label: "التاريخ",
@@ -66,7 +67,13 @@ export const ar: Translation = {
     ai_loading_task_description: "جار تحليل وصف مهمتك...",
     ai_task_analysis_fallback_toast: "انتهت مهلة استجابة تحليل المهمة بالذكاء الاصطناعي. يتم استخدام البديل المحلي بدلا من ذلك.",
     ai_question_pruning_fallback_toast: "انتهت مهلة استجابة تقليص الأسئلة بالذكاء الاصطناعي. يتم استخدام أسئلة المتابعة البديلة بدلا من ذلك.",
-    ai_fallback_toast_dismiss: "إغلاق إشعار بديل الذكاء الاصطناعي"
+    ai_fallback_toast_dismiss: "إغلاق إشعار بديل الذكاء الاصطناعي",
+    language_title: "اختر لغتك",
+    language_body: "يمكن عرض الأسئلة باللغة التي تفضلها. يتم إنشاء التقرير باللغة الإنجليزية.",
+    language_label: "اللغة",
+    language_placeholder: "اختر لغة",
+    language_coming_soon: "قريبًا",
+    assessment_no_questions: "لا حاجة إلى أسئلة إضافية."
   },
   sections: {
     intro: "حول العمل",

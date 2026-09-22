@@ -37,6 +37,7 @@ export const vi: Translation = {
     email_body: "Nhập địa chỉ email nếu bạn muốn nhận một bản sao của báo cáo này. Việc này có thể mất tối đa 15 phút. Vui lòng kiểm tra thư rác hoặc spam nếu bạn không thấy email trong hộp thư đến.",
     email_next_body: "Bạn sẽ thấy báo cáo cuối cùng ở màn hình tiếp theo.",
     email_address_label: "Địa chỉ email",
+    email_report_send_failed: "Chúng tôi không thể gửi báo cáo của bạn qua email. Bạn vẫn có thể tải xuống bên dưới.",
     report_ready_title: "Báo cáo của bạn đã sẵn sàng",
     report_card_title: "Báo cáo nguy cơ MSI",
     report_date_label: "Ngày",
@@ -66,7 +67,13 @@ export const vi: Translation = {
     ai_loading_task_description: "Đang phân tích mô tả công việc của bạn...",
     ai_task_analysis_fallback_toast: "Phản hồi phân tích công việc bằng AI đã hết thời gian chờ. Đang sử dụng phương án dự phòng cục bộ.",
     ai_question_pruning_fallback_toast: "Phản hồi sàng lọc câu hỏi bằng AI đã hết thời gian chờ. Đang sử dụng các câu hỏi theo dõi dự phòng.",
-    ai_fallback_toast_dismiss: "Đóng thông báo dự phòng AI"
+    ai_fallback_toast_dismiss: "Đóng thông báo dự phòng AI",
+    language_title: "Chọn ngôn ngữ của bạn",
+    language_body: "Các câu hỏi có thể được hiển thị bằng ngôn ngữ bạn muốn. Báo cáo được tạo bằng tiếng Anh.",
+    language_label: "Ngôn ngữ",
+    language_placeholder: "Chọn một ngôn ngữ",
+    language_coming_soon: "Sắp ra mắt",
+    assessment_no_questions: "Không cần thêm câu hỏi nào."
   },
   sections: {
     intro: "Về công việc",

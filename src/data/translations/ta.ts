@@ -37,6 +37,7 @@ export const ta: Translation = {
     email_body: "இந்த அறிக்கையின் நகலைப் பெற விரும்பினால் உங்கள் மின்னஞ்சல் முகவரியை உள்ளிடுங்கள். இதற்கு 15 நிமிடங்கள் வரை ஆகலாம். மின்னஞ்சல் inbox-இல் தெரியாவிட்டால் junk அல்லது spam கோப்புறையைச் சரிபார்க்கவும்.",
     email_next_body: "இறுதி அறிக்கையை அடுத்த திரையில் காண்பீர்கள்.",
     email_address_label: "மின்னஞ்சல் முகவரி",
+    email_report_send_failed: "உங்கள் அறிக்கையை மின்னஞ்சல் செய்ய முடியவில்லை. நீங்கள் இன்னும் அதைக் கீழே பதிவிறக்கலாம்.",
     report_ready_title: "உங்கள் அறிக்கை தயாராக உள்ளது",
     report_card_title: "MSI அபாய அறிக்கை",
     report_date_label: "தேதி",
@@ -66,7 +67,13 @@ export const ta: Translation = {
     ai_loading_task_description: "உங்கள் பணியின் விளக்கம் பகுப்பாய்வு செய்யப்படுகிறது...",
     ai_task_analysis_fallback_toast: "AI பணி பகுப்பாய்வு பதில் நேரம் முடிந்தது. அதற்கு பதிலாக உள்ளூர் fallback பயன்படுத்தப்படுகிறது.",
     ai_question_pruning_fallback_toast: "AI கேள்வி தேர்வு பதில் நேரம் முடிந்தது. அதற்கு பதிலாக fallback தொடர்ச்சி கேள்விகள் பயன்படுத்தப்படுகின்றன.",
-    ai_fallback_toast_dismiss: "AI fallback அறிவிப்பை மூடு"
+    ai_fallback_toast_dismiss: "AI fallback அறிவிப்பை மூடு",
+    language_title: "உங்கள் மொழியைத் தேர்ந்தெடுக்கவும்",
+    language_body: "கேள்விகளை நீங்கள் விரும்பும் மொழியில் காட்டலாம். அறிக்கை ஆங்கிலத்தில் உருவாக்கப்படும்.",
+    language_label: "மொழி",
+    language_placeholder: "ஒரு மொழியைத் தேர்ந்தெடுக்கவும்",
+    language_coming_soon: "விரைவில் வருகிறது",
+    assessment_no_questions: "கூடுதல் கேள்விகள் தேவையில்லை."
   },
   sections: {
     intro: "வேலை பற்றி",

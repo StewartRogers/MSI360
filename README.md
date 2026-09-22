@@ -215,6 +215,7 @@ tests/
     score-presentation.test.ts      # Score display formatting
     scoring.test.ts                 # Risk calculation
     send-report.test.ts             # Email validation, size cap, escaping, rate limiting
+    translations.test.ts            # Every language defines every English key
 ```
 
 ## Question Data & Localization
@@ -247,6 +248,10 @@ Language-specific content lives in `src/data/translations/*.ts`:
 2. Export a `Translation` object matching the English structure
 3. Add the language to `src/data/translations/index.ts`
 4. Add it to `languages` in `src/data/languages.ts` with the native display name
+5. If the language is written right to left, add its code to `rtlLanguageCodes` in `src/data/languages.ts`
+6. Run `npm test`; `tests/unit/translations.test.ts` fails if any English key is missing from the new file
+
+The language screen, task-analysis messages, and "no additional questions" message are all translated. The intro screen appears before a language is chosen, so it stays in English, and the PDF report is English only by design. The page `lang` attribute follows the selected language for screen readers.
 
 ### Assessment Flow & Draft Answers
 
@@ -469,7 +474,7 @@ Frequently adjusted prototype constants are centralized:
 
 ### Test Organization
 
-Tests live in `src/tests/` and use Node's built-in test runner with esbuild bundling:
+Tests live in `tests/` and use Node's built-in test runner with esbuild bundling:
 
 | Test File | Focus |
 |---|---|
@@ -482,6 +487,7 @@ Tests live in `src/tests/` and use Node's built-in test runner with esbuild bund
 | `report-data.test.ts` | Report data generation |
 | `report-document.test.ts` | PDF structure integrity |
 | `loading-state.test.ts` | Loading and async state handling |
+| `translations.test.ts` | Translation completeness against `en.ts` |
 
 ### Test Coverage Focus
 

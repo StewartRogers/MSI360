@@ -37,6 +37,7 @@ export const tr: Translation = {
     email_body: "Bu raporun bir kopyasını almak isterseniz e-posta adresinizi girin. Bu işlem 15 dakikaya kadar sürebilir. E-postayı gelen kutunuzda görmezseniz gereksiz veya spam klasörünü kontrol edin.",
     email_next_body: "Son raporu bir sonraki ekranda göreceksiniz.",
     email_address_label: "E-posta adresi",
+    email_report_send_failed: "Raporunuzu e-postayla gönderemedik. Yine de aşağıdan indirebilirsiniz.",
     report_ready_title: "Raporunuz hazır",
     report_card_title: "MSI risk raporu",
     report_date_label: "Tarih",
@@ -66,7 +67,13 @@ export const tr: Translation = {
     ai_loading_task_description: "Görev açıklamanız analiz ediliyor...",
     ai_task_analysis_fallback_toast: "AI görev analizi yanıtı zaman aşımına uğradı. Bunun yerine yerel yedek kullanılıyor.",
     ai_question_pruning_fallback_toast: "AI soru eleme yanıtı zaman aşımına uğradı. Bunun yerine yedek takip soruları kullanılıyor.",
-    ai_fallback_toast_dismiss: "AI yedek bildirimini kapat"
+    ai_fallback_toast_dismiss: "AI yedek bildirimini kapat",
+    language_title: "Dilinizi seçin",
+    language_body: "Sorular tercih ettiğiniz dilde gösterilebilir. Rapor İngilizce olarak oluşturulur.",
+    language_label: "Dil",
+    language_placeholder: "Bir dil seçin",
+    language_coming_soon: "Yakında",
+    assessment_no_questions: "Ek soru gerekmiyor."
   },
   sections: {
     intro: "İş hakkında",

@@ -37,6 +37,7 @@ export const bn: Translation = {
     email_body: "এই রিপোর্টের একটি কপি পেতে চাইলে আপনার ইমেইল ঠিকানা লিখুন। এতে ১৫ মিনিট পর্যন্ত সময় লাগতে পারে। ইনবক্সে ইমেইল না দেখলে junk বা spam ফোল্ডার দেখুন।",
     email_next_body: "চূড়ান্ত রিপোর্টটি পরের স্ক্রিনে দেখবেন।",
     email_address_label: "ইমেইল ঠিকানা",
+    email_report_send_failed: "আমরা আপনার রিপোর্ট ইমেইল করতে পারিনি। আপনি এখনও নিচে থেকে এটি ডাউনলোড করতে পারেন।",
     report_ready_title: "আপনার রিপোর্ট প্রস্তুত",
     report_card_title: "MSI ঝুঁকি রিপোর্ট",
     report_date_label: "তারিখ",
@@ -66,7 +67,13 @@ export const bn: Translation = {
     ai_loading_task_description: "আপনার কাজের বিবরণ বিশ্লেষণ করা হচ্ছে...",
     ai_task_analysis_fallback_toast: "AI কাজ বিশ্লেষণের উত্তর সময়সীমা অতিক্রম করেছে। এর বদলে স্থানীয় বিকল্প ব্যবহার করা হচ্ছে।",
     ai_question_pruning_fallback_toast: "AI প্রশ্ন বাছাইয়ের উত্তর সময়সীমা অতিক্রম করেছে। এর বদলে বিকল্প অনুসরণমূলক প্রশ্ন ব্যবহার করা হচ্ছে।",
-    ai_fallback_toast_dismiss: "AI বিকল্প বিজ্ঞপ্তি বন্ধ করুন"
+    ai_fallback_toast_dismiss: "AI বিকল্প বিজ্ঞপ্তি বন্ধ করুন",
+    language_title: "আপনার ভাষা বেছে নিন",
+    language_body: "প্রশ্নগুলো আপনার পছন্দের ভাষায় দেখানো যেতে পারে। রিপোর্টটি ইংরেজিতে তৈরি হয়।",
+    language_label: "ভাষা",
+    language_placeholder: "একটি ভাষা বেছে নিন",
+    language_coming_soon: "শীঘ্রই আসছে",
+    assessment_no_questions: "আর কোনো প্রশ্নের প্রয়োজন নেই।"
   },
   sections: {
     intro: "কাজ সম্পর্কে",
