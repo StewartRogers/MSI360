@@ -1,8 +1,12 @@
 import type { VercelRequest, VercelResponse } from "./_vercel-types";
 
+// api/ has no @types/node, so `process` needs an ambient type here -- otherwise
+// Vercel's function type-check reports TS2591 (same as api/send-report.ts).
+declare const process: { env: Record<string, string | undefined> };
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const GEMINI_MODEL = process.env.GEMINI_MODEL;
-const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",").map(s => s.trim()).filter(Boolean);
+const ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS?.split(",").map((s: string) => s.trim()).filter(Boolean);
 
 // Pre-answer prompts (preAnswering.ts) embed full label/option text for every
 // eligible follow-up question as JSON, which routinely runs 10-15k characters
