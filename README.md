@@ -7,7 +7,7 @@ MSI360 is a **React/TypeScript prototype** for a mobile-first musculoskeletal in
 ## Quick Start
 
 ### Prerequisites
-- Node.js 20+
+- Node.js 24.x (24.22.1 or later)
 - npm
 
 ### Development
@@ -110,6 +110,7 @@ vercel.json                            # Vercel deployment configuration
 index.html                             # HTML entry point
 
 api/
+  _vercel-types.ts                     # Local VercelRequest/VercelResponse types (no @vercel/node dependency)
   gemini.ts                            # Vercel serverless proxy for Gemini API
   send-report.ts                       # Vercel serverless proxy that emails the PDF report via Resend
 
@@ -352,6 +353,7 @@ Returns:
 - **Origin check**: requests must match `ALLOWED_ORIGINS` if set, otherwise same-origin only (fail closed, not open)
 - **Rate limiting**: in-memory sliding window, 20 requests/60s per client IP; returns `429` with `Retry-After`. Best-effort only — state resets on cold start and isn't shared across instances/regions
 - **Prompt size cap**: rejects prompts over 20000 characters with `413` (pre-answer prompts, which embed every eligible follow-up question's label/option text as JSON, routinely run 10-15k characters for a normal task description)
+- **No `@vercel/node` dependency**: request/response types come from `api/_vercel-types.ts` (the leading underscore keeps Vercel from deploying it as a function); Vercel provides the runtime
 
 ## Email Report Delivery
 

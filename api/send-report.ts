@@ -1,4 +1,4 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { VercelRequest, VercelResponse } from "./_vercel-types";
 import { Resend } from "resend";
 
 // api/ is outside tsconfig.json's `include` (Vercel bundles these functions with

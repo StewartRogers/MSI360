@@ -20,7 +20,7 @@ No linter is configured. Code quality relies on TypeScript strict mode and tests
 
 ### Key directories
 
-- **`api/`** -- Vercel serverless functions (`gemini.ts` proxies Gemini API, `send-report.ts` emails the PDF report via Resend)
+- **`api/`** -- Vercel serverless functions (`gemini.ts` proxies Gemini API, `send-report.ts` emails the PDF report via Resend). Request/response types live in `_vercel-types.ts` (no `@vercel/node` package). `api/` is outside `tsconfig.json`; only `send-report.ts` gets typechecked, via its unit test import
 - **`src/data/`** -- Question catalog (`catalog.ts`), tag taxonomy (`tags.ts`), 30+ translation files (`translations/`)
 - **`src/logic/`** -- Business logic: `questionnaire/` (routing, AI interpretation, pre-answering), `scoring/` (risk calculation), `ai/` (Gemini client)
 - **`src/report/`** -- PDF generation with `@react-pdf/renderer`. Entry: `reportActions.ts` -> `ReportDocument.tsx`
